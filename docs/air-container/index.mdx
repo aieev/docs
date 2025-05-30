@@ -1,0 +1,121 @@
+---
+title: "Air Container"
+description: "Deploy your AI container to Air Cloud"
+icon: "container"
+---
+
+Air Container enables you to deploy containerized AI services quickly and efficiently.
+Here's how it works:
+
+## Settings
+
+### Base Settings
+
+<Frame caption="Enter General Information">
+  <img
+    src="./air-container/images/enter-general-information.png"
+    style={{ borderRadius: "0.5rem" }}
+  />
+</Frame>
+
+<br />
+
+<Frame caption="Enter Container Image Information">
+  <img
+    src="./air-container/images/enter-container-image-information.png"
+    style={{ borderRadius: "0.5rem" }}
+  />
+</Frame>
+
+During container creation, the following fields are required:
+
+<ResponseField name="Name" type="string" required>
+  A user-friendly name for the container.
+</ResponseField>
+
+<ResponseField name="Category" type="string">
+  Type of service the container provides (used for future Playground
+  integration).
+</ResponseField>
+
+<ResponseField name="Container Image" type="url" required>
+  Docker image URL of the container.
+</ResponseField>
+
+<ResponseField name="Registry Provider" type="string" required>
+  The registry where the image is hosted (e.g., GitHub Container Registry,
+  Docker Hub).
+</ResponseField>
+
+<ResponseField name="Registry Username & Password" type="string">
+  Required if pulling from a private registry.
+</ResponseField>
+
+### Advanced Settings
+
+<Frame caption="Advanced Settings">
+  <img
+    src="./air-container/images/advanced-settings.png"
+    style={{ borderRadius: "0.5rem" }}
+  />
+</Frame>
+
+In the "Advanced" section, additional options are available:
+
+<ResponseField name="Start Command" type="string">
+  Overrides the default startup command in the container image.
+</ResponseField>
+
+<ResponseField name="Port" type="number">
+  Overrides the default exposed port.
+</ResponseField>
+
+<ResponseField name="Health Check URL" type="url">
+  Path to check container health status (e.g., /api/health).
+</ResponseField>
+
+<ResponseField name="Environment Variables" type="object">
+  Set key-value pairs required for your app (e.g., DB credentials, API keys).
+</ResponseField>
+
+## Deployment Completion
+
+<Frame caption="Deployment Completion">
+  <img
+    src="./air-container/images/deployment-completion.png"
+    style={{ borderRadius: "0.5rem" }}
+  />
+</Frame>
+
+Once deployed, the container will start immediately, and an API endpoint or service URL will be provided.
+
+- The container will appear in the left-hand list.
+- Selecting an item will show its detailed information on the right.
+- You can edit settings from the right panel.
+- Clicking the "Dashboard" button will redirect you to a detailed management page with container status and activity logs.
+
+## API Request
+
+Once the container status is `RUNNING`, you can access the AI inference API using the exposed endpoint.
+Replace the host part with your container's Endpoint URL.
+
+```bash curl
+curl --request POST \
+     --url ${ENDPOINT_URL}/api/v1/chat/completions \
+     --header "Accept: application/json" \
+     --header "Authorization: Bearer ${YOUR_API_KEY}" \
+     --header "Content-Type: application/json" \
+     --data '
+{
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a helpful assistant."
+    },
+    {
+      "role": "user",
+      "content": "Write a haiku about recursion in programming."
+    }
+  ]
+}
+```

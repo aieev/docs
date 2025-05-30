@@ -1,0 +1,16 @@
+---
+title: "Monitoring & API Testing"
+icon: "activity"
+---
+
+- **Single Request Test**: Use Postman or similar tools to test your vLLM container endpoint.
+- **Autoscaling Test**: Use Locust to simulate load and validate replica scaling.
+- **Usage Metrics**: Monitor replica count, request rate, and system response time.
+- **Runtime Logs**:
+  - Logs are displayed per container instance and replica.
+  - You can access real-time and historical logs from the Air Cloud dashboard.
+  - Logs are shown in reverse chronological order.
+  - Use filters to view logs by time range, container, or instance ID.
+  - Logs include startup command output, health check status, error messages, and stdout/stderr of model servers.
+  - If your container fails, logs will be preserved for a limited retention window for debugging.
+- **Settings**: You can update endpoint settings only when the container is stopped.

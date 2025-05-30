@@ -1,101 +1,133 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "mint",
-  "name": "Mint Starter Kit",
+  "theme": "maple",
+  "name": "AirCloud",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#0D9373",
+    "light": "#55D799",
+    "dark": "#0D9373"
   },
   "favicon": "/favicon.svg",
+  "icons": {
+    "library": "lucide"
+  },
   "navigation": {
-    "tabs": [
+    "languages": [
       {
-        "tab": "Guides",
-        "groups": [
+        "language": "en",
+        "dropdowns": [
           {
-            "group": "Get Started",
-            "pages": [
-              "index",
-              "quickstart",
-              "development"
+            "dropdown": "Documentation",
+            "icon": "book",
+            "description": "AirCloud Documentation",
+            "groups": [
+              {
+                "group": "Getting Started",
+                "pages": [
+                  "docs/index",
+                  "docs/quickstart",
+                  "docs/air-container/index",
+                  "docs/air-container/monitoring-api-testing",
+                  "docs/support"
+                ]
+              }
             ]
           },
           {
-            "group": "Essentials",
-            "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/settings",
-              "essentials/navigation",
-              "essentials/reusable-snippets"
+            "dropdown": "API Reference",
+            "description": "Reference for the API",
+            "icon": "terminal",
+            "groups": [
+              {
+                "group": "API Reference",
+                "pages": ["api-reference/introduction"]
+              },
+              {
+                "group": "Endpoint Examples",
+                "pages": [
+                  "api-reference/endpoint/get",
+                  "api-reference/endpoint/create",
+                  "api-reference/endpoint/delete",
+                  "api-reference/endpoint/webhook"
+                ]
+              }
             ]
           }
         ]
       },
       {
-        "tab": "API Reference",
-        "groups": [
+        "language": "ko",
+        "dropdowns": [
           {
-            "group": "API Documentation",
-            "pages": [
-              "api-reference/introduction"
+            "dropdown": "Documentation",
+            "icon": "book",
+            "description": "AirCloud Documentation",
+            "groups": [
+              {
+                "group": "Getting Started",
+                "pages": [
+                  "docs/index",
+                  "docs/quickstart",
+                  "docs/air-container/index",
+                  "docs/air-container/monitoring-api-testing",
+                  "docs/support"
+                ]
+              }
             ]
           },
           {
-            "group": "Endpoint Examples",
-            "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
+            "dropdown": "API Reference",
+            "description": "Reference for the API",
+            "icon": "terminal",
+            "groups": [
+              {
+                "group": "API Reference",
+                "pages": ["api-reference/introduction"]
+              },
+              {
+                "group": "Endpoint Examples",
+                "pages": [
+                  "api-reference/endpoint/get",
+                  "api-reference/endpoint/create",
+                  "api-reference/endpoint/delete",
+                  "api-reference/endpoint/webhook"
+                ]
+              }
             ]
           }
         ]
       }
-    ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Community",
-          "href": "https://mintlify.com/community",
-          "icon": "slack"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
-        }
-      ]
-    }
+    ]
   },
   "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
+    "light": "/logo/aieev-light.png",
+    "dark": "/logo/aieev-dark.png",
+    "href": "https://aieev.com"
+  },
+  "api": {
+    "mdx": {
+      "auth": {
+        "method": "bearer"
+      }
+    }
   },
   "navbar": {
     "links": [
       {
         "label": "Support",
-        "href": "mailto:hi@mintlify.com"
+        "href": "https://www.aieev.com/contact"
       }
     ],
     "primary": {
       "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
+      "label": "Get Started",
+      "href": "https://aieev.com"
     }
   },
   "footer": {
     "socials": {
-      "github": "https://github.com/aieev",
-      "linkedin": "https://linkedin.com/company/aieev"
+      "linkedin": "https://linkedin.com/company/aieev",
+      "github": "https://github.com/aieev"
     }
   }
 }

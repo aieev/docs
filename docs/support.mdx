@@ -1,0 +1,125 @@
+---
+title: "Support"
+description: "We're here to help you get the most out of Air Cloud"
+icon: "circle-help"
+---
+
+export function openSearch(e) {
+  e.preventDefault();
+  document.getElementById("search-bar-entry").click();
+}
+
+<div onClick={openSearch} style={{ cursor: "pointer" }}>
+  <Card
+    title="Ask our docs"
+    icon="message-circle-question"
+    href="https://docs.aieev.cloud/docs/overview/"
+    arrow={true}
+  >
+    Ask our AI assistant that's been trained on our documentation.
+  </Card>
+</div>
+
+<CardGroup cols={2}>
+  <Card title="Email Us for Support" icon="mail" href="mailto:hk.kim@aieev.com">
+    If you have any questions, email us at
+    [hk.kim@aieev.com](mailto:hk.kim@aieev.com).
+  </Card>
+  <Card
+    title="Email Us for Development"
+    icon="mail"
+    href="mailto:bspark@aieev.cloud"
+  >
+    If you have any questions, email us at
+    [bspark@aieev.cloud](mailto:bspark@aieev.cloud).
+  </Card>
+</CardGroup>
+
+## Frequently Asked Questions
+
+Below are common issues and how to resolve them based on real user deployments and our internal diagnostics:
+
+<AccordionGroup>
+  <Accordion title='401 Unauthorized'>
+  Authentication failed. Please verify that your API key or access credentials are correct.
+  </Accordion>
+
+<Accordion title="404 Not Found">
+  The requested container ID or endpoint path is invalid. Double-check the
+  container ID or route.
+</Accordion>
+
+  <Accordion title="500 Internal Server Error">
+  An internal server error has occurred. Try again later or contact the Air Cloud support team.
+  </Accordion>
+</AccordionGroup>
+
+Below are common issues and how to resolve them based on real user deployments and our internal diagnostics:
+
+<AccordionGroup>
+  <Accordion title="API Key Authentication Failure">
+  
+    -	Symptom: Fails to authenticate API request
+    - Cause: Expired or incorrect API key
+    - Fix:
+      - Ensure your key is still valid (check expiration)
+      - Generate a new API key from the Air Cloud dashboard
+  
+  </Accordion>
+
+  <Accordion title="GPU Assignment Errors">
+
+    - Symptom: No GPU detected on container startup
+    - Cause: Node instability or driver mismatch
+    - Fix:
+      - Re-deploy to a new instance
+      - Check compatibility of driver with your container runtime
+
+  </Accordion>
+
+  <Accordion title="Network Connectivity Failures">
+
+    - Symptom: Container cannot reach external endpoints
+    - Cause: Port configuration, DNS issues, or firewall blocks
+    - Fix:
+      - Verify container exposes correct port and service is listening
+      - Use curl inside container to test outbound connectivity
+      - Ensure no security group restrictions block egress traffic
+
+  </Accordion>
+
+  <Accordion title="Health Check Failures / Stuck in Initializing">
+
+    - Symptom: Deployment hangs on health check
+    - Cause: Container is not returning 200 OK on /health
+    - Fix:
+      - Confirm that the correct health check path and port are exposed
+      - Check logs for stack traces or model loading delays
+
+  </Accordion>
+
+  <Accordion title="Autoscaling Not Triggering">
+
+    - Symptom: No scaling despite high load
+    - Cause: Scaling threshold too high, or unhealthy replicas
+    - Fix:
+      - Tune autoscaling parameters (e.g., CPU threshold, latency window)
+      - Verify all replicas pass health checks
+
+  </Accordion>
+
+  <Accordion title="502/503 Gateway Errors">
+
+    - Symptom: API responds with server error
+    - Cause: App not bound to expected port or crashed during startup
+    - Fix:
+      - Verify service listens on `0.0.0.0:<PORT>`
+      - Increase health check timeout if model loading takes long
+
+  </Accordion>
+</AccordionGroup>
+
+<Info>
+  We do our best to respond to all requests within 24 hours but delays may occur
+  during busy times.
+</Info>
