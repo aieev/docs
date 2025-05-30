@@ -7,13 +7,35 @@ icon: "container"
 Air Container enables you to deploy containerized AI services quickly and efficiently.
 Here's how it works:
 
-## Settings
+## Deployment Flow
 
-### Base Settings
+### Step 1. Select a project
+
+<Frame caption="Select a project">
+  <img
+    src="/docs/images/air-container/select-a-project.png"
+    style={{ borderRadius: "0.5rem" }}
+  />
+</Frame>
+
+First, go to the Project Dashboard and select the organization and project you
+created during onboarding.
+
+<Frame caption="Container Page">
+  <img
+    src="/docs/images/air-container/container-page.png"
+    style={{ borderRadius: "0.5rem" }}
+  />
+</Frame>
+
+From the Service tab on the project page, select **“Container”** and click
+**[+ Create]** button to create a new container.
+
+### Step 2. Base Settings
 
 <Frame caption="Enter General Information">
   <img
-    src="./air-container/images/enter-general-information.png"
+    src="/docs/images/air-container/enter-general-information.png"
     style={{ borderRadius: "0.5rem" }}
   />
 </Frame>
@@ -22,7 +44,7 @@ Here's how it works:
 
 <Frame caption="Enter Container Image Information">
   <img
-    src="./air-container/images/enter-container-image-information.png"
+    src="/docs/images/air-container/enter-container-image-information.png"
     style={{ borderRadius: "0.5rem" }}
   />
 </Frame>
@@ -51,11 +73,24 @@ During container creation, the following fields are required:
   Required if pulling from a private registry.
 </ResponseField>
 
-### Advanced Settings
+### Step 3. Configure Resources
+
+<Frame caption="Resource Settings">
+  <img
+    src="/docs/images/air-container/resource-settings.png"
+    style={{ borderRadius: "0.5rem" }}
+  />
+</Frame>
+
+- **General Mode**: Define instance type (e.g., RTX 4070, 4090).
+- **Autoscaling Mode**: Define minimum and maximum replicas (1 to 30). Higher
+  values require manual approval.
+
+### Step 4. Advanced Settings
 
 <Frame caption="Advanced Settings">
   <img
-    src="./air-container/images/advanced-settings.png"
+    src="/docs/images/air-container/advanced-settings.png"
     style={{ borderRadius: "0.5rem" }}
   />
 </Frame>
@@ -78,11 +113,20 @@ In the "Advanced" section, additional options are available:
   Set key-value pairs required for your app (e.g., DB credentials, API keys).
 </ResponseField>
 
-## Deployment Completion
+### Step 5. Review and Deploy
+
+<Frame caption="Review Page">
+  <img
+    src="/docs/images/air-container/review-page.png"
+    style={{ borderRadius: "0.5rem" }}
+  />
+</Frame>
+
+### Step 6. Deployment Completion
 
 <Frame caption="Deployment Completion">
   <img
-    src="./air-container/images/deployment-completion.png"
+    src="/docs/images/air-container/deployment-completion.png"
     style={{ borderRadius: "0.5rem" }}
   />
 </Frame>
@@ -99,14 +143,13 @@ Once deployed, the container will start immediately, and an API endpoint or serv
 Once the container status is `RUNNING`, you can access the AI inference API using the exposed endpoint.
 Replace the host part with your container's Endpoint URL.
 
-```bash curl
+```bash cURL
 curl --request POST \
      --url ${ENDPOINT_URL}/api/v1/chat/completions \
      --header "Accept: application/json" \
      --header "Authorization: Bearer ${YOUR_API_KEY}" \
      --header "Content-Type: application/json" \
-     --data '
-{
+     --data '{
   "messages": [
     {
       "role": "system",
@@ -117,5 +160,5 @@ curl --request POST \
       "content": "Write a haiku about recursion in programming."
     }
   ]
-}
+}'
 ```
