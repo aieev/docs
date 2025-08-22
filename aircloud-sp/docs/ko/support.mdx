@@ -1,0 +1,126 @@
+---
+title: "지원"
+description: "Air Cloud를 최대한 활용할 수 있도록 도와드립니다"
+icon: "circle-help"
+---
+
+export function openSearch(e) {
+  e.preventDefault();
+  document.getElementById("search-bar-entry").click();
+}
+
+<div onClick={openSearch} style={{ cursor: "pointer" }}>
+  <Card
+    title="문서에 질문하기"
+    icon="message-circle-question"
+    href="https://docs.aieev.cloud/docs/overview/"
+    arrow={true}
+  >
+    저희 문서로 훈련된 AI 어시스턴트에게 질문하세요.
+  </Card>
+</div>
+
+<CardGroup cols={2}>
+  <Card title="김현경 매니저" icon="mail" href="mailto:hk.kim@aieev.com">
+    궁금한 점이 있으시면 [hk.kim@aieev.com](mailto:hk.kim@aieev.com)으로 이메일을 보내주세요.
+  </Card>
+  <Card
+    title="박병수 매니저"
+    icon="mail"
+    href="mailto:bspark@aieev.com"
+  >
+    개발 관련 문의사항이 있으시면 [bspark@aieev.com](mailto:bspark@aieev.com)으로 이메일을 보내주세요.
+  </Card>
+</CardGroup>
+
+## 자주 발생하는 HTTP 오류
+
+실제 사용자 사용 과정 중 자주 발생하는 문제 사례와 해결 방법입니다. 아래를 확인하여 순서대로 처리할 수 있습니다.
+
+<AccordionGroup>
+  <Accordion title='401 Unauthorized'>
+  인증 실패의 경우, API 키 또는 접근 권한 정보를 다시 확인해 주세요.
+  </Accordion>
+
+<Accordion title="404 Not Found">
+  요청한 컨테이너 ID 또는 엔드포인트 경로가 잘못된 경우입니다. 컨테이너 ID 또는 라우트를 다시 확인해 주세요.
+</Accordion>
+
+  <Accordion title="500 Internal Server Error">
+  내부 서버 오류가 발생할 경우, 잠시 후 다시 시도하거나 Air Cloud 지원팀(contact@aieev.com)으로 문의해 주세요.
+  </Accordion>
+</AccordionGroup>
+
+## 문제 해결
+
+실제 사용자 사용 과정 중 자주 발생하는 문제 사례와 해결 방법입니다. 아래를 확인하여 순서대로 처리할 수 있습니다.
+
+<AccordionGroup>
+  <Accordion title="[A]. API 키 인증 실패시">
+  
+    -	증상: API 요청 인증에 실패함
+    - 원인: 만료되었거나 잘못된 API 키 사용
+    - 해결 방법:
+      - API 키가 유효한지 확인합니다 (만료 여부 확인)
+      - Air Cloud 대시보드에서 새로운 API 키를 발급받아 사용
+  
+  </Accordion>
+
+  <Accordion title="[B]. GPU 할당 오류 발생시">
+
+    - 증상: 컨테이너 시작 시 GPU가 감지되지 않음
+    - 원인: 노드 불안정성 또는 드라이버 불일치
+    - 해결 방법:
+      - 새로운 인스턴스로 재배포
+      - 사용 중인 컨테이너 런타임과 드라이버의 호환성 확인
+
+  </Accordion>
+
+  <Accordion title="[C]. 네트워크 연결 실패">
+
+    - 증상: 컨테이너가 외부 엔드포인트에 연결하지 못함
+    - 원인: 포트 설정 오류, DNS 문제, 방화벽 차단
+    - 해결 방법:
+      - 컨테이너가 올바른 포트를 노출하고 서비스가 수신 중인지 확인
+      - 컨테이너 내부에서 curl 명령어로 외부 연결 테스트
+      - 보안 그룹 설정에서 아웃바운드 트래픽이 차단되지 않았는지 확인
+
+  </Accordion>
+
+  <Accordion title="[D]. 헬스 체크 실패 / 초기화 단계에서의 멈춤">
+
+    - 증상: 배포가 헬스 체크 단계에서 멈춤
+    - 원인: /health 경로에서 HTTP 200 OK 응답을 반환하지 않음
+    - 해결 방법:
+      - 올바른 헬스 체크 url 및 포트가 노출되어 있는지 확인
+      - 로그를 확인하여 에러 메시지나 모델 로딩 지연 여부 파악
+
+  </Accordion>
+
+  <Accordion title="[E]. 오토스케일링 미작동">
+
+    - 증상: 높은 부하에도 불구하고 확장이 발생하지 않음
+    - 원인: 스케일링 임계값이 너무 높거나, 레플리카 상태가 비정상
+    - 해결 방법:
+      - CPU 임계값, 지연 시간 등 오토스케일링 파라미터 조정
+      - 모든 레플리카가 헬스 체크를 정상 통과하는지 확인
+
+  </Accordion>
+
+  <Accordion title="[F]. 502/503 게이트웨이 오류">
+
+    - 증상: API 응답이 서버 오류(502/503)를 반환
+    - 원인: 애플리케이션이 예상 포트에 바인딩되지 않았거나 시작 중 충돌 발생
+    - 해결 방법:
+      - 서비스가 `0.0.0.0:<PORT>`에 정상적으로 실행 중인지 확인
+      - 모델 로딩 시간이 길 경우 헬스 체크 타임아웃을 늘려서 설정
+
+  </Accordion>
+</AccordionGroup>
+
+## 추가 담당 지원
+
+추가 담당 지원이 필요하신 경우, 아래 담당자에게 연락해 주세요:
+
+- **김현경 매니저**: [hk.kim@aieev.com](mailto:hk.kim@aieev.com) / +82-10-9888-4696
+- **박병수 매니저**: [bspark@aieev.com](mailto:bspark@aieev.com) / +82-10-4102-4050

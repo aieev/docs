@@ -1,0 +1,32 @@
+---
+title: "소개"
+description: "API 엔드포인트를 보여주기 위한 예시 섹션"
+---
+
+<Note>
+  API 참조 문서를 구축하지 않으려면 api-reference 폴더를 제거하여 이 섹션을 삭제할 수 있습니다.
+</Note>
+
+## 환영합니다
+
+API 문서를 구축하는 방법은 두 가지가 있습니다: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup)와 [MDX 컴포넌트](https://mintlify.com/docs/api-playground/mdx/configuration)입니다. 스타터 키트의 경우 다음 OpenAPI 사양을 사용하고 있습니다.
+
+<Card
+  title="Plant Store 엔드포인트"
+  icon="leaf"
+  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
+>
+  OpenAPI 사양 파일 보기
+</Card>
+
+## 인증
+
+모든 API 엔드포인트는 Bearer 토큰을 사용하여 인증되며 사양 파일에서 가져옵니다.
+
+```json
+"security": [
+  {
+    "bearerAuth": []
+  }
+]
+```

@@ -59,33 +59,33 @@
         "language": "ko",
         "dropdowns": [
           {
-            "dropdown": "Documentation",
+            "dropdown": "문서",
             "icon": "book",
-            "description": "AirCloud Documentation",
+            "description": "AirCloud 문서",
             "groups": [
               {
-                "group": "Getting Started",
+                "group": "시작하기",
                 "pages": [
-                  "docs/index",
-                  "docs/quickstart",
-                  "docs/air-container/index",
-                  "docs/air-container/monitoring-api-testing",
-                  "docs/support"
+                  "docs/ko/index",
+                  "docs/ko/quickstart",
+                  "docs/ko/air-container/index",
+                  "docs/ko/air-container/monitoring-api-testing",
+                  "docs/ko/support"
                 ]
               }
             ]
           },
           {
-            "dropdown": "API Reference",
-            "description": "Reference for the API",
+            "dropdown": "API 참조",
+            "description": "API 참조 문서",
             "icon": "terminal",
             "groups": [
               {
-                "group": "API Reference",
-                "pages": ["api-reference/introduction"]
+                "group": "API 참조",
+                "pages": ["api-reference/ko/introduction"]
               },
               {
-                "group": "Endpoint Examples",
+                "group": "엔드포인트 예제",
                 "pages": [
                   "api-reference/endpoint/get",
                   "api-reference/endpoint/create",
