@@ -1,0 +1,61 @@
+---
+title: "조직 및 과금"
+description: "Organization, Project, 멤버, 크레딧과 과금 구조"
+icon: "building"
+---
+
+Aircloud를 처음 시작할 때 필요한 Organization, Project, 멤버 관리, 크레딧과 과금 구조를 정리한 문서입니다.
+
+## 온보딩 흐름
+
+Aircloud의 기본 온보딩은 아래 순서로 진행됩니다.
+
+1. Organization 생성
+2. Project 생성
+3. 크레딧 등록 (선택사항)
+
+온보딩을 완료하면 콘솔에서 프로젝트별 워크로드를 생성하고 관리할 수 있습니다.
+
+## Organization과 Project 관계
+
+Organization은 팀 또는 회사 단위의 상위 관리 단위입니다. Project는 실제 워크로드를 운영하는 하위 단위이며, Air API와 Air Container도 모두 프로젝트 안에서 생성하고 관리합니다.
+
+## 멤버 초대
+
+멤버는 이메일 초대 방식으로 Organization에 참여할 수 있습니다.
+
+- 초대 진행 시에는 초대받은 이메일 주소와 동일한 주소로 회원가입해야 합니다.
+- 기존 계정이 로그인된 상태에서 초대 링크를 열면 오류가 발생할 수 있으므로, 필요 시 먼저 로그아웃한 뒤 진행하는 것을 권장합니다.
+
+## 크레딧과 결제
+
+Aircloud는 프로젝트에서 사용하는 리소스와 워크로드에 따라 크레딧 또는 결제 정보가 필요할 수 있습니다.
+
+크레딧 등록은 온보딩 단계에서 선택사항으로 표시될 수 있지만, 실제 리소스 사용 전에는 결제 가능 상태를 미리 확인하는 것이 좋습니다.
+
+## 운영 시 권장 사항
+
+- 프로젝트 목적에 따라 API 테스트용 Project와 운영용 Project를 분리
+- 멤버별 역할과 접근 범위를 정리
+- 과금과 사용량을 정기적으로 확인
+- 배포 전 크레딧 및 결제 상태 확인
+
+## 관련 문서
+
+<Columns cols={2}>
+  <Card title="Quickstart" icon="play-circle" href="/docs/ko/quickstart" cta="빠르게 시작하기" arrow="true">
+    온보딩부터 첫 사용 흐름까지 전체 과정을 빠르게 확인합니다.
+  </Card>
+
+  <Card title="Air API" icon="sparkles" href="/docs/ko/air-api" cta="API 문서 보기" arrow="true">
+    모델 호출 방식과 API 연동 흐름을 확인합니다.
+  </Card>
+
+  <Card title="Air Container" icon="box" href="/docs/ko/air-container" cta="컨테이너 문서 보기" arrow="true">
+    컨테이너 배포와 설정 항목을 확인합니다.
+  </Card>
+
+  <Card title="문의 및 피드백" icon="mail" href="/docs/ko/support/contact-and-feedback" cta="문의하기" arrow="true">
+    사용 중 문의사항이나 피드백을 남길 수 있습니다.
+  </Card>
+</Columns>

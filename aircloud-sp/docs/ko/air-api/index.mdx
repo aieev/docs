@@ -1,0 +1,47 @@
+---
+title: "Air API"
+description: "모델 API를 빠르게 연동하고 테스트하는 방법"
+icon: "sparkles"
+---
+
+Air API는 프로젝트 안에서 지원 모델을 선택하고, 시크릿 키를 발급받아, 코드 샘플 또는 Playground를 통해 빠르게 테스트할 수 있는 API 기반 워크로드입니다. 직접 인프라를 관리하지 않고 모델을 빠르게 연동하고 싶은 경우에 적합합니다.
+
+## Air API로 할 수 있는 일
+
+- 프로젝트 안에서 API 워크로드 생성
+- 지원 모델 선택
+- API 액세스 엔드포인트 선택
+- 시크릿 키 발급
+- 코드 샘플 기반 연결 테스트
+- Playground 기반 Web UI 테스트
+- 동일한 설정을 바탕으로 Air Container 확장 검토
+
+## 기본 흐름
+
+1. 프로젝트 개요에서 Air API 선택
+2. 필요한 모델 선택
+3. 시크릿 키 생성
+4. 코드 샘플로 연결 테스트
+5. Playground 또는 애플리케이션 연동
+
+## 이런 경우에 적합합니다
+
+- 모델 API를 빠르게 붙이고 싶은 경우
+- 초기 PoC나 프로토타입을 빠르게 검증하고 싶은 경우
+- 별도 컨테이너 배포 없이 API 중심으로 시작하고 싶은 경우
+
+## 다음에 읽으면 좋은 문서
+
+<Columns cols={2}>
+  <Card title="모델 및 Playground" icon="sparkles" href="/docs/ko/air-api/models-and-playground" cta="사용 방법 보기" arrow="true">
+    지원 모델 확인 및 Playground 기반 테스트 흐름을 안내합니다.
+  </Card>
+
+  <Card title="API 사용 가이드" icon="code-2" href="/docs/ko/air-api/api-usage-guide" cta="가이드 보기" arrow="true">
+    API 호출 방법, 키 사용, 운영 시 주의사항을 정리합니다.
+  </Card>
+
+  <Card title="문제 해결" icon="wrench" href="/docs/ko/air-api/troubleshooting" cta="문제 해결 보기" arrow="true">
+    자주 발생하는 오류와 해결 방법을 확인합니다.
+  </Card>
+</Columns>

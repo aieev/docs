@@ -1,0 +1,57 @@
+---
+title: "API 사용 가이드"
+description: "시크릿 키 발급과 첫 연결 테스트"
+icon: "key"
+---
+
+Air API를 실제 애플리케이션에서 사용하기 위한 기본 흐름을 안내합니다.
+
+## 1. 프로젝트 개요에서 Air API 선택
+
+조직과 프로젝트를 생성한 뒤, 프로젝트 개요 화면에서 Air API를 선택합니다.
+
+## 2. 사용할 모델 선택
+
+프로젝트 내 API 워크로드를 생성하고 필요한 모델을 선택합니다.
+
+## 3. 시크릿 키 생성
+
+API 액세스 엔드포인트를 선택한 뒤 시크릿 키를 생성합니다.
+
+<Warning>
+  시크릿 키는 생성 이후 다시 확인할 수 없으므로 반드시 복사해 안전하게 보관해야 합니다.
+</Warning>
+
+## 4. 코드 샘플 테스트
+
+시크릿 키를 발급받은 뒤 API 화면으로 돌아가 코드 샘플을 확인합니다. Aircloud 콘솔에서 제공하는 코드 샘플의 `your-api-key` 위치에 발급받은 키를 입력해 연결 테스트를 진행합니다.
+
+## 5. 실제 연동
+
+테스트가 성공하면 같은 인증 정보와 엔드포인트를 사용해 실제 애플리케이션에 연동할 수 있습니다.
+
+운영 전에는 Playground 테스트, 사용량 확인, 필요한 경우 Air Container 확장 여부를 함께 검토하는 것을 권장합니다.
+
+## 체크리스트
+
+- 프로젝트 선택 완료
+- 모델 선택 완료
+- 시크릿 키 복사 완료
+- 코드 샘플 테스트 완료
+- Playground 테스트 완료 (선택사항)
+
+## 관련 문서
+
+<Columns cols={2}>
+  <Card title="모델 및 Playground" icon="play" href="/docs/ko/air-api/models-and-playground" cta="문서 보기" arrow="true">
+    지원 모델 선택과 Playground 기반 테스트 흐름을 확인합니다.
+  </Card>
+
+  <Card title="문제 해결" icon="wrench" href="/docs/ko/air-api/troubleshooting" cta="문제 해결 보기" arrow="true">
+    자주 발생하는 오류와 해결 방법을 확인합니다.
+  </Card>
+
+  <Card title="API 레퍼런스" icon="book" href="/docs/ko/api-reference" cta="레퍼런스 보기" arrow="true">
+    엔드포인트와 파라미터 등 API 상세 스펙을 확인합니다.
+  </Card>
+</Columns>

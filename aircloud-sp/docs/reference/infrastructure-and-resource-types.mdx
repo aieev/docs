@@ -1,0 +1,53 @@
+---
+title: "Infrastructure and Resource Types"
+description: "Understand cloud types and instance types"
+icon: "server"
+---
+
+This page summarizes the infrastructure options (cloud types) and instance types available in Aircloud.
+
+## Cloud Type
+
+Choose a cloud type based on workload requirements.
+
+### Aircloud
+
+Best for workloads where cost efficiency and flexibility matter.
+
+### Aircloud+
+
+Best for workloads that require higher reliability, performance, and a more predictable operating environment.
+
+### Aircloud 0
+
+An option that leverages distributed infrastructure (e.g., individuals, partner providers).
+
+## Instance types
+
+When deploying containers, you can select a GPU instance type. Examples include:
+
+- RTX 4070 Ti Super
+- RTX 4070 Super
+- RTX 4090
+- RTX 5090
+- RTX PRO 6000
+
+## What to consider
+
+- Required latency
+- Model size and memory requirements
+- Expected request volume
+- Replica strategy
+- Whether autoscaling is enabled
+
+## Related docs
+
+<Columns cols={2}>
+  <Card title="Deploy a Container" icon="container" href="/docs/air-container/deploy-a-container" cta="Deploy" arrow="true">
+    Deployment flow and configuration steps.
+  </Card>
+
+  <Card title="Autoscaling and Scheduling" icon="activity" href="/docs/air-container/autoscaling-and-scheduling" cta="Configure" arrow="true">
+    Autoscaling and scheduled scaling guidance.
+  </Card>
+</Columns>

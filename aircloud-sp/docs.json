@@ -19,16 +19,49 @@
           {
             "dropdown": "Documentation",
             "icon": "book",
-            "description": "AirCloud Documentation",
+            "description": "Aircloud Documentation",
             "groups": [
               {
-                "group": "Getting Started",
+                "group": "Get started",
                 "pages": [
                   "docs/index",
                   "docs/quickstart",
+                  "docs/get-started/concepts",
+                  "docs/get-started/organizations-and-billing"
+                ]
+              },
+              {
+                "group": "Air API",
+                "pages": [
+                  "docs/air-api/index",
+                  "docs/air-api/models-and-playground",
+                  "docs/air-api/api-usage-guide",
+                  "docs/air-api/troubleshooting"
+                ]
+              },
+              {
+                "group": "Air Container",
+                "pages": [
                   "docs/air-container/index",
-                  "docs/air-container/monitoring-api-testing",
-                  "docs/support"
+                  "docs/air-container/deploy-a-container",
+                  "docs/air-container/autoscaling-and-scheduling",
+                  "docs/air-container/monitoring-and-troubleshooting"
+                ]
+              },
+              {
+                "group": "Reference",
+                "pages": [
+                  "docs/api-reference/index",
+                  "docs/reference/infrastructure-and-resource-types",
+                  "docs/reference/container-runtime-reference"
+                ]
+              },
+              {
+                "group": "Support",
+                "pages": [
+                  "docs/support/faq",
+                  "docs/support/contact-and-feedback",
+                  "docs/support/release-notes"
                 ]
               }
             ]
@@ -41,16 +74,49 @@
           {
             "dropdown": "문서",
             "icon": "book",
-            "description": "AirCloud 문서",
+            "description": "Aircloud 문서",
             "groups": [
               {
                 "group": "시작하기",
                 "pages": [
                   "docs/ko/index",
                   "docs/ko/quickstart",
+                  "docs/ko/get-started/concepts",
+                  "docs/ko/get-started/organizations-and-billing"
+                ]
+              },
+              {
+                "group": "Air API",
+                "pages": [
+                  "docs/ko/air-api/index",
+                  "docs/ko/air-api/models-and-playground",
+                  "docs/ko/air-api/api-usage-guide",
+                  "docs/ko/air-api/troubleshooting"
+                ]
+              },
+              {
+                "group": "Air Container",
+                "pages": [
                   "docs/ko/air-container/index",
-                  "docs/ko/air-container/monitoring-api-testing",
-                  "docs/ko/support"
+                  "docs/ko/air-container/deploy-a-container",
+                  "docs/ko/air-container/autoscaling-and-scheduling",
+                  "docs/ko/air-container/monitoring-and-troubleshooting"
+                ]
+              },
+              {
+                "group": "레퍼런스",
+                "pages": [
+                  "docs/ko/api-reference/index",
+                  "docs/ko/reference/infrastructure-and-resource-types",
+                  "docs/ko/reference/container-runtime-reference"
+                ]
+              },
+              {
+                "group": "지원",
+                "pages": [
+                  "docs/ko/support/faq",
+                  "docs/ko/support/contact-and-feedback",
+                  "docs/ko/support/release-notes"
                 ]
               }
             ]
@@ -71,23 +137,46 @@
       }
     }
   },
-  "navbar": {
-    "links": [
-      {
-        "label": "Support",
-        "href": "https://www.aieev.com/contact"
-      }
-    ],
-    "primary": {
-      "type": "button",
-      "label": "Get Started",
-      "href": "https://aieev.com"
-    }
-  },
   "footer": {
     "socials": {
       "linkedin": "https://linkedin.com/company/aieev",
       "github": "https://github.com/aieev"
     }
+  },
+  "global": {
+    "languages": [
+      {
+        "language": "en",
+        "navbar": {
+          "links": [
+            {
+              "label": "Support",
+              "href": "https://www.aieev.com/contact"
+            }
+          ],
+          "primary": {
+            "type": "button",
+            "label": "Get Started",
+            "href": "https://aieev.com"
+          }
+        }
+      },
+      {
+        "language": "ko",
+        "navbar": {
+          "links": [
+            {
+              "label": "지원",
+              "href": "https://www.aieev.com/contact"
+            }
+          ],
+          "primary": {
+            "type": "button",
+            "label": "시작하기",
+            "href": "https://aieev.com"
+          }
+        }
+      }
+    ]
   }
 }

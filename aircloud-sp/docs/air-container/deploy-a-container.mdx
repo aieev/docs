@@ -1,0 +1,80 @@
+---
+title: "Deploy a Container"
+description: "From creation to running state"
+icon: "container"
+---
+
+This page walks through the standard flow to deploy a container using Air Container.
+
+## 1. Select a project
+
+Choose the project where you want to deploy your container. The project overview also shows endpoint status and current deployments.
+
+## 2. Start creating a container
+
+In the Air Container menu, click **+ Create** to open the container creation flow. Enter a container name and proceed.
+
+## 3. Configure Container Image
+
+Provide the following:
+
+- Container image
+- Registry provider
+- Registry access type (public/private)
+- If private: username + password/token
+
+Common registry providers include:
+
+- GCP Artifact Registry
+- AWS ECR
+- GitHub Container Registry
+- Docker Hub
+
+## 4. Configure Resources
+
+Configure:
+
+- Cloud Type
+- Instance type
+- Enable Autoscaling (optional)
+- Replica count
+
+We recommend balancing cost and latency based on your workload.
+
+## 5. Advanced settings
+
+Optionally configure:
+
+- Start command
+- Port
+- Health check URL
+- Max wait time
+- Boot wait time
+- Environment variables
+- Endpoint ID
+
+## 6. Review and deploy
+
+Review the configuration and deploy.
+
+Initial pull time depends on image size and registry performance. Pulled images may be cached on the node for faster subsequent starts.
+
+## 7. Start the container
+
+After deployment, the container may appear as **Pending**.
+
+<Note>
+  Pending state is not billed. To run workloads, click **Start container** to switch into a running state.
+</Note>
+
+## Next steps
+
+<Columns cols={2}>
+  <Card title="Autoscaling and Scheduling" icon="activity" href="/docs/air-container/autoscaling-and-scheduling" cta="Configure" arrow="true">
+    Configure autoscaling and scheduled scaling.
+  </Card>
+
+  <Card title="Monitoring and Troubleshooting" icon="radar" href="/docs/air-container/monitoring-and-troubleshooting" cta="Monitor" arrow="true">
+    Monitor and debug deployments with logs and usage.
+  </Card>
+</Columns>

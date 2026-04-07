@@ -1,0 +1,56 @@
+---
+title: "모니터링 및 문제 해결"
+description: "Usage, 로그, 설정 변경, 상태 확인"
+icon: "radar"
+---
+
+배포 이후에는 Usage, Runtime Logs, Settings를 통해 서비스 상태를 확인하고 운영할 수 있습니다.
+
+## Usage
+
+Usage 화면에서는 현재 사용량과 서비스 상태를 확인할 수 있습니다. **Healthy Replicas Count**를 통해 현재 실행 중인 Replica 수를 확인할 수 있습니다.
+
+## Runtime Logs
+
+로그 화면에서는 실시간 최신 로그를 확인할 수 있으며, 다운로드 기능도 제공합니다.
+
+<Note>
+  배포 직후 문제가 발생하는 경우에는 로그를 먼저 확인하는 것이 가장 빠릅니다.
+</Note>
+
+## Settings
+
+컨테이너 이름 변경을 제외한 대부분의 수정 사항은 컨테이너를 Stop한 뒤 변경할 수 있습니다. 설정 변경 전에는 현재 엔드포인트 상태를 먼저 확인하는 것을 권장합니다.
+
+## 자주 확인할 항목
+
+- 이미지 경로가 올바른지
+- 비공개 레지스트리 인증 정보가 정확한지
+- 포트 설정이 올바른지
+- 시작 명령이 올바른지
+- 헬스 체크 URL이 정상 응답하는지
+- 환경 변수가 누락되지 않았는지
+
+## 대기중 상태
+
+배포 직후 컨테이너가 **대기중** 상태인 경우에는 아직 실행 상태가 아닙니다.
+
+<Note>
+  대기중 상태에서는 과금이 발생하지 않으며, 실제 실행을 위해서는 **컨테이너 시작**이 필요합니다.
+</Note>
+
+## 관련 문서
+
+<Columns cols={2}>
+  <Card title="컨테이너 배포" icon="container" href="/docs/ko/air-container/deploy-a-container" cta="배포하기" arrow="true">
+    컨테이너 배포 단계와 주요 설정 흐름을 안내합니다.
+  </Card>
+
+  <Card title="오토스케일링 및 스케줄링" icon="activity" href="/docs/ko/air-container/autoscaling-and-scheduling" cta="설정 보기" arrow="true">
+    Autoscaling/Scheduled Scaling 설정을 정리합니다.
+  </Card>
+
+  <Card title="문의 및 피드백" icon="mail" href="/docs/ko/support/contact-and-feedback" cta="문의하기" arrow="true">
+    문제가 지속되면 지원을 요청할 수 있습니다.
+  </Card>
+</Columns>
