@@ -34,7 +34,7 @@ Qwen 3.5 35B (A3B)는 강력한 성능과 효율적인 추론을 제공하도록
 - Mixture-of-Experts (MoE, A3B) 아키텍처로 희소 활성화를 통한 효율적 스케일링
 - 9B 모델 대비 강화된 추론 및 코딩 성능
 - 최대 262,144 토큰의 긴 컨텍스트 추론 지원
-- 텍스트 및 이미지 입력을 지원하는 멀티모달 능력
+- 텍스트 및 이미지 입력을 지원하는 멀티모달 능력 (요청당 최대 1장, 2장 이상 전송 시 400 에러)
 - 강력한 다국어 이해 및 생성
 - 희소 전문가 활성화를 통한 효율적 추론
 - vLLM 등 고처리량 서빙 엔진과 호환
@@ -113,7 +113,7 @@ Key components:
 | 컨텍스트 길이 | 262,144 |
 | 최대 출력 길이 | 262,144 |
 | 양자화 | fp8 |
-| 입력 모달리티 | text, image |
+| 입력 모달리티 | text, image (요청당 최대 1장) |
 | 출력 모달리티 | text |
 | 지원 기능 | tools, reasoning, streaming, vision, json_mode, logprobs |
 | 샘플링 파라미터 | min_p, temperature, presence_penalty, repetition_penalty, stop, top_p, top_k, frequency_penalty, seed |

@@ -34,7 +34,7 @@ Qwen 3.5 35B (A3B) is a mixture-of-experts (MoE) large language model designed t
 - Mixture-of-Experts (MoE, A3B) architecture with sparse activation for efficient scaling
 - Stronger reasoning and coding performance compared to smaller models such as 9B variants
 - Supports long-context inference up to 262,144 tokens
-- Multimodal capability with text and image input support
+- Multimodal capability with text and image input support (max 1 image per request; sending 2+ images returns a 400 error)
 - Strong multilingual understanding and generation
 - Efficient inference through sparse expert activation
 - Compatible with high-throughput serving engines such as vLLM
@@ -113,7 +113,7 @@ Analyze images and extract insights through multimodal reasoning.
 | Context Length | 262,144 |
 | Max Output Length | 262,144 |
 | Quantization | fp8 |
-| Input Modalities | text, image |
+| Input Modalities | text, image (max 1 image per request) |
 | Output Modalities | text |
 | Supported Features | tools, reasoning, streaming, vision, json_mode, logprobs |
 | Sampling Parameters | min_p, temperature, presence_penalty, repetition_penalty, stop, top_p, top_k, frequency_penalty, seed |

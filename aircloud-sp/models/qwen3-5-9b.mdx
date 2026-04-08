@@ -9,7 +9,7 @@ description: "Compact and efficient 9B language model with multimodal support."
 
 ## Overview
 
-Qwen 3.5 9B is a compact yet capable open-source language model designed to balance performance and efficiency. It supports multilingual understanding and generation, long-context inference up to 262,144 tokens, and multimodal input with text and image support while producing text outputs. Compared with larger models, it offers lower serving cost and faster inference, making it well suited for chat assistants, coding help, document summarization, visual understanding, and other real-time AI applications.
+Qwen 3.5 9B is a compact yet capable open-source language model designed to balance performance and efficiency. It supports multilingual understanding and generation, long-context inference up to 131,072 tokens, and multimodal input with text and image support while producing text outputs. Compared with larger models, it offers lower serving cost and faster inference, making it well suited for chat assistants, coding help, document summarization, visual understanding, and other real-time AI applications.
 
 <CardGroup cols={3}>
   <Card title="Air API Playground" icon="play" href="https://ap-1.aieev.cloud:3007/models/qwen%2Fqwen3.5-9b">
@@ -33,8 +33,8 @@ Qwen 3.5 9B is a compact yet capable open-source language model designed to bala
 
 - Efficient 9B model suitable for cost-sensitive and latency-sensitive deployments
 - Strong multilingual understanding and generation
-- Supports long-context inference up to 262,144 tokens
-- Supports text and image input with text output
+- Supports long-context inference up to 131,072 tokens
+- Supports text and image input with text output (max 1 image per request; sending 2+ images returns a 400 error)
 - Includes support for reasoning, tools, streaming, vision, json_mode, and logprobs
 - Good balance between performance, latency, and serving cost
 - Compatible with optimized inference runtimes such as vLLM
@@ -112,10 +112,10 @@ Understand image inputs and generate text-based explanations or insights.
 
 | Property | Value |
 |----------|-------|
-| Context Length | 262,144 |
-| Max Output Length | 262,144 |
+| Context Length | 131,072 |
+| Max Output Length | 131,072 |
 | Quantization | fp8 |
-| Input Modalities | text, image |
+| Input Modalities | text, image (max 1 image per request) |
 | Output Modalities | text |
 | Supported Features | tools, reasoning, streaming, vision, json_mode, logprobs |
 
