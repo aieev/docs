@@ -25,6 +25,14 @@ docs/
     │   ├── index.mdx
     │   ├── quickstart.mdx
     │   └── ko/                         # 일반 문서 (한국어)
+    ├── models/
+    │   ├── index.mdx                   # 모델 페이지 (영어)
+    │   └── ko/
+    │       └── index.mdx               # 모델 페이지 (한국어)
+    ├── release-notes/
+    │   ├── index.mdx                   # 릴리즈 노트 (영어)
+    │   └── ko/
+    │       └── index.mdx               # 릴리즈 노트 (한국어)
     ├── logo/
     └── images/
 ```
@@ -158,15 +166,19 @@ openapi: "openapi-ko.json METHOD /path"
       {
         "language": "en",
         "tabs": [
-          { "tab": "Docs", "groups": [...] },
-          { "tab": "API Reference", "groups": [...] }
+          { "tab": "Documentation", "groups": [...] },
+          { "tab": "Models", "groups": [...] },
+          { "tab": "API Reference", "groups": [...] },
+          { "tab": "Release Notes", "groups": [...] }
         ]
       },
       {
         "language": "ko",
         "tabs": [
           { "tab": "문서", "groups": [...] },
-          { "tab": "API 레퍼런스", "groups": [...] }
+          { "tab": "모델", "groups": [...] },
+          { "tab": "API 레퍼런스", "groups": [...] },
+          { "tab": "릴리즈 노트", "groups": [...] }
         ]
       }
     ]
@@ -174,9 +186,14 @@ openapi: "openapi-ko.json METHOD /path"
 }
 ```
 
-- `tabs`: 상단 탭 네비게이션 (Docs | API Reference)
+- `tabs`: 상단 탭 네비게이션 (Documentation | Models | API Reference | Release Notes)
 - `groups`: 사이드바 그룹 (Overview, Endpoints, Replicas 등)
 - `pages`: 그룹 내 페이지 경로 (확장자 없이)
+
+> **주의: `dropdown` 타입을 사용하지 말 것.**
+> `"dropdown"`은 하위에 `"tabs"`를 포함하는 구조인데, `"groups"`를 직접 넣으면
+> Mintlify가 네비게이션 전체를 파싱하지 못해 탭이 모두 사라지는 버그가 발생함.
+> 반드시 `"tab"`을 사용할 것.
 
 ## 로컬 개발
 
