@@ -24,7 +24,14 @@ docs/
     ├── docs/                           # 일반 문서 (영어)
     │   ├── index.mdx
     │   ├── quickstart.mdx
+    │   ├── support/
+    │   │   └── release-notes.mdx       # 문서 릴리즈 노트 (영어)
+    │   ├── images/                     # 문서에 사용되는 이미지
+    │   │   ├── quickstart/             # Quickstart 관련 스크린샷
+    │   │   └── air-container/          # Air Container 배포 플로우 스크린샷
     │   └── ko/                         # 일반 문서 (한국어)
+    │       └── support/
+    │           └── release-notes.mdx   # 문서 릴리즈 노트 (한국어)
     ├── models/
     │   ├── index.mdx                   # 모델 목록 페이지 (영어)
     │   ├── qwen3-tts.mdx               # 모델 상세 페이지
@@ -36,9 +43,9 @@ docs/
     │       ├── qwen3-5-9b.mdx
     │       └── qwen3-5-35b-a3b.mdx
     ├── release-notes/
-    │   ├── index.mdx                   # 릴리즈 노트 (영어)
+    │   ├── index.mdx                   # 제품 릴리즈 노트 (영어) — 상단 탭
     │   └── ko/
-    │       └── index.mdx               # 릴리즈 노트 (한국어)
+    │       └── index.mdx               # 제품 릴리즈 노트 (한국어) — 상단 탭
     ├── logo/
     └── images/
 ```
@@ -231,9 +238,14 @@ openapi: "openapi-ko.json METHOD /path"
 
 ## 릴리즈 노트 규칙
 
-### 구조
+릴리즈 노트는 **제품 릴리즈 노트**와 **문서 릴리즈 노트** 두 종류가 있음.
 
-`<Update label="날짜">` 컴포넌트를 사용하여 타임라인 형태로 작성.
+### 제품 릴리즈 노트 (Product Updates)
+
+- 위치: `release-notes/index.mdx` (EN), `release-notes/ko/index.mdx` (KO)
+- 상단 탭 "Release Notes" / "릴리즈 노트"에 표시
+- AirCloud 플랫폼의 새 기능, 개선, 수정 사항 기록
+- `<Update label="날짜">` 컴포넌트를 사용하여 타임라인 형태로 작성
 
 ```mdx
 <Update label="April 2026">
@@ -246,6 +258,13 @@ openapi: "openapi-ko.json METHOD /path"
 
 </Update>
 ```
+
+### 문서 릴리즈 노트 (Documentation Updates)
+
+- 위치: `docs/support/release-notes.mdx` (EN), `docs/ko/support/release-notes.mdx` (KO)
+- Documentation 탭 → Support 그룹 내에 표시
+- 문서 구조 변경, 새 문서 추가, 가이드 개선 등 **문서 자체의 변경 사항**을 기록
+- `## YYYY-MM` 날짜 헤딩 아래 카테고리별로 불릿 리스트로 작성
 
 ### 한국어 작성 시 주의
 
