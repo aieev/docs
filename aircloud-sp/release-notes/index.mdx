@@ -1,0 +1,268 @@
+---
+title: "Product Updates"
+sidebarTitle: "Product Updates"
+description: "New features, fixes, and improvements for the AirCloud platform."
+mode: "wide"
+---
+
+<Update label="April 2026">
+
+## Air API General Availability
+
+Air API is now generally available. Access AirCloud's AI models through an OpenAI-compatible interface with transparent per-token pricing.
+
+- **OpenAI-compatible API**: Use existing OpenAI SDKs and code to access AirCloud models with minimal changes.
+- **Public pricing**: Per-token pricing is now published for all models with pay-as-you-go billing.
+- **Air API Playground**: Test models directly in the browser without writing code.
+
+<CardGroup cols={2}>
+  <Card title="Get started with Air API" href="/docs/air-api/index" icon="bolt">
+    Learn how to use Air API.
+  </Card>
+  <Card title="Browse Models" href="/models/index" icon="microchip">
+    Explore all available models and pricing.
+  </Card>
+</CardGroup>
+
+## External API expansion and new model endpoints
+
+The External API now covers full endpoint lifecycle management. Three new AI models are available on the platform.
+
+**External API: New endpoints**
+
+Programmatic control over your deployments is now complete with five new endpoints:
+
+- **List Endpoints**: Retrieve a paginated list of all accessible endpoints with status and configuration details.
+- **List Replicas**: View live replica status for any active endpoint.
+- **List/Get Log Files**: Access endpoint log files and download their contents for debugging.
+- **Patch Endpoint**: Update runtime settings (replica count, scaling config) for inactive endpoints.
+- **Get API Key Context**: Verify your API key's authentication scope and permissions.
+
+<CardGroup cols={2}>
+  <Card title="API Reference" href="/api-reference/introduction" icon="book">
+    View the complete API documentation.
+  </Card>
+</CardGroup>
+
+**New models available**
+
+Three new models are now available through the [Air API Playground](https://ap-1.aieev.cloud:3007):
+
+| Model | Type | Input | Output |
+|-------|------|-------|--------|
+| [Qwen3-TTS](/models/qwen3-tts) | Multilingual TTS with custom voice cloning | \$0/1M tokens | \$0/1M tokens |
+| [Qwen3.5-9B](/models/qwen3-5-9b) | Efficient 9B with vision support | \$0.05/1M tokens | \$0.15/1M tokens |
+| [Qwen3.5-35B-A3B](/models/qwen3-5-35b-a3b) | High-performance MoE (35B) | \$0.1625/1M tokens | \$1.3/1M tokens |
+
+<CardGroup cols={2}>
+  <Card title="Browse Models" href="/models/index" icon="microchip">
+    Explore all available models and pricing.
+  </Card>
+</CardGroup>
+
+</Update>
+
+<Update label="February 2026">
+
+## Jupyter Notebook, Web IDE, and Persistent Volume support
+
+New development environments and storage capabilities for GPU workloads.
+
+**Jupyter Notebook environment**
+
+GPU-powered Jupyter Notebook environments are now available as ready-to-use templates. Start developing immediately without any setup.
+
+- Pre-configured with TensorFlow, PyTorch, and other major libraries
+- Full GPU resource access for experimentation and model development
+- Browser-based access — no local installation required
+- Built-in Jupyter AI integration
+
+**Web IDE (Code) environment**
+
+A VS Code-based Web IDE is now available directly in the browser for cloud-native development.
+
+- Write and run code in the browser without a local development environment
+- Container-based isolated workspace for each session
+- Built-in development and debugging tools
+- Code assistant integration included
+
+**Persistent Volume**
+
+Data now persists beyond container lifecycle with the new persistent volume feature.
+
+- Store model checkpoints, logs, and data files across container restarts
+- Data management independent of container lifecycle
+- Ideal for long-running jobs and iterative experiments
+
+</Update>
+
+<Update label="January 2026">
+
+## External API initial release
+
+Launched the AirCloud External API for programmatic endpoint management. Control your inference endpoints without leaving your terminal or CI/CD pipeline:
+
+```bash
+# Check endpoint status
+curl -X GET https://external.aieev.cloud:5007/external/api/v1/endpoints/{id} \
+  -H "Authorization: Bearer YOUR_API_KEY"
+
+# Scale replicas
+curl -X POST https://external.aieev.cloud:5007/external/api/v1/endpoints/{id}/scale \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{"replica_count": 3}'
+```
+
+Key capabilities:
+
+- **Get Endpoint Status**: Check current status, configuration, and health of any endpoint.
+- **Start/Stop Endpoint**: Start or stop endpoints on demand via API.
+- **Scale Replicas**: Adjust replica count for active endpoints to match traffic requirements.
+
+<CardGroup cols={2}>
+  <Card title="API Reference" href="/api-reference/introduction" icon="book">
+    Get started with the External API.
+  </Card>
+</CardGroup>
+
+
+</Update>
+
+<Update label="October 2025">
+
+## Air API beta launch, observability, dashboards, and UX upgrades
+
+Air API launches in beta alongside major improvements to observability, project dashboards, and security.
+
+**Air API (beta)**
+
+An OpenAI-compatible inference API is now available in beta. Access AirCloud's AI models with a single API key.
+
+- OpenAI SDK compatible — swap models without changing your code
+- API key authentication with per-key endpoint access control
+- Test models interactively in the Playground
+
+**Observability & Logs**
+
+Runtime logs are now searchable, filterable, and exportable:
+
+- **Log download and bulk export**: Download logs for offline analysis with single or batch export.
+- **Advanced log filtering**: Regex-based search and time-range filtering for faster troubleshooting.
+- **Raw log (JSON) view**: Inspect unprocessed log data alongside the structured view.
+- **Scaling history**: Track autoscale events, timeout-triggered changes, and error-driven replica adjustments over time.
+
+**Dashboards**
+
+New project-level and organization-level dashboards for usage visibility:
+
+- **Project dashboards**: Monitor status and usage at the project level with dedicated views.
+- **Organization usage breakdown**: View usage and cost distribution by project, endpoint, and instance type.
+- **Extended request metrics**: Cumulative request counts, job error rates, and other operational metrics.
+- **Transaction history filtering**: Filter billing records by type and status.
+
+**UX Improvements**
+
+- **Korean language support**: Full Korean UI now available.
+- **First-time user onboarding**: Guided tutorial flow for new users to deploy their first endpoint.
+- **In-product feedback**: Submit feedback directly from within the platform.
+
+**Security & Access**
+
+- **OpenAI-compatible API keys**: Issue API keys with OpenAI-compatible format. Control which endpoints each key can access.
+- **HTTPS endpoints**: Enforced HTTPS for all inference endpoints.
+- **Path-based endpoint addressing**: Moved from port-based to path-based routing with support for custom endpoint URLs.
+
+</Update>
+
+<Update label="September 2025">
+
+## AirCloud General Availability
+
+AirCloud is now generally available. With this release, Air Container graduates from beta to GA. Deploy and operate your own container images on AirCloud's GPU infrastructure.
+
+**Air Container GA**
+
+- Deploy custom container images directly on GPU clusters
+- Autoscaling and scheduled scaling to match traffic patterns
+- Full control over runtimes, dependencies, and service configuration
+- Persistent storage integration for models and data
+
+<CardGroup cols={2}>
+  <Card title="Get started with Air Container" href="/docs/air-container/index" icon="container-storage">
+    Learn how to deploy containers.
+  </Card>
+</CardGroup>
+
+**Platform features**
+
+- **Time-based scaling**: Schedule minimum replica counts or enable/disable autoscaling by time of day.
+- **Custom endpoint URLs**: Use your own URL identifiers instead of system-generated IDs for cleaner integration.
+- **API Playground**: Test and integrate APIs interactively through the built-in Playground without writing code.
+- **One-click cluster deployment**: Reduce repetitive setup with templated, automated cluster deployments.
+- **Actionable error messages**: Detailed error guidance on failure screens to cut mean-time-to-resolution.
+- **Secure inference traffic (HTTPS)**: End-to-end HTTPS for all inference requests.
+
+</Update>
+
+<Update label="May 2025">
+
+## Usage insights, autoscaling controls, and performance tuning
+
+New visibility into costs, smarter autoscaling, and infrastructure-level performance hardening.
+
+- **Usage & billing dashboards**: Monthly and daily usage visualization to track credit consumption and spending trends at a glance.
+- **Autoscaling sensitivity controls**: Configure autoscale responsiveness (Heavy / Normal / Light) to match your workload's characteristics—from bursty inference to steady throughput.
+- **Deployment template reuse**: Reuse existing deployment configurations to quickly spin up new endpoints with the same settings.
+- **Predictable scaling behavior**: Adjusted scale-in/out policies to reduce variability under varying load patterns.
+- **Concurrent request handling improvements**: Improved stability for large-file transfers and concurrent request handling under peak traffic.
+
+</Update>
+
+<Update label="April 2025">
+
+## Zero-downtime operations
+
+Stability improvements so platform updates and scaling events don't disrupt running workloads.
+
+- **Zero-downtime updates**: Minimized service disruption during platform updates.
+- **Request drop prevention**: Improved handling during scale-in and updates to prevent in-flight request loss.
+- **Restart stability**: Event processing pipelines now handle component restarts without data loss or ordering issues.
+- **HTTPS adoption**: Began HTTPS rollout as the platform security baseline.
+
+</Update>
+
+<Update label="February 2025">
+
+## Billing and team collaboration
+
+Introduced credit-based billing and multi-user collaboration so teams can manage costs and share resources.
+
+- **Credits-based billing**: Manage usage costs through a prepaid credit system with top-up and balance tracking.
+- **Team invites**: Invite team members to your organization via email for collaborative access to shared resources.
+- **Reserved capacity**: Distinguish between reserved (term-based) and on-demand resources for predictable cost planning.
+- **Billing automation**: Automated usage collection and settlement processing on scheduled intervals.
+
+</Update>
+
+<Update label="January 2025">
+
+## Air Container beta launch and platform foundation upgrades
+
+Air Container beta is now available. Deploy custom container images on GPU infrastructure for the first time on AirCloud.
+
+**Air Container (beta)**
+
+- Deploy custom container images on GPU clusters
+- Basic autoscaling and monitoring support
+- Container health checks with automatic recovery
+
+**Infrastructure improvements**
+
+- **Custom metrics for user workloads**: Collect and display per-container metrics (e.g., vLLM) with configurable metric targets.
+- **Improved health checks**: Better readiness detection for containers with long boot times to prevent premature termination.
+- **Faster runtime environments**: Lighter, faster packaging and deployment structures for reduced startup times.
+- **Offline-friendly deployment**: Support for restricted-network environments with offline operation scenarios.
+- **Better model caching**: More efficient HuggingFace model cache sharing and management for faster cold starts.
+- **Reliable event capture**: Hardened autoscale and operational event capture for more stable scaling decisions.
+
+</Update>

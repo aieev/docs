@@ -1,33 +1,30 @@
 ---
-title: "Introduction"
-description: "Example section for showcasing API endpoints"
+title: "Overview"
+description: "Use the AirCloud External API to programmatically manage your endpoints."
 ---
 
-<Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
-</Note>
+The AirCloud External API provides programmatic access to your container endpoints. Integrate GPU infrastructure into your applications, workflows, and automation systems.
 
-## Welcome
+## Available resources
 
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
-
-<Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
->
-  View the OpenAPI specification file
-</Card>
+- **Endpoints**: Start, stop, scale, and monitor container endpoints.
+- **Replicas**: View live replica status for active endpoints.
+- **Logs**: Access endpoint log files and their contents.
 
 ## Authentication
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
+All requests require an [API key](/docs/quickstart) in the request headers. Pass your API key as a Bearer token in the `Authorization` header.
 
-```json
-"security": [
-  {
-    "bearerAuth": []
-  }
-]
+```bash
+Authorization: Bearer YOUR_API_KEY
 ```
+
+<Note>
+  API Keys can only access the projects and endpoints specified at creation time.
+</Note>
+
+## Important notes
+
+- Replica scaling is only available when the endpoint is **active**.
+- Endpoints with autoscaling enabled cannot be manually scaled.
+- Endpoint settings can only be patched (PATCH) when the endpoint is **inactive**.

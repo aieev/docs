@@ -8,6 +8,12 @@
     "dark": "#0D9373"
   },
   "favicon": "/favicon.svg",
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/docs/index"
+    }
+  ],
   "icons": {
     "library": "lucide"
   },
@@ -15,11 +21,9 @@
     "languages": [
       {
         "language": "en",
-        "dropdowns": [
+        "tabs": [
           {
-            "dropdown": "Documentation",
-            "icon": "book",
-            "description": "Aircloud Documentation",
+            "tab": "Documentation",
             "groups": [
               {
                 "group": "Get started",
@@ -65,16 +69,80 @@
                 ]
               }
             ]
+          },
+          {
+            "tab": "Models",
+            "groups": [
+              {
+                "group": "Models",
+                "pages": [
+                  "models/index",
+                  "models/qwen3-tts",
+                  "models/qwen3-5-9b",
+                  "models/qwen3-5-35b-a3b"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "API Reference",
+            "groups": [
+              {
+                "group": "Overview",
+                "pages": [
+                  "api-reference/introduction"
+                ]
+              },
+              {
+                "group": "Endpoints",
+                "pages": [
+                  "api-reference/endpoint/list-endpoints",
+                  "api-reference/endpoint/get-endpoint",
+                  "api-reference/endpoint/start-endpoint",
+                  "api-reference/endpoint/stop-endpoint",
+                  "api-reference/endpoint/scale-endpoint",
+                  "api-reference/endpoint/patch-endpoint"
+                ]
+              },
+              {
+                "group": "Replicas",
+                "pages": [
+                  "api-reference/endpoint/list-replicas"
+                ]
+              },
+              {
+                "group": "Logs",
+                "pages": [
+                  "api-reference/endpoint/list-logs",
+                  "api-reference/endpoint/get-log-content"
+                ]
+              },
+              {
+                "group": "Authentication",
+                "pages": [
+                  "api-reference/endpoint/get-me"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "Release Notes",
+            "groups": [
+              {
+                "group": "Release Notes",
+                "pages": [
+                  "release-notes/index"
+                ]
+              }
+            ]
           }
         ]
       },
       {
         "language": "ko",
-        "dropdowns": [
+        "tabs": [
           {
-            "dropdown": "문서",
-            "icon": "book",
-            "description": "Aircloud 문서",
+            "tab": "문서",
             "groups": [
               {
                 "group": "시작하기",
@@ -117,6 +185,72 @@
                   "docs/ko/support/faq",
                   "docs/ko/support/contact-and-feedback",
                   "docs/ko/support/release-notes"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "모델",
+            "groups": [
+              {
+                "group": "모델",
+                "pages": [
+                  "models/ko/index",
+                  "models/ko/qwen3-tts",
+                  "models/ko/qwen3-5-9b",
+                  "models/ko/qwen3-5-35b-a3b"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "API 레퍼런스",
+            "groups": [
+              {
+                "group": "개요",
+                "pages": [
+                  "api-reference/ko/introduction"
+                ]
+              },
+              {
+                "group": "엔드포인트",
+                "pages": [
+                  "api-reference/ko/endpoint/list-endpoints",
+                  "api-reference/ko/endpoint/get-endpoint",
+                  "api-reference/ko/endpoint/start-endpoint",
+                  "api-reference/ko/endpoint/stop-endpoint",
+                  "api-reference/ko/endpoint/scale-endpoint",
+                  "api-reference/ko/endpoint/patch-endpoint"
+                ]
+              },
+              {
+                "group": "레플리카",
+                "pages": [
+                  "api-reference/ko/endpoint/list-replicas"
+                ]
+              },
+              {
+                "group": "로그",
+                "pages": [
+                  "api-reference/ko/endpoint/list-logs",
+                  "api-reference/ko/endpoint/get-log-content"
+                ]
+              },
+              {
+                "group": "인증",
+                "pages": [
+                  "api-reference/ko/endpoint/get-me"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "릴리즈 노트",
+            "groups": [
+              {
+                "group": "릴리즈 노트",
+                "pages": [
+                  "release-notes/ko/index"
                 ]
               }
             ]

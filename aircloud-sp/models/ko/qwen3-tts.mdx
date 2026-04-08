@@ -1,0 +1,144 @@
+---
+title: "Qwen3-TTS"
+description: "커스텀 보이스 클로닝을 지원하는 다국어 텍스트 음성 변환 모델."
+---
+
+<Info>
+  **모델 ID:** `qwen/qwen3-tts-customvoice` | **파라미터:** 1.7B | **출시일:** 2026-01-22
+</Info>
+
+## 개요
+
+Qwen3-TTS-12Hz-1.7B-CustomVoice는 Qwen3 계열의 다국어 텍스트 음성 변환 모델입니다. 17억 개의 파라미터로 영어, 중국어, 일본어, 한국어에서 고품질 음성 합성을 제공합니다. 9개의 프리셋 음성과 커스텀 보이스 클로닝을 지원하여 다양한 활용이 가능합니다. 12Hz 토큰 레이트로 자연스러운 음성 출력을 유지하면서 효율적인 오디오 생성을 제공합니다.
+
+<CardGroup cols={3}>
+  <Card title="Air API Playground" icon="play" href="https://ap-1.aieev.cloud:3007/ko/models/qwen%2Fqwen3-tts-customvoice">
+    플레이그라운드에서 모델을 체험하세요.
+  </Card>
+  <Card title="AIR Container로 배포" icon="container-storage" href="/docs/ko/air-container/deploy-a-container">
+    AIR Container로 배포하세요.
+  </Card>
+  <Card title="API 사용 가이드" icon="book" href="/docs/ko/air-api/api-usage-guide">
+    API 사용법을 알아보세요.
+  </Card>
+</CardGroup>
+
+## 가격
+
+| 입력 | 출력 |
+|------|------|
+| \$0 / 1M 토큰 | \$0 / 1M 토큰 |
+
+## 주요 기능
+
+- 1.7B 파라미터 모델로 고품질 다국어 음성 합성
+- 영어, 중국어, 일본어, 한국어 지원
+- 9개의 다양한 프리셋 음성과 커스텀 보이스 지원
+- 12Hz 토큰 레이트로 효율적인 오디오 생성
+- Qwen3 아키텍처 기반의 강력한 언어 이해 능력
+
+## 활용 사례
+
+### 나레이션 생성
+
+비디오 콘텐츠 및 오디오북을 위한 자연스러운 음성 나레이션을 생성합니다.
+
+**입력 텍스트:**
+> Life is like a box of chocolates. You never know what you're gonna get.
+
+### 음성 안내
+
+다양한 음성 스타일로 음성 안내 및 알림을 생성합니다.
+
+**입력 텍스트:**
+> Your order has been confirmed and will be delivered within 3 business days.
+
+### 대화형 AI 음성
+
+챗봇 및 가상 어시스턴트를 위한 자연스러운 음성 응답을 생성합니다.
+
+**입력 텍스트:**
+> I'd be happy to help you with that! Let me check your account details.
+
+## 파라미터
+
+| 파라미터 | 타입 | 필수 | 기본값 | 설명 |
+|----------|------|------|--------|------|
+| `input` | string | 필수 | - | 음성으로 변환할 텍스트 |
+| `voice` | enum | 선택 | `"serena"` | 음성 프리셋 |
+| `response_format` | enum | 선택 | `"mp3"` | 출력 오디오 포맷 |
+| `speed` | number | 선택 | 1 | 음성 속도 배율 (0.25-4.0) |
+
+## 시작하기
+
+<Steps>
+  <Step title="API 키 발급하기">
+    [AirCloud 계정](https://aieev.com)에서 API 키를 발급받습니다.
+  </Step>
+  <Step title="코드 실행하기">
+    아래 코드에서 `YOUR_API_KEY` 자리에 실제 발급받은 키를 넣어 실행하세요. 언어별(Python, cURL, Node.js) 코드 예시를 선택할 수 있습니다.
+  </Step>
+</Steps>
+
+<CodeGroup>
+```python Python
+import requests
+
+response = requests.post(
+    "https://external.aieev.cloud:5007/ai/api/v1/audio/speech",
+    headers={
+        "Authorization": "Bearer YOUR_API_KEY",
+        "Content-Type": "application/json"
+    },
+    json={
+        "model": "qwen/qwen3-tts-customvoice",
+        "input": "Hello, welcome to AirCloud!",
+        "voice": "serena",
+        "response_format": "mp3"
+    }
+)
+
+with open("output.mp3", "wb") as f:
+    f.write(response.content)
+```
+
+```bash cURL
+curl --request POST \
+  --url https://external.aieev.cloud:5007/ai/api/v1/audio/speech \
+  --header 'Authorization: Bearer YOUR_API_KEY' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "model": "qwen/qwen3-tts-customvoice",
+    "input": "Hello, welcome to AirCloud!",
+    "voice": "serena",
+    "response_format": "mp3"
+  }' \
+  --output output.mp3
+```
+
+```javascript Node.js
+const response = await fetch(
+  "https://external.aieev.cloud:5007/ai/api/v1/audio/speech",
+  {
+    method: "POST",
+    headers: {
+      "Authorization": "Bearer YOUR_API_KEY",
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      model: "qwen/qwen3-tts-customvoice",
+      input: "Hello, welcome to AirCloud!",
+      voice: "serena",
+      response_format: "mp3"
+    })
+  }
+);
+
+const buffer = await response.arrayBuffer();
+require("fs").writeFileSync("output.mp3", Buffer.from(buffer));
+```
+</CodeGroup>
+
+## 태그
+
+`open-source` `tts` `1.7B` `custom-voice` `multilingual` `multi-voice`
