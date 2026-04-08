@@ -176,17 +176,33 @@ New project-level and organization-level dashboards for usage visibility:
 
 <Update label="September 2025">
 
-## AirCloud General Availability
+## AirCloud General Availability — Air Container GA
 
-AirCloud is now generally available. This milestone release introduces API-first workflows, custom endpoints, and scheduled scaling for production inference workloads.
+AirCloud is now generally available. **Air Container** graduates from beta to GA, enabling you to deploy and operate custom container images on GPU infrastructure.
 
-- **Time-based scaling**: Schedule minimum replica counts or enable/disable autoscaling by time of day. Match traffic patterns and reduce idle costs automatically.
-- **Custom endpoint URLs**: Use your own URL identifiers instead of system-generated IDs for cleaner integration and easier sharing.
+**Air Container (GA)**
+
+Air Container is now production-ready after a successful beta period. Deploy your own containers on AirCloud's GPU clusters.
+
+- Deploy custom container images directly on GPU clusters
+- Autoscaling and scheduled scaling to match traffic patterns
+- Full control over runtimes, dependencies, and service configuration
+- Persistent storage integration for models and data
+
+<CardGroup cols={2}>
+  <Card title="Get started with Air Container" href="/docs/air-container/index" icon="container-storage">
+    Learn how to deploy containers.
+  </Card>
+</CardGroup>
+
+**Platform features**
+
+- **Time-based scaling**: Schedule minimum replica counts or enable/disable autoscaling by time of day.
+- **Custom endpoint URLs**: Use your own URL identifiers instead of system-generated IDs for cleaner integration.
 - **API Playground**: Test and integrate APIs interactively through the built-in Playground without writing code.
 - **One-click cluster deployment**: Reduce repetitive setup with templated, automated cluster deployments.
 - **Actionable error messages**: Detailed error guidance on failure screens to cut mean-time-to-resolution.
 - **Secure inference traffic (HTTPS)**: End-to-end HTTPS for all inference requests.
-- **Resource management improvements**: Enhanced resource allocation and operational controls for production workloads.
 
 </Update>
 
@@ -232,9 +248,17 @@ Introduced credit-based billing and multi-user collaboration so teams can manage
 
 <Update label="January 2025">
 
-## Platform foundation upgrades
+## Air Container beta launch and platform foundation upgrades
 
-Infrastructure improvements for observability, caching, and deployment flexibility.
+Air Container beta is now available. Deploy custom container images on GPU infrastructure for the first time on AirCloud.
+
+**Air Container (beta)**
+
+- Deploy custom container images on GPU clusters
+- Basic autoscaling and monitoring support
+- Container health checks with automatic recovery
+
+**Infrastructure improvements**
 
 - **Custom metrics for user workloads**: Collect and display per-container metrics (e.g., vLLM) with configurable metric targets.
 - **Improved health checks**: Better readiness detection for containers with long boot times to prevent premature termination.
