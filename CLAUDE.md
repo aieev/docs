@@ -26,9 +26,15 @@ docs/
     │   ├── quickstart.mdx
     │   └── ko/                         # 일반 문서 (한국어)
     ├── models/
-    │   ├── index.mdx                   # 모델 페이지 (영어)
+    │   ├── index.mdx                   # 모델 목록 페이지 (영어)
+    │   ├── qwen3-tts.mdx               # 모델 상세 페이지
+    │   ├── qwen3-5-9b.mdx
+    │   ├── qwen3-5-35b-a3b.mdx
     │   └── ko/
-    │       └── index.mdx               # 모델 페이지 (한국어)
+    │       ├── index.mdx               # 모델 목록 페이지 (한국어)
+    │       ├── qwen3-tts.mdx
+    │       ├── qwen3-5-9b.mdx
+    │       └── qwen3-5-35b-a3b.mdx
     ├── release-notes/
     │   ├── index.mdx                   # 릴리즈 노트 (영어)
     │   └── ko/
@@ -194,6 +200,60 @@ openapi: "openapi-ko.json METHOD /path"
 > `"dropdown"`은 하위에 `"tabs"`를 포함하는 구조인데, `"groups"`를 직접 넣으면
 > Mintlify가 네비게이션 전체를 파싱하지 못해 탭이 모두 사라지는 버그가 발생함.
 > 반드시 `"tab"`을 사용할 것.
+
+## 모델 페이지 규칙
+
+### 모델 상세 페이지 구조
+
+각 모델 페이지는 아래 구조를 따름:
+- **Info 블록**: 모델 ID, 파라미터 수, 출시일
+- **개요**: 모델 설명
+- **CardGroup**: 플랫폼 링크 (Playground, Container 배포, API 가이드)
+- **가격**: 입력/출력 토큰 단가
+- **주요 기능**: 불릿 리스트
+- **활용 사례**: CodeGroup으로 입출력 예시
+- **파라미터**: API 요청 파라미터 테이블
+- **모델 세부정보**: 컨텍스트 길이, 양자화, 모달리티 등
+- **시작하기**: Steps + CodeGroup (Python, cURL, Node.js)
+
+### 플랫폼 링크 규칙
+
+- **EN**: `https://ap-1.aieev.cloud:3007/models/qwen%2F{model-name}`
+- **KO**: `https://ap-1.aieev.cloud:3007/ko/models/qwen%2F{model-name}`
+- EN 페이지는 EN docs 경로(`/docs/air-api/...`), KO 페이지는 KO docs 경로(`/docs/ko/air-api/...`)로 링크
+
+### 신규 모델 추가 시
+
+1. `models/{name}.mdx` (영어) 생성
+2. `models/ko/{name}.mdx` (한국어) 생성
+3. `models/index.mdx` / `models/ko/index.mdx` 테이블에 추가
+4. `docs.json` EN/KO Models 탭에 페이지 등록
+
+## 릴리즈 노트 규칙
+
+### 구조
+
+`<Update label="날짜">` 컴포넌트를 사용하여 타임라인 형태로 작성.
+
+```mdx
+<Update label="April 2026">
+
+## 제목
+
+설명 문단.
+
+- **기능명**: 설명.
+
+</Update>
+```
+
+### 한국어 작성 시 주의
+
+- 번역투를 피하고 자연스러운 한국어로 작성
+- "~를 제공합니다" 보다 "~할 수 있습니다" 선호
+- "토글" → "활성화/비활성화", "감쇠" → "정책 조정" 등 기술 용어 자연스럽게
+- "포맷된 화면" → "정리된 로그 화면" 등 직역 대신 의역
+- 내부 테스트/PoC 내용은 릴리즈 노트에 포함하지 않음
 
 ## 로컬 개발
 
