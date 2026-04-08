@@ -1,38 +1,72 @@
 ---
-title: "Release Notes"
-sidebarTitle: "Release Notes"
-description: "Latest updates and changes to AirCloud."
+title: "Product Updates"
+sidebarTitle: "Product Updates"
+description: "New features, fixes, and improvements for the AirCloud platform."
 mode: "wide"
 ---
 
-## April 2026
+<Update label="April 2026">
 
-### External API expansion and new model endpoints
+## External API expansion and new model endpoints
 
-New External API endpoints for programmatic management, plus three new AI models available on the platform.
+The External API now covers full endpoint lifecycle management. Three new AI models are available on the platform for inference.
 
-- **External API: New endpoints added**: List Endpoints, List Replicas, List/Get Log Files, Patch Endpoint, and Get API Key Context for full programmatic control over your deployments.
-- **New models available**: [Qwen3-TTS](/models/qwen3-tts) (multilingual TTS with custom voice), [Qwen3.5-9B](/models/qwen3-5-9b) (efficient 9B with vision), and [Qwen3.5-35B-A3B](/models/qwen3-5-35b-a3b) (high-performance MoE) are now available through the [Air API Playground](https://ap-1.aieev.cloud:3007).
+**External API: New endpoints**
+
+Programmatic control over your deployments is now complete with five new endpoints:
+
+- **List Endpoints**: Retrieve a paginated list of all accessible endpoints with status and configuration details.
+- **List Replicas**: View live replica status for any active endpoint.
+- **List/Get Log Files**: Access endpoint log files and download their contents for debugging.
+- **Patch Endpoint**: Update runtime settings (replica count, scaling config) for inactive endpoints.
+- **Get API Key Context**: Verify your API key's authentication scope and permissions.
 
 <CardGroup cols={2}>
   <Card title="API Reference" href="/api-reference/introduction" icon="book">
     View the complete API documentation.
   </Card>
+</CardGroup>
+
+**New models available**
+
+Three new models are now available through the [Air API Playground](https://ap-1.aieev.cloud:3007):
+
+| Model | Type | Input | Output |
+|-------|------|-------|--------|
+| [Qwen3-TTS](/models/qwen3-tts) | Multilingual TTS with custom voice cloning | \$0/1M tokens | \$0/1M tokens |
+| [Qwen3.5-9B](/models/qwen3-5-9b) | Efficient 9B with vision support | \$0.05/1M tokens | \$0.15/1M tokens |
+| [Qwen3.5-35B-A3B](/models/qwen3-5-35b-a3b) | High-performance MoE (35B) | \$0.1625/1M tokens | \$1.3/1M tokens |
+
+<CardGroup cols={2}>
   <Card title="Browse Models" href="/models/index" icon="microchip">
-    Explore all available models.
+    Explore all available models and pricing.
   </Card>
 </CardGroup>
 
----
+</Update>
 
-## January 2026
+<Update label="January 2026">
 
-### External API initial release and high-volume TTS validation
+## External API initial release
 
-Launched the AirCloud External API and validated production-grade TTS capacity.
+Launched the AirCloud External API for programmatic endpoint management. Control your inference endpoints without leaving your terminal or CI/CD pipeline:
 
-- **External API launch**: Programmatic endpoint management with Get Endpoint Status, Start/Stop Endpoint, and Scale Replicas via REST API.
-- **High-volume TTS validation**: Verified platform capacity for 800K+ daily TTS requests with low-latency streaming requirements, supporting phased migration from small-scale to full production traffic.
+```bash
+# Check endpoint status
+curl -X GET https://external.aieev.cloud:5007/external/api/v1/endpoints/{id} \
+  -H "Authorization: Bearer YOUR_API_KEY"
+
+# Scale replicas
+curl -X POST https://external.aieev.cloud:5007/external/api/v1/endpoints/{id}/scale \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{"replica_count": 3}'
+```
+
+Key capabilities:
+
+- **Get Endpoint Status**: Check current status, configuration, and health of any endpoint.
+- **Start/Stop Endpoint**: Start or stop endpoints on demand via API.
+- **Scale Replicas**: Adjust replica count for active endpoints to match traffic requirements.
 
 <CardGroup cols={2}>
   <Card title="API Reference" href="/api-reference/introduction" icon="book">
@@ -40,98 +74,113 @@ Launched the AirCloud External API and validated production-grade TTS capacity.
   </Card>
 </CardGroup>
 
----
+## High-volume TTS capacity validation
 
-## October 2025
+Validated platform capacity for production-grade text-to-speech workloads:
 
-### Observability, dashboards, API keys, and UX upgrades
+- Verified **800K+ daily TTS requests** with low-latency streaming requirements.
+- Confirmed phased migration path from small-scale pilot to full production traffic.
+- Tested large container delivery with caching and pre-provisioning strategies to minimize cold start impact.
 
-Major release bringing comprehensive observability, project dashboards, and security enhancements.
+</Update>
+
+<Update label="October 2025">
+
+## Observability, dashboards, API keys, and UX upgrades
+
+Major release bringing comprehensive observability, project dashboards, and security enhancements to the platform.
 
 **Observability & Logs**
-- **Log download and bulk export**: Download and analyze logs offline with single or batch export.
-- **Advanced log filtering**: Regex-based and time-range filtering for faster troubleshooting.
+
+Runtime logs are now searchable, filterable, and exportable:
+
+- **Log download and bulk export**: Download logs for offline analysis with single or batch export.
+- **Advanced log filtering**: Regex-based search and time-range filtering for faster troubleshooting.
 - **Raw log (JSON) view**: Inspect unprocessed log data alongside the formatted view.
-- **Scaling history logs**: Track autoscale events, timeout-triggered changes, and error-driven replica adjustments over time.
+- **Scaling history**: Track autoscale events, timeout-triggered changes, and error-driven replica adjustments over time.
 
 **Dashboards**
-- **Project-level dashboards**: Monitor status and usage at the project level with dedicated dashboard views.
-- **Enhanced filtering and sorting**: Find relevant metrics and endpoints faster with improved search and sort controls.
-- **Extended request metrics**: Cumulative request counts, job error rates, and other operational metrics for quick health checks.
+
+New project-level and organization-level dashboards for usage visibility:
+
+- **Project dashboards**: Monitor status and usage at the project level with dedicated views.
+- **Organization usage breakdown**: View usage and cost distribution by project, endpoint, and instance type.
+- **Extended request metrics**: Cumulative request counts, job error rates, and other operational metrics.
+- **Transaction history filtering**: Filter billing records by type and status.
 
 **UX Improvements**
-- **Organization-level usage breakdown**: View usage and cost distribution by project, endpoint, and instance type.
-- **Transaction history filtering**: Filter billing records by type and status.
+
 - **Korean language support**: Full Korean UI now available.
-- **First-time user onboarding**: Guided tutorial flow for new users.
+- **First-time user onboarding**: Guided tutorial flow for new users to deploy their first endpoint.
 - **In-product feedback**: Submit feedback directly from within the platform.
 
 **Security & Access**
-- **OpenAI-compatible API keys**: Issue API keys with OpenAI-compatible format and control per-key endpoint access.
+
+- **OpenAI-compatible API keys**: Issue API keys with OpenAI-compatible format. Control which endpoints each key can access.
 - **HTTPS endpoints**: Enforced HTTPS for all inference endpoints.
 - **Path-based endpoint addressing**: Moved from port-based to path-based routing with support for custom endpoint URLs.
 
----
+</Update>
 
-## September 2025
+<Update label="September 2025">
 
-### AirCloud General Availability — API-first platform with scheduled scaling
+## AirCloud General Availability
 
-AirCloud is now generally available. This milestone release introduces API-first workflows, custom endpoints, and scheduled scaling.
+AirCloud is now generally available. This milestone release introduces API-first workflows, custom endpoints, and scheduled scaling for production inference workloads.
 
-- **Time-based scaling**: Schedule minimum replica counts or toggle autoscaling by time of day to match traffic patterns and reduce idle costs.
-- **Custom endpoint URLs**: Use your own custom URL identifiers instead of system-generated IDs for cleaner integration.
-- **API Playground**: Test and integrate APIs interactively through the built-in Playground experience.
+- **Time-based scaling**: Schedule minimum replica counts or toggle autoscaling by time of day. Match traffic patterns and reduce idle costs automatically.
+- **Custom endpoint URLs**: Use your own URL identifiers instead of system-generated IDs for cleaner integration and easier sharing.
+- **API Playground**: Test and integrate APIs interactively through the built-in Playground without writing code.
 - **One-click cluster deployment**: Reduce repetitive setup with templated, automated cluster deployments.
 - **Actionable error messages**: Detailed error guidance on failure screens to cut mean-time-to-resolution.
-- **Secure inference traffic (HTTPS)**: End-to-end HTTPS for inference requests to meet security and compliance requirements.
+- **Secure inference traffic (HTTPS)**: End-to-end HTTPS for all inference requests.
 - **Resource management improvements**: Enhanced resource allocation and operational controls for production workloads.
 
----
+</Update>
 
-## May 2025
+<Update label="May 2025">
 
-### Usage insights, autoscaling usability, and scale tuning
+## Usage insights, autoscaling controls, and performance tuning
 
-New visibility into costs, smarter autoscaling controls, and performance hardening.
+New visibility into costs, smarter autoscaling, and infrastructure-level performance hardening.
 
-- **Usage & billing dashboards**: Monthly and daily usage visualization to track credit consumption and spending trends.
-- **Autoscaling sensitivity controls**: Configure autoscale responsiveness (Heavy / Normal / Light) to match workload characteristics.
-- **Deployment template reuse**: Copy existing deployment configurations to quickly create new deployments with the same settings.
+- **Usage & billing dashboards**: Monthly and daily usage visualization to track credit consumption and spending trends at a glance.
+- **Autoscaling sensitivity controls**: Configure autoscale responsiveness (Heavy / Normal / Light) to match your workload's characteristics—from bursty inference to steady throughput.
+- **Deployment template reuse**: Copy existing deployment configurations to quickly spin up new endpoints with the same settings.
 - **Predictable scaling behavior**: Tuned scale-in/out policies and dampening for more consistent autoscaling under varying load patterns.
-- **High-concurrency delivery**: Performance tuning for large-file transfers and concurrent request handling to improve stability under peak traffic.
+- **High-concurrency delivery**: Performance tuning for large-file transfers and concurrent request handling under peak traffic.
 
----
+</Update>
 
-## April 2025
+<Update label="April 2025">
 
-### Zero-downtime hardening
+## Zero-downtime operations
 
-Stability improvements for seamless updates and restarts.
+Stability improvements so platform updates and scaling events don't disrupt running workloads.
 
 - **Zero-downtime updates**: Reduced service impact during platform updates and rolling restarts.
-- **Graceful worker drain**: Workers exit cleanly during scale-in and updates, preventing request drops.
+- **Graceful worker drain**: Workers exit cleanly during scale-in and updates, preventing in-flight request drops.
 - **Restart resilience**: Event processing pipelines now handle component restarts without data loss or ordering issues.
 - **HTTPS adoption**: Began HTTPS rollout as the platform security baseline.
 
----
+</Update>
 
-## February 2025
+<Update label="February 2025">
 
-### Billing and team collaboration foundations
+## Billing and team collaboration
 
-Introduced credit-based billing and multi-user collaboration.
+Introduced credit-based billing and multi-user collaboration so teams can manage costs and share resources.
 
 - **Credits-based billing**: Manage usage costs through a prepaid credit system with top-up and balance tracking.
 - **Team invites**: Invite team members to your organization via email for collaborative access to shared resources.
 - **Reserved capacity**: Distinguish between reserved (term-based) and on-demand resources for predictable cost planning.
 - **Billing automation**: Automated usage collection and settlement processing on scheduled intervals.
 
----
+</Update>
 
-## January 2025
+<Update label="January 2025">
 
-### Platform foundation upgrades
+## Platform foundation upgrades
 
 Infrastructure improvements for observability, caching, and deployment flexibility.
 
@@ -141,3 +190,5 @@ Infrastructure improvements for observability, caching, and deployment flexibili
 - **Offline-friendly deployment**: Support for restricted-network environments with offline operation scenarios.
 - **Better model caching**: More efficient HuggingFace model cache sharing and management for faster cold starts.
 - **Reliable event capture**: Hardened autoscale and operational event capture for more stable scaling decisions.
+
+</Update>
