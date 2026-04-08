@@ -1,0 +1,67 @@
+---
+title: "Container Runtime Reference"
+description: "Registry, ports, env vars, and health checks"
+icon: "settings"
+---
+
+This page summarizes common runtime settings used when deploying with Air Container.
+
+## Supported registries (examples)
+
+- GCP Artifact Registry
+- AWS ECR
+- GitHub Container Registry
+- Docker Hub
+
+<Note>
+  Private registries require authentication.
+</Note>
+
+## Common configuration fields
+
+### Start command
+
+The command used to start the container process.
+
+### Port
+
+The port your service listens on for external requests.
+
+### Health check URL
+
+A path used to verify the container is healthy.
+
+### Max wait time
+
+The maximum time allowed for startup.
+
+### Boot wait time
+
+How long to wait for the service to become ready.
+
+### Environment variables
+
+Key-value configuration required by your application.
+
+### Endpoint ID
+
+An optional identifier you can use for endpoint tracking.
+
+## Operational recommendations
+
+- Manage public vs. private registry settings explicitly
+- Validate ports and health check paths before deployment
+- Re-check production environment variables before deploying
+- After changes, review logs and usage together
+
+## Related docs
+
+<Columns cols={2}>
+  <Card title="Deploy a Container" icon="container" href="/docs/air-container/deploy-a-container" cta="Deploy" arrow="true">
+    Deployment flow and configuration steps.
+  </Card>
+
+  <Card title="Monitoring and Troubleshooting" icon="radar" href="/docs/air-container/monitoring-and-troubleshooting" cta="Monitor" arrow="true">
+    What to check in Usage, Logs, and Settings.
+  </Card>
+</Columns>

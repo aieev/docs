@@ -1,0 +1,57 @@
+---
+title: "인프라 및 리소스 타입"
+description: "Cloud Type과 인스턴스 타입 이해하기"
+icon: "server"
+---
+
+Aircloud에서 사용할 수 있는 인프라 유형과 리소스 타입을 정리한 문서입니다.
+
+## Cloud Type
+
+Aircloud에서는 워크로드 특성에 따라 서로 다른 Cloud Type을 선택할 수 있습니다.
+
+### Aircloud
+
+비용 효율과 유연성이 중요한 워크로드에 적합한 인프라 옵션입니다.
+
+### Aircloud+
+
+더 높은 수준의 안정성, 성능, 예측 가능한 운영 환경이 중요한 워크로드에 적합합니다.
+
+PPT 기준으로는 **Air Cloud +(plus)**(자사 보유 디바이스 기반 인프라)와 동일한 옵션입니다.
+
+### Aircloud 0
+
+개인, PC방, 공급 파트너사 기반 인프라를 활용하는 옵션입니다.
+
+PPT 기준으로는 **Air Cloud 0(zero)**(개인/PC방/공급 파트너사 기반 인프라)와 동일한 옵션입니다.
+
+## 인스턴스 타입
+
+컨테이너 배포 시 워크로드에 맞는 GPU 인스턴스 타입을 선택할 수 있습니다. 예시는 다음과 같습니다.
+
+- RTX 4070 Ti Super
+- RTX 4070 Super
+- RTX 4090
+- RTX 5090
+- RTX PRO 6000
+
+## 선택 시 고려할 사항
+
+- 필요한 응답 속도
+- 모델 크기와 메모리 요구사항
+- 예상 요청량
+- Replica 운영 계획
+- Autoscaling 사용 여부
+
+## 관련 문서
+
+<Columns cols={2}>
+  <Card title="컨테이너 배포" icon="container" href="/docs/ko/air-container/deploy-a-container" cta="배포하기" arrow="true">
+    컨테이너 배포 단계와 주요 설정 흐름을 안내합니다.
+  </Card>
+
+  <Card title="오토스케일링 및 스케줄링" icon="activity" href="/docs/ko/air-container/autoscaling-and-scheduling" cta="설정 보기" arrow="true">
+    Autoscaling/Scheduled Scaling 설정을 정리합니다.
+  </Card>
+</Columns>

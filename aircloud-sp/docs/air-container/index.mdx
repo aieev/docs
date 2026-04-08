@@ -1,164 +1,43 @@
 ---
-title: "Air Container"
-description: "Deploy your AI container to Air Cloud"
-icon: "container"
+title: "Overview"
+description: "Deploy and operate your container images"
+icon: "box"
 ---
 
-Air Container enables you to deploy containerized AI services quickly and efficiently.
-Here's how it works:
+Air Container lets you deploy and operate your own container images on Aircloud.
 
-## Deployment Flow
+It’s a great fit when you need direct control over runtime, dependencies, ports, environment variables, resources, and autoscaling.
 
-### Step 1. Select a project
+## Standard flow
 
-<Frame caption="Select a project">
-  <img
-    src="/docs/images/air-container/select-a-project.png"
-    style={{ borderRadius: "0.5rem" }}
-  />
-</Frame>
+1. Select a project
+2. Start creating a container
+3. Configure Container Image
+4. Configure Resources
+5. Configure Advanced settings
+6. Review and deploy
+7. Start the container
+8. Monitor usage and logs
 
-First, go to the Project Dashboard and select the organization and project you
-created during onboarding.
+## When it’s a good fit
 
-<Frame caption="Container Page">
-  <img
-    src="/docs/images/air-container/container-page.png"
-    style={{ borderRadius: "0.5rem" }}
-  />
-</Frame>
+- You want to deploy your own model server or application image
+- You need to choose GPU specs and replica counts directly
+- You want to operate Autoscaling and Scheduled Scaling together
+- You need deeper operational control than an API-first approach
 
-From the Service tab on the project page, select **"Container"** and click
-**[+ Create]** button to create a new container.
+## What to read next
 
-### Step 2. Base Settings
+<Columns cols={2}>
+  <Card title="Deploy a Container" icon="container" href="/docs/air-container/deploy-a-container" cta="Deploy" arrow="true">
+    Step-by-step container deployment flow.
+  </Card>
 
-<Frame caption="Enter General Information">
-  <img
-    src="/docs/images/air-container/enter-general-information.png"
-    style={{ borderRadius: "0.5rem" }}
-  />
-</Frame>
+  <Card title="Autoscaling and Scheduling" icon="activity" href="/docs/air-container/autoscaling-and-scheduling" cta="Configure" arrow="true">
+    Autoscaling and scheduled scaling best practices.
+  </Card>
 
-<br />
-
-<Frame caption="Enter Container Image Information">
-  <img
-    src="/docs/images/air-container/enter-container-image-information.png"
-    style={{ borderRadius: "0.5rem" }}
-  />
-</Frame>
-
-During container creation, the following fields are required:
-
-<ResponseField name="Name" type="string" required>
-  A user-friendly name for the container.
-</ResponseField>
-
-<ResponseField name="Category" type="string">
-  Type of service the container provides (used for future Playground
-  integration).
-</ResponseField>
-
-<ResponseField name="Container Image" type="url" required>
-  Docker image URL of the container.
-</ResponseField>
-
-<ResponseField name="Registry Provider" type="string" required>
-  The registry where the image is hosted (e.g., GitHub Container Registry,
-  Docker Hub).
-</ResponseField>
-
-<ResponseField name="Registry Username & Password" type="string">
-  Required if pulling from a private registry.
-</ResponseField>
-
-### Step 3. Configure Resources
-
-<Frame caption="Resource Settings">
-  <img
-    src="/docs/images/air-container/resource-settings.png"
-    style={{ borderRadius: "0.5rem" }}
-  />
-</Frame>
-
-- **General Mode**: Define instance type (e.g., RTX 4070, 4090).
-- **Autoscaling Mode**: Define minimum and maximum replicas (1 to 30). Higher
-  values require manual approval.
-
-### Step 4. Advanced Settings
-
-<Frame caption="Advanced Settings">
-  <img
-    src="/docs/images/air-container/advanced-settings.png"
-    style={{ borderRadius: "0.5rem" }}
-  />
-</Frame>
-
-In the "Advanced" section, additional options are available:
-
-<ResponseField name="Start Command" type="string">
-  Overrides the default startup command in the container image.
-</ResponseField>
-
-<ResponseField name="Port" type="number">
-  Overrides the default exposed port.
-</ResponseField>
-
-<ResponseField name="Health Check URL" type="url">
-  Path to check container health status (e.g., /api/health).
-</ResponseField>
-
-<ResponseField name="Environment Variables" type="object">
-  Set key-value pairs required for your app (e.g., DB credentials, API keys).
-</ResponseField>
-
-### Step 5. Review and Deploy
-
-<Frame caption="Review Page">
-  <img
-    src="/docs/images/air-container/review-page.png"
-    style={{ borderRadius: "0.5rem" }}
-  />
-</Frame>
-
-### Step 6. Deployment Completion
-
-<Frame caption="Deployment Completion">
-  <img
-    src="/docs/images/air-container/deployment-completion.png"
-    style={{ borderRadius: "0.5rem" }}
-  />
-</Frame>
-
-Once deployed, the container will start immediately, and an API endpoint or service URL will be provided.
-
-- The container will appear in the left-hand list.
-- Selecting an item will show its detailed information on the right.
-- You can edit settings from the right panel.
-- Clicking the "Dashboard" button will redirect you to a detailed management page with container status and activity logs.
-
-## API Request
-
-Once the container status is `RUNNING`, you can access the AI inference API using the exposed endpoint.
-Replace the host part with your container's Endpoint URL.
-
-```bash cURL
-curl --request POST \
-     --url ${ENDPOINT_URL}/api/v1/chat/completions \
-     --header "Accept: application/json" \
-     --header "Authorization: Bearer ${YOUR_API_KEY}" \
-     --header "Content-Type: application/json" \
-     --data '{
-  "messages": [
-    {
-      "role": "system",
-      "content": "You are a helpful assistant."
-    },
-    {
-      "role": "user",
-      "content": "Write a haiku about recursion in programming."
-    }
-  ]
-}'
-```
+  <Card title="Monitoring and Troubleshooting" icon="radar" href="/docs/air-container/monitoring-and-troubleshooting" cta="Monitor" arrow="true">
+    What to check in Usage, Logs, Settings, and scheduling.
+  </Card>
+</Columns>

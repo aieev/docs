@@ -1,0 +1,65 @@
+---
+title: "Concepts"
+description: "Core concepts to understand Aircloud"
+icon: "lightbulb"
+---
+
+This page covers the core concepts that are most helpful to understand before you start using Aircloud.
+
+<Info>
+  If you’re new to Aircloud, we recommend reviewing the full flow in [Quickstart](/docs/quickstart) first, then coming back to this page.
+</Info>
+
+## Organization
+
+An **Organization** is the top-level unit that groups users and projects. You typically create an Organization per team, company, or operating entity. Member invitations and permission management are handled at the Organization level.
+
+## Project
+
+A **Project** is the unit where you manage real workloads and resources. Air API, Air Container, usage, endpoints, and monitoring information are all scoped to a project. One Organization can have multiple Projects.
+
+## Air API
+
+**Air API** is the fastest way to integrate and test a model via APIs. Inside a project, you select a supported model, issue a secret key, and test quickly using code samples or the Playground.
+
+## Air Container
+
+**Air Container** lets you deploy your own container images. It’s a good fit when you need fine-grained control over runtime, dependencies, ports, environment variables, autoscaling, and replica counts.
+
+## Endpoint
+
+An **Endpoint** is the running unit you use to access a deployed API or container service. Within a project, you can check endpoint status, usage, logs, and scheduling settings.
+
+## Replica
+
+A **Replica** is the number of identical workload instances running. Increasing replicas helps handle more traffic. Replicas can also be adjusted automatically via autoscaling.
+
+## Autoscaling
+
+**Autoscaling** automatically adjusts replica counts based on traffic or configuration conditions. Setting minimum and maximum replicas helps balance cost and performance.
+
+## Aircloud and Aircloud+
+
+**Aircloud** is a cost-effective, flexible infrastructure option.
+
+**Aircloud+** is a dedicated option designed for higher reliability, predictable performance, and stronger operational control.
+
+## What to read next
+
+<Columns cols={2}>
+  <Card title="Quickstart" icon="play-circle" href="/docs/quickstart" cta="Get started" arrow="true">
+    Walk through the full onboarding and first-run flow.
+  </Card>
+
+  <Card title="Organizations & Billing" icon="building" href="/docs/get-started/organizations-and-billing" cta="Learn the structure" arrow="true">
+    Understand Organization/Project structure and billing concepts.
+  </Card>
+
+  <Card title="Air API" icon="sparkles" href="/docs/air-api" cta="Start with APIs" arrow="true">
+    Learn how to select models, create keys, and test with Playground.
+  </Card>
+
+  <Card title="Air Container" icon="box" href="/docs/air-container" cta="Deploy a container" arrow="true">
+    Learn how to deploy container images and configure resources/autoscaling.
+  </Card>
+</Columns>
