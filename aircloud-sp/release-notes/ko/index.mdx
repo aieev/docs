@@ -7,9 +7,26 @@ mode: "wide"
 
 <Update label="2026년 4월">
 
+## Air API 정식 출시 (GA)
+
+Air API가 정식 출시되었습니다. OpenAI 호환 인터페이스를 통해 AirCloud의 AI 모델을 바로 사용할 수 있습니다.
+
+- **OpenAI 호환 API**: 기존 OpenAI SDK와 코드를 그대로 사용하여 AirCloud 모델에 접근할 수 있습니다.
+- **가격 공개**: 모델별 토큰 단가가 확정되어 투명한 종량제 과금이 적용됩니다.
+- **Air API Playground**: 코드 없이 브라우저에서 모델을 바로 테스트할 수 있습니다.
+
+<CardGroup cols={2}>
+  <Card title="Air API 시작하기" href="/docs/ko/air-api/index" icon="bolt">
+    Air API 사용법을 확인하세요.
+  </Card>
+  <Card title="모델 둘러보기" href="/models/ko/index" icon="microchip">
+    사용 가능한 모델과 가격을 확인하세요.
+  </Card>
+</CardGroup>
+
 ## External API 확장 및 신규 모델 추가
 
-External API가 전체 엔드포인트 라이프사이클 관리를 지원합니다. 추론을 위한 3종의 AI 모델이 플랫폼에 추가되었습니다.
+External API가 전체 엔드포인트 라이프사이클 관리를 지원합니다. 3종의 AI 모델이 플랫폼에 추가되었습니다.
 
 **External API: 신규 엔드포인트**
 
@@ -113,9 +130,17 @@ curl -X POST https://external.aieev.cloud:5007/external/api/v1/endpoints/{id}/sc
 
 <Update label="2025년 10월">
 
-## 관측성, 대시보드, API 키, UX 대규모 개선
+## Air API 베타 출시, 관측성, 대시보드, UX 대규모 개선
 
-관측성, 프로젝트 대시보드, 보안을 대폭 강화한 릴리즈입니다.
+Air API 베타가 출시되고, 관측성, 프로젝트 대시보드, 보안이 대폭 강화된 릴리즈입니다.
+
+**Air API (베타)**
+
+OpenAI 호환 추론 API가 베타로 출시되었습니다. API 키 하나로 AirCloud에서 제공하는 AI 모델에 접근할 수 있습니다.
+
+- OpenAI SDK 호환 — 기존 코드 변경 없이 모델 교체 가능
+- API 키 기반 인증 및 엔드포인트별 접근 제어
+- Playground에서 모델 테스트 가능
 
 **관측성 및 로그**
 
