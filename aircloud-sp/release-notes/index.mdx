@@ -108,13 +108,6 @@ Key capabilities:
   </Card>
 </CardGroup>
 
-## High-volume TTS capacity validation
-
-Validated platform capacity for production-grade text-to-speech workloads:
-
-- Verified **800K+ daily TTS requests** with low-latency streaming requirements.
-- Confirmed phased migration path from small-scale pilot to full production traffic.
-- Tested large container delivery with caching and pre-provisioning strategies to minimize cold start impact.
 
 </Update>
 
@@ -130,7 +123,7 @@ Runtime logs are now searchable, filterable, and exportable:
 
 - **Log download and bulk export**: Download logs for offline analysis with single or batch export.
 - **Advanced log filtering**: Regex-based search and time-range filtering for faster troubleshooting.
-- **Raw log (JSON) view**: Inspect unprocessed log data alongside the formatted view.
+- **Raw log (JSON) view**: Inspect unprocessed log data alongside the structured view.
 - **Scaling history**: Track autoscale events, timeout-triggered changes, and error-driven replica adjustments over time.
 
 **Dashboards**
@@ -162,7 +155,7 @@ New project-level and organization-level dashboards for usage visibility:
 
 AirCloud is now generally available. This milestone release introduces API-first workflows, custom endpoints, and scheduled scaling for production inference workloads.
 
-- **Time-based scaling**: Schedule minimum replica counts or toggle autoscaling by time of day. Match traffic patterns and reduce idle costs automatically.
+- **Time-based scaling**: Schedule minimum replica counts or enable/disable autoscaling by time of day. Match traffic patterns and reduce idle costs automatically.
 - **Custom endpoint URLs**: Use your own URL identifiers instead of system-generated IDs for cleaner integration and easier sharing.
 - **API Playground**: Test and integrate APIs interactively through the built-in Playground without writing code.
 - **One-click cluster deployment**: Reduce repetitive setup with templated, automated cluster deployments.
@@ -180,9 +173,9 @@ New visibility into costs, smarter autoscaling, and infrastructure-level perform
 
 - **Usage & billing dashboards**: Monthly and daily usage visualization to track credit consumption and spending trends at a glance.
 - **Autoscaling sensitivity controls**: Configure autoscale responsiveness (Heavy / Normal / Light) to match your workload's characteristics—from bursty inference to steady throughput.
-- **Deployment template reuse**: Copy existing deployment configurations to quickly spin up new endpoints with the same settings.
-- **Predictable scaling behavior**: Tuned scale-in/out policies and dampening for more consistent autoscaling under varying load patterns.
-- **High-concurrency delivery**: Performance tuning for large-file transfers and concurrent request handling under peak traffic.
+- **Deployment template reuse**: Reuse existing deployment configurations to quickly spin up new endpoints with the same settings.
+- **Predictable scaling behavior**: Adjusted scale-in/out policies to reduce variability under varying load patterns.
+- **Concurrent request handling improvements**: Improved stability for large-file transfers and concurrent request handling under peak traffic.
 
 </Update>
 
@@ -192,9 +185,9 @@ New visibility into costs, smarter autoscaling, and infrastructure-level perform
 
 Stability improvements so platform updates and scaling events don't disrupt running workloads.
 
-- **Zero-downtime updates**: Reduced service impact during platform updates and rolling restarts.
-- **Graceful worker drain**: Workers exit cleanly during scale-in and updates, preventing in-flight request drops.
-- **Restart resilience**: Event processing pipelines now handle component restarts without data loss or ordering issues.
+- **Zero-downtime updates**: Minimized service disruption during platform updates.
+- **Request drop prevention**: Improved handling during scale-in and updates to prevent in-flight request loss.
+- **Restart stability**: Event processing pipelines now handle component restarts without data loss or ordering issues.
 - **HTTPS adoption**: Began HTTPS rollout as the platform security baseline.
 
 </Update>
