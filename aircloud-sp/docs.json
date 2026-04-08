@@ -8,6 +8,12 @@
     "dark": "#0D9373"
   },
   "favicon": "/favicon.svg",
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/docs/index"
+    }
+  ],
   "icons": {
     "library": "lucide"
   },
@@ -17,9 +23,7 @@
         "language": "en",
         "tabs": [
           {
-            "dropdown": "Documentation",
-            "icon": "book",
-            "description": "Aircloud Documentation",
+            "tab": "Documentation",
             "groups": [
               {
                 "group": "Get started",
@@ -67,6 +71,17 @@
             ]
           },
           {
+            "tab": "Models",
+            "groups": [
+              {
+                "group": "Models",
+                "pages": [
+                  "models/index"
+                ]
+              }
+            ]
+          },
+          {
             "tab": "API Reference",
             "groups": [
               {
@@ -106,6 +121,17 @@
                 ]
               }
             ]
+          },
+          {
+            "tab": "Release Notes",
+            "groups": [
+              {
+                "group": "Release Notes",
+                "pages": [
+                  "release-notes/index"
+                ]
+              }
+            ]
           }
         ]
       },
@@ -113,9 +139,7 @@
         "language": "ko",
         "tabs": [
           {
-            "dropdown": "문서",
-            "icon": "book",
-            "description": "Aircloud 문서",
+            "tab": "문서",
             "groups": [
               {
                 "group": "시작하기",
@@ -163,6 +187,17 @@
             ]
           },
           {
+            "tab": "모델",
+            "groups": [
+              {
+                "group": "모델",
+                "pages": [
+                  "models/ko/index"
+                ]
+              }
+            ]
+          },
+          {
             "tab": "API 레퍼런스",
             "groups": [
               {
@@ -199,6 +234,17 @@
                 "group": "인증",
                 "pages": [
                   "api-reference/ko/endpoint/get-me"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "릴리즈 노트",
+            "groups": [
+              {
+                "group": "릴리즈 노트",
+                "pages": [
+                  "release-notes/ko/index"
                 ]
               }
             ]

@@ -1,0 +1,35 @@
+---
+title: "Models"
+description: "Explore AI models available on AirCloud."
+---
+
+<Note>
+  This page is under construction.
+</Note>
+
+## Available Models
+
+AirCloud provides access to a variety of AI models for inference, including chat, image generation, text-to-speech, speech-to-text, and text embedding.
+
+| Category | Description |
+|----------|-------------|
+| Chat | Large language models for conversational AI and text generation. |
+| Image Generation | Generate and edit images with text prompts. |
+| Text-to-Speech | Convert text to natural-sounding speech. |
+| Speech-to-Text | Transcribe audio to text. |
+| Text Embedding | Generate vector embeddings for text. |
+
+## Getting Started
+
+Models are accessible through the [AI API](/api-reference/introduction) using an OpenAI-compatible interface.
+
+```bash
+curl --request POST \
+  --url https://external.aieev.cloud:5007/ai/api/v1/chat/completions \
+  --header 'Authorization: Bearer YOUR_API_KEY' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "model": "MODEL_ID",
+    "messages": [{"role": "user", "content": "Hello!"}]
+  }'
+```

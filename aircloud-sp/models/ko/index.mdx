@@ -1,0 +1,35 @@
+---
+title: "모델"
+description: "AirCloud에서 사용 가능한 AI 모델을 살펴보세요."
+---
+
+<Note>
+  이 페이지는 준비 중입니다.
+</Note>
+
+## 사용 가능한 모델
+
+AirCloud는 채팅, 이미지 생성, 텍스트 음성 변환, 음성 텍스트 변환, 텍스트 임베딩 등 다양한 AI 모델을 제공합니다.
+
+| 카테고리 | 설명 |
+|----------|------|
+| Chat | 대화형 AI 및 텍스트 생성을 위한 대규모 언어 모델 |
+| Image Generation | 텍스트 프롬프트로 이미지 생성 및 편집 |
+| Text-to-Speech | 텍스트를 자연스러운 음성으로 변환 |
+| Speech-to-Text | 음성을 텍스트로 변환 |
+| Text Embedding | 텍스트의 벡터 임베딩 생성 |
+
+## 시작하기
+
+모델은 OpenAI 호환 인터페이스를 통해 [AI API](/api-reference/ko/introduction)로 접근할 수 있습니다.
+
+```bash
+curl --request POST \
+  --url https://external.aieev.cloud:5007/ai/api/v1/chat/completions \
+  --header 'Authorization: Bearer YOUR_API_KEY' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "model": "MODEL_ID",
+    "messages": [{"role": "user", "content": "Hello!"}]
+  }'
+```
