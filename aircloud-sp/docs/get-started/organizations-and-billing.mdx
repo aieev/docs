@@ -6,39 +6,39 @@ icon: "building"
 
 This page summarizes the Organization/Project structure, member management, and the credits/billing model you’ll encounter when getting started with Aircloud.
 
-## Onboarding flow
-
-Aircloud onboarding typically follows this sequence:
-
-1. Create an Organization
-2. Create a Project
-3. Add credits (optional during onboarding)
-
-After onboarding, you can create and manage workloads per project in the console.
-
 ## Organization and Project relationship
 
 An **Organization** is the top-level administrative unit (team/company). A **Project** is the unit where you operate workloads. Air API and Air Container are both created and managed inside projects.
 
-## Inviting members
-
-Members can join an Organization via email invitation.
-
-- Sign up using the **same email address** that received the invitation.
-- If an invite link fails while you’re logged in with another account, log out and try again on the same device.
-
 ## Credits and payments
 
-Depending on the resources and workloads used in a project, you may need credits or valid payment information.
+Aircloud requires credit top-ups and billing information depending on the resources and workloads you use within a project.
+
+![Credits and billing screen](/docs/images/billing-and-credits.png)
+
+<Info>
+  - Usage is measured in **AU**, which is converted to KRW.
+  - Use **Purchase AU** to top up credits in advance and operate cloud services within your available limit.
+  - When credits are fully depleted, you will be notified via **Email Alert**. If you do not top up, workloads may be force-stopped.
+  - To prevent forced stops, you can enable **Auto Topup**, register a card, and automatically purchase AU based on predefined rules.
+</Info>
 
 Even if credits appear optional during onboarding, we recommend confirming billing readiness before running real workloads.
 
+![Purchase AU screen](/docs/images/purchase-au.png)
+
+- Supported payment methods
+  - Toss Payments (Korea, AU prepaid top-up)
+  - PayPal (Global, AU prepaid top-up)
+  - Stripe (Global, AU prepaid top-up and card storage for Auto Topup)
+- If you register a card for Auto Topup, once your remaining credits drop below a threshold, AU will be automatically purchased using the selected card based on the predefined top-up amount.
+
 ## Operational recommendations
 
-- Separate projects for API testing vs. production workloads
-- Define roles and access boundaries for each member
-- Review usage and billing regularly
-- Confirm credits/payment status before deployments
+- Separate projects for API testing and production workloads based on their purpose.
+- For stable organization operations, define roles and access boundaries for each member.
+- To ensure continuous service operations, review usage and billing regularly.
+- Confirm your credits and payment status before deployments.
 
 ## Related docs
 
