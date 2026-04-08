@@ -38,7 +38,7 @@ Qwen 3.5 9B는 성능과 효율성의 균형을 위해 설계된 컴팩트하면
 - reasoning, tools, streaming, vision, json_mode, logprobs 지원
 - 성능, 지연 시간, 서빙 비용 간의 적절한 균형
 - vLLM 등 최적화된 추론 런타임과 호환
-- bf16 포맷 제공
+- 효율적인 배포를 위한 FP8 포맷 제공
 
 ## 활용 사례
 
@@ -114,7 +114,7 @@ def is_prime(n):
 |------|-----|
 | 컨텍스트 길이 | 262,144 |
 | 최대 출력 길이 | 262,144 |
-| 포맷 | bf16 |
+| 양자화 | fp8 |
 | 입력 모달리티 | text, image |
 | 출력 모달리티 | text |
 | 지원 기능 | tools, reasoning, streaming, vision, json_mode, logprobs |

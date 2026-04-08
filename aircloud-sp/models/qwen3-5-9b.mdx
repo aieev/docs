@@ -38,7 +38,7 @@ Qwen 3.5 9B is a compact yet capable open-source language model designed to bala
 - Includes support for reasoning, tools, streaming, vision, json_mode, and logprobs
 - Good balance between performance, latency, and serving cost
 - Compatible with optimized inference runtimes such as vLLM
-- Provided in bf16 format
+- Provided in FP8 format for efficient deployment
 
 ## Use Cases
 
@@ -114,7 +114,7 @@ Understand image inputs and generate text-based explanations or insights.
 |----------|-------|
 | Context Length | 262,144 |
 | Max Output Length | 262,144 |
-| Format | bf16 |
+| Quantization | fp8 |
 | Input Modalities | text, image |
 | Output Modalities | text |
 | Supported Features | tools, reasoning, streaming, vision, json_mode, logprobs |
