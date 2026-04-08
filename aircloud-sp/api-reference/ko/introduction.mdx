@@ -1,32 +1,30 @@
 ---
-title: "소개"
-description: "API 엔드포인트를 보여주기 위한 예시 섹션"
+title: "개요"
+description: "AirCloud External API를 사용하여 엔드포인트를 프로그래밍 방식으로 관리하세요."
 ---
 
-<Note>
-  API 참조 문서를 구축하지 않으려면 api-reference 폴더를 제거하여 이 섹션을 삭제할 수 있습니다.
-</Note>
+AirCloud External API는 웹 콘솔을 통하지 않고도 컨테이너 엔드포인트를 프로그래밍 방식으로 관리할 수 있는 API입니다.
 
-## 환영합니다
+## 사용 가능한 리소스
 
-API 문서를 구축하는 방법은 두 가지가 있습니다: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup)와 [MDX 컴포넌트](https://mintlify.com/docs/api-playground/mdx/configuration)입니다. 스타터 키트의 경우 다음 OpenAPI 사양을 사용하고 있습니다.
-
-<Card
-  title="Plant Store 엔드포인트"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
->
-  OpenAPI 사양 파일 보기
-</Card>
+- **엔드포인트**: 컨테이너 엔드포인트의 시작, 중지, 스케일링, 모니터링
+- **레플리카**: 활성 엔드포인트의 실행 중인 레플리카 상태 조회
+- **로그**: 엔드포인트 로그 파일 및 내용 조회
 
 ## 인증
 
-모든 API 엔드포인트는 Bearer 토큰을 사용하여 인증되며 사양 파일에서 가져옵니다.
+모든 요청에 API Key를 `Authorization` 헤더에 Bearer 토큰으로 전달해야 합니다.
 
-```json
-"security": [
-  {
-    "bearerAuth": []
-  }
-]
+```bash
+Authorization: Bearer YOUR_API_KEY
 ```
+
+<Note>
+  API Key는 생성 시 지정한 프로젝트와 엔드포인트에만 접근 가능합니다.
+</Note>
+
+## 참고 사항
+
+- 레플리카 스케일링은 엔드포인트가 **활성 상태**일 때만 가능합니다.
+- 오토스케일링이 활성화된 엔드포인트는 수동 스케일링이 불가능합니다.
+- 엔드포인트 설정 수정(PATCH)은 **비활성 상태**에서만 가능합니다.

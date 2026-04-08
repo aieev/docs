@@ -15,11 +15,9 @@
     "languages": [
       {
         "language": "en",
-        "dropdowns": [
+        "tabs": [
           {
-            "dropdown": "Documentation",
-            "icon": "book",
-            "description": "AirCloud Documentation",
+            "tab": "Docs",
             "groups": [
               {
                 "group": "Getting Started",
@@ -32,16 +30,55 @@
                 ]
               }
             ]
+          },
+          {
+            "tab": "API Reference",
+            "groups": [
+              {
+                "group": "Overview",
+                "pages": [
+                  "api-reference/introduction"
+                ]
+              },
+              {
+                "group": "Endpoints",
+                "pages": [
+                  "api-reference/endpoint/list-endpoints",
+                  "api-reference/endpoint/get-endpoint",
+                  "api-reference/endpoint/start-endpoint",
+                  "api-reference/endpoint/stop-endpoint",
+                  "api-reference/endpoint/scale-endpoint",
+                  "api-reference/endpoint/patch-endpoint"
+                ]
+              },
+              {
+                "group": "Replicas",
+                "pages": [
+                  "api-reference/endpoint/list-replicas"
+                ]
+              },
+              {
+                "group": "Logs",
+                "pages": [
+                  "api-reference/endpoint/list-logs",
+                  "api-reference/endpoint/get-log-content"
+                ]
+              },
+              {
+                "group": "Authentication",
+                "pages": [
+                  "api-reference/endpoint/get-me"
+                ]
+              }
+            ]
           }
         ]
       },
       {
         "language": "ko",
-        "dropdowns": [
+        "tabs": [
           {
-            "dropdown": "문서",
-            "icon": "book",
-            "description": "AirCloud 문서",
+            "tab": "문서",
             "groups": [
               {
                 "group": "시작하기",
@@ -51,6 +88,47 @@
                   "docs/ko/air-container/index",
                   "docs/ko/air-container/monitoring-api-testing",
                   "docs/ko/support"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "API 레퍼런스",
+            "groups": [
+              {
+                "group": "개요",
+                "pages": [
+                  "api-reference/ko/introduction"
+                ]
+              },
+              {
+                "group": "엔드포인트",
+                "pages": [
+                  "api-reference/ko/endpoint/list-endpoints",
+                  "api-reference/ko/endpoint/get-endpoint",
+                  "api-reference/ko/endpoint/start-endpoint",
+                  "api-reference/ko/endpoint/stop-endpoint",
+                  "api-reference/ko/endpoint/scale-endpoint",
+                  "api-reference/ko/endpoint/patch-endpoint"
+                ]
+              },
+              {
+                "group": "레플리카",
+                "pages": [
+                  "api-reference/ko/endpoint/list-replicas"
+                ]
+              },
+              {
+                "group": "로그",
+                "pages": [
+                  "api-reference/ko/endpoint/list-logs",
+                  "api-reference/ko/endpoint/get-log-content"
+                ]
+              },
+              {
+                "group": "인증",
+                "pages": [
+                  "api-reference/ko/endpoint/get-me"
                 ]
               }
             ]
