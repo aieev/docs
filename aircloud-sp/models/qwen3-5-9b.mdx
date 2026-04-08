@@ -1,0 +1,190 @@
+---
+title: "Qwen3.5-9B"
+description: "Compact and efficient 9B language model with multimodal support."
+---
+
+<Info>
+  **Model ID:** `qwen/qwen3.5-9b` | **Parameters:** 9B | **Released:** 2026-03-10
+</Info>
+
+## Overview
+
+Qwen 3.5 9B is a compact yet capable open-source language model designed to balance performance and efficiency. It supports multilingual understanding and generation, long-context inference up to 262,144 tokens, and multimodal input with text and image support while producing text outputs. Compared with larger models, it offers lower serving cost and faster inference, making it well suited for chat assistants, coding help, document summarization, visual understanding, and other real-time AI applications.
+
+<CardGroup cols={3}>
+  <Card title="Air API Playground" icon="play" href="https://ap-1.aieev.cloud:3007/models/qwen%2Fqwen3.5-9b">
+    Try the model in the playground.
+  </Card>
+  <Card title="Deploy with Container" icon="container-storage" href="/docs/air-container/deploy-a-container">
+    Deploy with AIR Container.
+  </Card>
+  <Card title="API Usage Guide" icon="book" href="/docs/air-api/api-usage-guide">
+    Learn how to use the API.
+  </Card>
+</CardGroup>
+
+## Pricing
+
+| Input | Output |
+|-------|--------|
+| \$0.05 / 1M tokens | \$0.15 / 1M tokens |
+
+## Key Features
+
+- Efficient 9B model suitable for cost-sensitive and latency-sensitive deployments
+- Strong multilingual understanding and generation
+- Supports long-context inference up to 262,144 tokens
+- Supports text and image input with text output
+- Includes support for reasoning, tools, streaming, vision, json_mode, and logprobs
+- Good balance between performance, latency, and serving cost
+- Compatible with optimized inference runtimes such as vLLM
+- Provided in bf16 format
+
+## Use Cases
+
+### General Q&A
+
+Handle general-purpose Q&A with efficient reasoning and contextual understanding.
+
+<CodeGroup>
+```text Input
+Explain how transformers work in simple terms and give a real-world analogy.
+```
+
+```text Output
+Transformers process text by modeling relationships between tokens in parallel
+rather than strictly one by one...
+
+A simple analogy is a group discussion where each person listens to everyone
+else to understand the full context before responding.
+```
+</CodeGroup>
+
+### Code Generation & Assistance
+
+Generate and explain code efficiently for practical development tasks.
+
+<CodeGroup>
+```text Input
+Write a Python function to check if a number is prime and explain the logic.
+```
+
+```python Output
+def is_prime(n):
+    if n <= 1:
+        return False
+    for i in range(2, int(n ** 0.5) + 1):
+        if n % i == 0:
+            return False
+    return True
+
+# This function checks divisibility only up to the square root of n,
+# which improves efficiency.
+```
+</CodeGroup>
+
+### Summarization & Analysis
+
+Efficient summarization and light analytical tasks for long documents.
+
+### Visual Understanding
+
+Understand image inputs and generate text-based explanations or insights.
+
+## Parameters
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| `messages` | array | Required | - | List of input messages for chat-based generation. Supports text and image content. |
+| `max_tokens` | integer | Optional | - | Maximum number of output tokens to generate |
+| `temperature` | number | Optional | 1 | Sampling temperature (0.0-2.0) |
+| `top_p` | number | Optional | 1 | Nucleus sampling threshold |
+| `top_k` | integer | Optional | - | Limits sampling to the top-k most likely tokens |
+| `min_p` | number | Optional | - | Minimum probability threshold for token sampling |
+| `frequency_penalty` | number | Optional | 0 | Penalty for token frequency |
+| `presence_penalty` | number | Optional | 0 | Penalty for token presence |
+| `repetition_penalty` | number | Optional | - | Penalty for repeated token generation |
+| `stop` | string \| array | Optional | - | Stop sequence(s) where generation will terminate |
+| `seed` | integer | Optional | - | Random seed for reproducible sampling |
+| `stream` | boolean | Optional | false | Enable streaming responses |
+
+## Model Details
+
+| Property | Value |
+|----------|-------|
+| Context Length | 262,144 |
+| Max Output Length | 262,144 |
+| Format | bf16 |
+| Input Modalities | text, image |
+| Output Modalities | text |
+| Supported Features | tools, reasoning, streaming, vision, json_mode, logprobs |
+
+## Quick Start
+
+<Steps>
+  <Step title="Get your API key">
+    Generate an API key from your [AirCloud account](https://aieev.com).
+  </Step>
+  <Step title="Run the code">
+    Replace `YOUR_API_KEY` with your actual key and choose your preferred language.
+  </Step>
+</Steps>
+
+<CodeGroup>
+```python Python
+import requests
+
+response = requests.post(
+    "https://external.aieev.cloud:5007/ai/api/v1/chat/completions",
+    headers={
+        "Authorization": "Bearer YOUR_API_KEY",
+        "Content-Type": "application/json"
+    },
+    json={
+        "model": "qwen/qwen3.5-9b",
+        "messages": [{"role": "user", "content": "Hello!"}],
+        "temperature": 0.7
+    }
+)
+
+result = response.json()
+print(result["choices"][0]["message"]["content"])
+```
+
+```bash cURL
+curl --request POST \
+  --url https://external.aieev.cloud:5007/ai/api/v1/chat/completions \
+  --header 'Authorization: Bearer YOUR_API_KEY' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "model": "qwen/qwen3.5-9b",
+    "messages": [{"role": "user", "content": "Hello!"}],
+    "temperature": 0.7
+  }'
+```
+
+```javascript Node.js
+const response = await fetch(
+  "https://external.aieev.cloud:5007/ai/api/v1/chat/completions",
+  {
+    method: "POST",
+    headers: {
+      "Authorization": "Bearer YOUR_API_KEY",
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      model: "qwen/qwen3.5-9b",
+      messages: [{ role: "user", content: "Hello!" }],
+      temperature: 0.7
+    })
+  }
+);
+
+const result = await response.json();
+console.log(result.choices[0].message.content);
+```
+</CodeGroup>
+
+## Tags
+
+`open-source` `conversational` `9B` `reasoning` `multilingual` `efficient` `vision`

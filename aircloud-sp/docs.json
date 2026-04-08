@@ -76,7 +76,10 @@
               {
                 "group": "Models",
                 "pages": [
-                  "models/index"
+                  "models/index",
+                  "models/qwen3-tts",
+                  "models/qwen3-5-9b",
+                  "models/qwen3-5-35b-a3b"
                 ]
               }
             ]
@@ -192,7 +195,10 @@
               {
                 "group": "모델",
                 "pages": [
-                  "models/ko/index"
+                  "models/ko/index",
+                  "models/ko/qwen3-tts",
+                  "models/ko/qwen3-5-9b",
+                  "models/ko/qwen3-5-35b-a3b"
                 ]
               }
             ]

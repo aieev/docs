@@ -1,0 +1,189 @@
+---
+title: "Qwen3.5-35B-A3B"
+description: "High-performance mixture-of-experts model with multimodal support."
+---
+
+<Info>
+  **Model ID:** `qwen/qwen3.5-35b-a3b` | **Parameters:** 35B (A3B MoE) | **Released:** 2026-02-26
+</Info>
+
+## Overview
+
+Qwen 3.5 35B (A3B) is a mixture-of-experts (MoE) large language model designed to deliver strong performance with efficient inference. It uses sparse activation, where only a subset of parameters is activated per token, enabling a better balance between capability and serving cost. Compared to smaller models such as 9B variants, it offers improved reasoning, coding, and analytical performance for more complex workloads. The model supports long-context inference up to 262K tokens and multimodal input (text and image), making it suitable for advanced assistants, backend automation, multimodal understanding, and large-scale inference systems.
+
+<CardGroup cols={3}>
+  <Card title="Air API Playground" icon="play" href="https://ap-1.aieev.cloud:3007/models/qwen%2Fqwen3.5-35b-a3b">
+    Try the model in the playground.
+  </Card>
+  <Card title="Deploy with Container" icon="container-storage" href="/docs/air-container/deploy-a-container">
+    Deploy with AIR Container.
+  </Card>
+  <Card title="API Usage Guide" icon="book" href="/docs/air-api/api-usage-guide">
+    Learn how to use the API.
+  </Card>
+</CardGroup>
+
+## Pricing
+
+| Input | Output |
+|-------|--------|
+| \$0.1625 / 1M tokens | \$1.3 / 1M tokens |
+
+## Key Features
+
+- Mixture-of-Experts (MoE, A3B) architecture with sparse activation for efficient scaling
+- Stronger reasoning and coding performance compared to smaller models such as 9B variants
+- Supports long-context inference up to 262,144 tokens
+- Multimodal capability with text and image input support
+- Strong multilingual understanding and generation
+- Efficient inference through sparse expert activation
+- Compatible with high-throughput serving engines such as vLLM
+- Provided in FP8 format for efficient deployment
+
+## Use Cases
+
+### Complex Q&A
+
+Handle complex multi-step reasoning and analytical queries.
+
+<CodeGroup>
+```text Input
+Compare transformer-based models and mixture-of-experts models
+in terms of scalability and efficiency.
+```
+
+```text Output
+Transformer models scale by increasing parameter count and compute,
+while MoE models improve efficiency by activating only a subset of
+parameters per token...
+
+MoE advantages:
+1. Higher parameter capacity with lower compute cost
+2. Better scalability across distributed systems
+3. Improved efficiency for large-scale inference workloads
+```
+</CodeGroup>
+
+### Advanced Code Generation
+
+Generate production-level code and system design explanations.
+
+<CodeGroup>
+```text Input
+Design a scalable distributed task queue system using Python
+and explain key components.
+```
+
+```text Output
+A scalable distributed task queue system can be built using components
+such as a message broker (Redis/Kafka), worker nodes, and a task scheduler...
+
+Key components:
+- Producer: submits tasks
+- Broker: queues tasks
+- Worker: executes tasks
+- Result backend: stores results
+```
+</CodeGroup>
+
+### Deep Analysis & Summarization
+
+Perform deeper document understanding and insight extraction.
+
+### Visual Understanding
+
+Analyze images and extract insights through multimodal reasoning.
+
+## Parameters
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| `messages` | array | Required | - | List of messages for chat-based generation |
+| `max_tokens` | integer | Optional | - | Maximum tokens to generate |
+| `temperature` | number | Optional | 1 | Sampling temperature (0.0-2.0) |
+| `top_p` | number | Optional | 1 | Nucleus sampling threshold |
+| `frequency_penalty` | number | Optional | 0 | Penalty for token frequency |
+| `presence_penalty` | number | Optional | 0 | Penalty for token presence |
+| `stream` | boolean | Optional | false | Enable streaming responses |
+
+## Model Details
+
+| Property | Value |
+|----------|-------|
+| Context Length | 262,144 |
+| Max Output Length | 262,144 |
+| Quantization | fp8 |
+| Input Modalities | text, image |
+| Output Modalities | text |
+| Supported Features | tools, reasoning, streaming, vision, json_mode, logprobs |
+| Sampling Parameters | min_p, temperature, presence_penalty, repetition_penalty, stop, top_p, top_k, frequency_penalty, seed |
+
+## Quick Start
+
+<Steps>
+  <Step title="Get your API key">
+    Generate an API key from your [AirCloud account](https://aieev.com).
+  </Step>
+  <Step title="Run the code">
+    Replace `YOUR_API_KEY` with your actual key and choose your preferred language.
+  </Step>
+</Steps>
+
+<CodeGroup>
+```python Python
+import requests
+
+response = requests.post(
+    "https://external.aieev.cloud:5007/ai/api/v1/chat/completions",
+    headers={
+        "Authorization": "Bearer YOUR_API_KEY",
+        "Content-Type": "application/json"
+    },
+    json={
+        "model": "qwen/qwen3.5-35b-a3b",
+        "messages": [{"role": "user", "content": "Hello!"}],
+        "temperature": 0.7
+    }
+)
+
+result = response.json()
+print(result["choices"][0]["message"]["content"])
+```
+
+```bash cURL
+curl --request POST \
+  --url https://external.aieev.cloud:5007/ai/api/v1/chat/completions \
+  --header 'Authorization: Bearer YOUR_API_KEY' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "model": "qwen/qwen3.5-35b-a3b",
+    "messages": [{"role": "user", "content": "Hello!"}],
+    "temperature": 0.7
+  }'
+```
+
+```javascript Node.js
+const response = await fetch(
+  "https://external.aieev.cloud:5007/ai/api/v1/chat/completions",
+  {
+    method: "POST",
+    headers: {
+      "Authorization": "Bearer YOUR_API_KEY",
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      model: "qwen/qwen3.5-35b-a3b",
+      messages: [{ role: "user", content: "Hello!" }],
+      temperature: 0.7
+    })
+  }
+);
+
+const result = await response.json();
+console.log(result.choices[0].message.content);
+```
+</CodeGroup>
+
+## Tags
+
+`open-source` `conversational` `35B` `reasoning` `multilingual` `moe` `high-performance`
