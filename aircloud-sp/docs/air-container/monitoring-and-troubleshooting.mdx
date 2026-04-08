@@ -1,0 +1,56 @@
+---
+title: "Monitoring and Troubleshooting"
+description: "Usage, logs, settings, and status checks"
+icon: "radar"
+---
+
+After deployment, you can operate and debug your services using Usage, Runtime Logs, and Settings.
+
+## Usage
+
+The Usage view shows current usage and service health. Use **Healthy Replicas Count** to verify how many replicas are active.
+
+## Runtime Logs
+
+Runtime Logs show live logs with view options and allow downloading.
+
+<Note>
+  If something breaks right after deployment, checking logs is usually the fastest first step.
+</Note>
+
+## Settings
+
+Most settings (except renaming) require stopping the container first. Before changing settings, confirm the current endpoint status.
+
+## Common checks
+
+- Image path is correct
+- Private registry credentials are correct
+- Port settings are correct
+- Start command is correct
+- Health check URL returns a healthy response
+- Required environment variables are set
+
+## Pending state
+
+If the container is **Pending**, it is not yet running.
+
+<Note>
+  Pending state is not billed. Click **Start container** to run workloads.
+</Note>
+
+## Related docs
+
+<Columns cols={2}>
+  <Card title="Deploy a Container" icon="container" href="/docs/air-container/deploy-a-container" cta="Deploy" arrow="true">
+    Deployment flow and configuration steps.
+  </Card>
+
+  <Card title="Autoscaling and Scheduling" icon="activity" href="/docs/air-container/autoscaling-and-scheduling" cta="Configure" arrow="true">
+    Configure autoscaling and scheduling.
+  </Card>
+
+  <Card title="Contact & Feedback" icon="mail" href="/docs/support/contact-and-feedback" cta="Get help" arrow="true">
+    Reach out if the issue persists.
+  </Card>
+</Columns>

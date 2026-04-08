@@ -1,0 +1,46 @@
+---
+title: "Autoscaling and Scheduling"
+description: "Replica autoscaling and time-based scheduling"
+icon: "activity"
+---
+
+Air Container supports **Autoscaling** and **Scheduled Scaling** so you can operate replica counts based on your traffic patterns.
+
+## Autoscaling
+
+Autoscaling automatically adjusts replica counts based on conditions. When enabled during resource configuration, you can set minimum and maximum replicas.
+
+### When you need autoscaling
+
+- Request volume varies significantly by time of day
+- You want to reduce latency while improving operational efficiency
+- Manual replica management is not practical
+
+## Scheduled Scaling
+
+Scheduled Scaling adjusts replicas on a **time-based** schedule. For predictable traffic patterns, you can turn autoscaling on/off at certain times and set replica counts.
+
+### Example
+
+If traffic increases daily from 11:30 AM to 6:30 PM:
+
+- 11:30 AM: Autoscale On, Min 1 / Max 3
+- 6:30 PM: Autoscale Off, Replica 1
+
+## Operational tips
+
+- Keep minimum replicas low when baseline traffic is small
+- Use Scheduled Scaling for expected events/time windows
+- Review real replica changes regularly in the Usage view
+
+## Related docs
+
+<Columns cols={2}>
+  <Card title="Deploy a Container" icon="container" href="/docs/air-container/deploy-a-container" cta="Deploy" arrow="true">
+    Deployment flow and configuration steps.
+  </Card>
+
+  <Card title="Monitoring and Troubleshooting" icon="radar" href="/docs/air-container/monitoring-and-troubleshooting" cta="Monitor" arrow="true">
+    Monitor usage and review logs/settings.
+  </Card>
+</Columns>

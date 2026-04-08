@@ -1,0 +1,63 @@
+---
+title: "개념"
+description: "Aircloud를 이해하기 위한 핵심 개념"
+icon: "lightbulb"
+---
+
+Aircloud를 처음 사용할 때 가장 먼저 이해하면 좋은 핵심 개념을 정리한 문서입니다.
+
+<Info>
+  처음이라면 [Quickstart](/docs/ko/quickstart)에서 전체 흐름을 먼저 확인한 뒤, 이 문서를 읽는 것을 권장합니다.
+</Info>
+
+## Organization
+
+Organization은 사용자와 프로젝트를 묶는 상위 단위입니다. 하나의 팀, 회사, 또는 운영 주체를 기준으로 Organization을 생성하며, 멤버 초대와 권한 관리도 Organization 단위로 이루어집니다.
+
+## Project
+
+Project는 실제 워크로드와 리소스를 관리하는 작업 단위입니다. Air API, Air Container, 사용량, 엔드포인트, 모니터링 정보는 모두 프로젝트 단위로 구분됩니다. 하나의 Organization에는 여러 개의 Project를 만들 수 있습니다.
+
+## Air API
+
+Air API는 모델을 API 형태로 빠르게 연동하고 테스트할 수 있는 방식입니다. 프로젝트 안에서 지원 모델을 선택하고 시크릿 키를 발급받은 뒤, 코드 샘플 또는 Playground를 통해 바로 테스트할 수 있습니다.
+
+## Air Container
+
+Air Container는 사용자가 직접 준비한 컨테이너 이미지를 배포하는 방식입니다. 런타임, 의존성, 포트, 환경 변수, 오토스케일링, Replica 수 같은 배포 옵션을 세밀하게 제어해야 하는 경우에 적합합니다.
+
+## Endpoint
+
+Endpoint는 배포된 API 또는 컨테이너 서비스에 접근하기 위한 실행 단위입니다. 사용자는 프로젝트 안에서 엔드포인트 상태, 사용량, 로그, 스케줄링 설정을 확인할 수 있습니다.
+
+## Replica
+
+Replica는 동일한 워크로드 인스턴스 수를 의미합니다. 트래픽이 많아질수록 Replica 수를 늘려 더 많은 요청을 처리할 수 있으며, Autoscaling을 통해 자동으로 조정할 수도 있습니다.
+
+## Autoscaling
+
+Autoscaling은 트래픽이나 설정 조건에 따라 Replica 수를 자동으로 조정하는 기능입니다. 최소 Replica 수와 최대 Replica 수를 함께 설정하여 비용과 성능을 균형 있게 운영할 수 있습니다.
+
+## Aircloud와 Aircloud+
+
+Aircloud는 비용 효율과 유연성이 중요한 워크로드에 적합한 인프라 옵션입니다. Aircloud+는 더 높은 수준의 안정성, 예측 가능한 성능, 전용 운영 환경이 중요한 워크로드에 적합합니다.
+
+## 다음에 읽으면 좋은 문서
+
+<Columns cols={2}>
+  <Card title="Quickstart" icon="play-circle" href="/docs/ko/quickstart" cta="빠르게 시작하기" arrow="true">
+    계정 생성부터 첫 사용 흐름까지 전체 과정을 빠르게 훑어봅니다.
+  </Card>
+
+  <Card title="조직 및 과금" icon="building" href="/docs/ko/get-started/organizations-and-billing" cta="구조 이해하기" arrow="true">
+    Organization/Project 구조와 과금 관련 개념을 정리합니다.
+  </Card>
+
+  <Card title="Air API" icon="sparkles" href="/docs/ko/air-api" cta="API로 시작하기" arrow="true">
+    모델을 API 형태로 빠르게 테스트하고 연동하는 흐름을 확인합니다.
+  </Card>
+
+  <Card title="Air Container" icon="box" href="/docs/ko/air-container" cta="컨테이너 배포하기" arrow="true">
+    컨테이너 이미지 배포 및 리소스/오토스케일링 설정 흐름을 확인합니다.
+  </Card>
+</Columns>

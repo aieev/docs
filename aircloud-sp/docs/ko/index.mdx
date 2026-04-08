@@ -1,38 +1,108 @@
 ---
 title: "소개"
-description: ""
-icon: "book-open"
+icon: "cloud"
 ---
 
-**Air Cloud**는 대규모 AI 추론을 안정적으로 처리할 수 있는 GPU 클라우드 플랫폼입니다. 실시간 AI 서비스부터 비용 최적화가 필요한 워크로드까지, 사용자 목적에 맞는 두 가지 옵션을 제공합니다.
+Aircloud는 AI inference workload를 빠르고 유연하게 배포하고 운영할 수 있도록 설계된 분산형 AI cloud platform입니다. 사용자는 API 기반으로 모델을 빠르게 연동할 수도 있고, 컨테이너 단위로 애플리케이션과 런타임을 직접 배포해 원하는 환경을 구성할 수도 있습니다.
 
-- **Air Cloud**: 분산형 GPU 인프라를 기반으로, 검증된 네트워크를 통해 효율적이고 합리적인 비용을 제공합니다.
-- **Air Cloud+**: AIEEV가 직접 운영하는 전용 GPU 노드로, 높은 가용성·성능·안정성을 보장합니다.
+간단한 프로토타이핑부터 production 서비스까지, Aircloud는 서비스 목적과 운영 방식에 맞는 다양한 시작 경로를 제공합니다. 처음 사용하는 경우에는 먼저 Air API와 Air Container 중 적합한 시작점을 선택한 뒤, 서비스 요구사항에 따라 Aircloud 또는 Aircloud+ 인프라 옵션을 함께 검토하는 흐름을 권장합니다.
 
-전통적인 전용 GPU 클라우드가 실서비스(프로덕션) 환경에서 겪는 한계를 해결하기 위해 설계된 Air Cloud를 통해 복잡한 설정이나 비용 부담없이 시작해보세요.
+## Aircloud에서 시작하는 방법
 
-[지금 바로 계정을 만들고 시작해보세요.](https://integrated-dev.aieev.cloud:3002/ko)
+<Columns cols={2}>
+  <Card
+    title="Air API"
+    icon="sparkles"
+    href="/docs/api-reference"
+    cta="API로 시작하기"
+    arrow="true"
+  >
+    인프라를 직접 관리하지 않고 API 형태로 AI 모델을 빠르게 연동할 수 있는 방식입니다. 사용량 기반 과금과 자동 확장을 바탕으로, 빠른 통합과 간편한 운영이 필요한 inference workload에 적합합니다.
+  </Card>
 
-## A. 배포 방식 선택
+  <Card
+    title="Air Container"
+    icon="box"
+    href="/docs/air-container"
+    cta="컨테이너 배포하기"
+    arrow="true"
+  >
+    사용자가 직접 준비한 컨테이너 이미지를 Aircloud에 배포하는 방식입니다. 런타임, 의존성, 서비스 구성을 더 세밀하게 제어해야 하는 팀에 적합하며, 유연한 배포와 운영 제어가 필요한 경우에 적합합니다.
+  </Card>
+</Columns>
 
-- **Air Container**: AWS, GitHub, Docker Hub, Google 등 퍼블릭·프라이빗 레포지토리에서 컨테이너 이미지를 손쉽게 배포할 수 있습니다. 이미지 주소와 보안 토큰만 입력하면 즉시 실행 가능합니다.
-- **Air Model** (25년 9월 출시 예정): 서버리스 기반 초 단위 과금 모델로, 빠른 AI 추론을 위한 환경을 제공합니다. 모델을 자동으로 불러오고 REST 엔드포인트를 구성하며, 프로덕션 환경을 위한 오토스케일링까지 지원합니다.
-- **Air API** (25년 9월 출시 예정): Whisper, LLaMA 3.3 8B, Solar Mini, D.N.A와 같은 오픈소스 모델을 활용하여 OpenAI 호환 REST API 엔드포인트를 제공합니다.
+## 인프라 옵션
 
-## B. 인프라 설정
+<Columns cols={2}>
+  <Card title="Aircloud" icon="cloud">
+    비용 효율과 유연성이 중요한 워크로드를 위한 분산형 인프라 옵션입니다. 합리적인 비용으로 AI inference workload를 운영하려는 팀에 적합합니다.
+  </Card>
 
-- **Air Cloud**: 한국 내 1만여 대 이상의 GPU가 연결된 분산 네트워크로, 검증된 GPU 파트너 네트워크를 통해 운영됩니다. 이 중 1,000대 이상의 GPU를 사전 확보해 두었으며, 작업에 따라 동적으로 할당되어 업계 최고 수준의 비용 경쟁력을 제공합니다.
-- **Air Cloud+**: AI추론 전용으로 설계된 AIEEV가 직접 운영하는 GPU 서버로, 높은 가용성과 서비스 안정성, 엔터프라이즈급 보안을 제공합니다.
+  <Card title="Aircloud+" icon="shield-check">
+    더 높은 수준의 안정성, 성능, 가용성, 운영 통제가 필요한 워크로드를 위한 전용 인프라 옵션입니다. 엔터프라이즈 환경이나 중요한 production workload에 적합합니다.
+  </Card>
+</Columns>
 
-## C. 미션
+## 어떤 경우에 무엇을 선택하면 되나요?
 
-AIEEV는 성능, 안정성, 사용성을 결코 타협하지 않으면서 누구나 GPU AI 클라우드 플랫폼을 쉽고 합리적인 비용으로 활용할 수 있도록 설계했습니다. 개인 사용자부터 기업까지, 모두가 AI와 확장형 인프라의 잠재력을 최대한 활용할 수 있도록 지원합니다.
+### 배포 방식 정하기
 
-<Info>
-  도움이 필요하신가요? 사용안내서에서 확인할 수 없는 내용은, [Discord](https://discord.com/channels/912829806415085598/1187492973148115076/threads/1349672733168107541), [이메일](mailto:contact@aieev.com)을 통해 문의해주세요.
-</Info>
+<Columns cols={2}>
+  <Card title="빠르게 시작하고 싶은 경우" icon="rocket">
+    모델 API를 빠르게 연동하고 운영 부담을 줄이고 싶다면 [Air API](/docs/api-reference)가 적합합니다.
+  </Card>
 
-## D. 진행 가이드
+  <Card title="직접 제어하고 싶은 경우" icon="settings">
+    컨테이너 이미지, 런타임, 의존성, 서비스 구성을 직접 관리하고 싶다면 [Air Container](/docs/air-container)가 적합합니다.
+  </Card>
+</Columns>
 
-- Air Cloud 튜토리얼 실행하기
-- 계정에 사용 금액 충전하기
+### 인프라 옵션 정하기
+
+<Columns cols={2}>
+  <Card title="비용 효율이 중요한 경우" icon="wallet">
+    유연하고 비용 효율적인 인프라가 중요하다면 Aircloud가 적합합니다.
+  </Card>
+
+  <Card title="안정성이 중요한 경우" icon="badge-check">
+    더 높은 안정성, 예측 가능한 성능, 전용 운영 환경이 중요하다면 Aircloud+가 적합합니다.
+
+    <Note>
+      🛡️ ISO 27001 Certified — 엔터프라이즈급 보안/컴플라이언스 요구사항이 중요한 워크로드에 적합합니다.
+    </Note>
+  </Card>
+</Columns>
+
+## 다음 단계
+
+<Columns cols={3}>
+  <Card
+    title="Quickstart"
+    icon="play-circle"
+    href="/docs/quickstart"
+    cta="빠르게 시작하기"
+    arrow="true"
+  >
+    계정 생성, 기본 설정, 첫 사용 흐름을 확인합니다.
+  </Card>
+
+  <Card
+    title="Air API"
+    icon="code-2"
+    href="/docs/api-reference"
+    cta="API 문서 보기"
+    arrow="true"
+  >
+    모델 연동 방식과 호출 흐름을 확인합니다.
+  </Card>
+
+  <Card
+    title="Support"
+    icon="life-buoy"
+    href="/docs/support"
+    cta="지원 문서 보기"
+    arrow="true"
+  >
+    사용 중 도움이 필요한 경우 지원 문서를 확인합니다.
+  </Card>
+</Columns>

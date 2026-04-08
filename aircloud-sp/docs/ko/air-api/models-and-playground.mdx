@@ -1,0 +1,46 @@
+---
+title: "모델 및 Playground"
+description: "지원 모델 선택과 Playground 테스트"
+icon: "play"
+---
+
+Air API에서는 프로젝트 안에서 지원 모델을 선택하고, Playground를 통해 Web UI 기반 테스트를 진행할 수 있습니다.
+
+## 모델 선택
+
+프로젝트 내 Air API 화면에서 사용할 모델을 선택할 수 있습니다. 지원 모델은 지속적으로 추가될 수 있으며, 필요한 모델이 목록에 없는 경우 피드백을 통해 요청할 수 있습니다.
+
+## 모델 선택 시 확인할 사항
+
+- 사용 목적 (예: 일반 대화, 요약, 생성)
+- 응답 속도 요구사항
+- 운영 비용과 사용량
+- 이후 Air Container 확장 가능성
+
+## Playground
+
+Playground는 브라우저에서 바로 모델 응답을 테스트할 수 있는 인터페이스입니다. 시크릿 키 발급 이후 Playground를 통해 모델 동작을 빠르게 확인할 수 있으며, 애플리케이션 연동 전 테스트 단계에서 특히 유용합니다.
+
+## 권장 사용 흐름
+
+1. 모델 선택
+2. 시크릿 키 생성
+3. 코드 샘플 테스트
+4. Playground 테스트
+5. 실제 애플리케이션 연동 또는 컨테이너 기반 확장 검토
+
+## 관련 문서
+
+<Columns cols={2}>
+  <Card title="Air API 개요" icon="sparkles" href="/docs/ko/air-api" cta="개요 보기" arrow="true">
+    Air API 전체 흐름과 사용 시나리오를 확인합니다.
+  </Card>
+
+  <Card title="API 사용 가이드" icon="code-2" href="/docs/ko/air-api/api-usage-guide" cta="가이드 보기" arrow="true">
+    API 호출 방법과 운영 시 주의사항을 정리합니다.
+  </Card>
+
+  <Card title="문제 해결" icon="wrench" href="/docs/ko/air-api/troubleshooting" cta="문제 해결 보기" arrow="true">
+    자주 발생하는 오류와 해결 방법을 확인합니다.
+  </Card>
+</Columns>

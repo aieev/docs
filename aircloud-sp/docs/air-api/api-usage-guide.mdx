@@ -1,0 +1,57 @@
+---
+title: "API Usage Guide"
+description: "Create a secret key and run your first test"
+icon: "key"
+---
+
+This guide walks through the minimal steps to start using Air API from your application.
+
+## 1. Select Air API in your project
+
+After creating an Organization and Project, open the project overview and select **Air API**.
+
+## 2. Choose a model
+
+Create an API workload in the project and select the model you need.
+
+## 3. Create a secret key
+
+Select an API access endpoint, then generate a secret key.
+
+<Warning>
+  Secret keys cannot be viewed again after creation. Copy and store them securely.
+</Warning>
+
+## 4. Test using code samples
+
+Return to the API screen and use the provided code sample. Replace `your-api-key` with your generated secret key, then run a connectivity test.
+
+## 5. Integrate into your application
+
+Once the test succeeds, integrate using the same credentials and endpoint.
+
+Before production, we recommend testing in the Playground, reviewing usage, and evaluating whether to expand to Air Container.
+
+## Checklist
+
+- Project selected
+- Model selected
+- Secret key copied
+- Code sample test completed
+- Playground test completed (optional)
+
+## Related docs
+
+<Columns cols={2}>
+  <Card title="Models and Playground" icon="play" href="/docs/air-api/models-and-playground" cta="Read" arrow="true">
+    Choose models and test in the Playground.
+  </Card>
+
+  <Card title="Troubleshooting" icon="wrench" href="/docs/air-api/troubleshooting" cta="Fix issues" arrow="true">
+    Common issues and what to check first.
+  </Card>
+
+  <Card title="API Reference" icon="book" href="/docs/api-reference" cta="View reference" arrow="true">
+    Review API specs, endpoints, and parameters.
+  </Card>
+</Columns>
