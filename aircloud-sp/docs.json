@@ -55,7 +55,6 @@
               {
                 "group": "Reference",
                 "pages": [
-                  "docs/api-reference/index",
                   "docs/reference/infrastructure-and-resource-types",
                   "docs/reference/container-runtime-reference"
                 ]
@@ -174,7 +173,6 @@
               {
                 "group": "레퍼런스",
                 "pages": [
-                  "docs/ko/api-reference/index",
                   "docs/ko/reference/infrastructure-and-resource-types",
                   "docs/ko/reference/container-runtime-reference"
                 ]
