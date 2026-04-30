@@ -1,0 +1,97 @@
+---
+title: "Desktop Notifications"
+description: "Receive Air Cloud alerts on your operating system"
+icon: "bell"
+---
+
+Air Cloud can deliver critical alerts as native OS notifications, so you don't have to keep the console tab open to catch them. This guide walks you through enabling desktop notifications in your browser, your operating system, and the Air Cloud console.
+
+<Info>
+  Only a limited set of high-priority events trigger OS notifications today — for example, **endpoint deployment failures** and **service announcements**. Other in-app notifications (balance updates, member events, etc.) appear in the notification popover but do not pop up on your desktop.
+</Info>
+
+## How It Works
+
+Desktop notifications use the browser's native [Web Notifications API](https://developer.mozilla.org/en-US/docs/Web/API/Notifications_API). For an alert to reach you, three independent permissions must all be granted:
+
+1. **Browser permission** — granted per browser, per device.
+2. **Operating system permission** — granted to the browser at the OS level.
+3. **Air Cloud preference** — a toggle inside your console profile.
+
+If any one of the three is off, no desktop popup will appear. Note that notifications are delivered while the browser is running; if you fully quit the browser, you will not receive new desktop alerts until you return to the console.
+
+## Enabling Notifications in the Console
+
+Open your profile settings and turn on **Desktop notifications**. The first time you enable the toggle, your browser will prompt you to allow notifications from Air Cloud.
+
+<Frame>
+  <img
+    src="/docs/images/console-webnoti-settings.png"
+    style={{ borderRadius: "0.5rem" }}
+  />
+</Frame>
+
+Click **Allow** in the prompt. If you accidentally clicked **Block**, the browser will not ask again — see [Re-enabling a Blocked Permission](#re-enabling-a-blocked-permission) below.
+
+The toggle state is stored per browser, per device. If you switch laptops or browsers, you'll need to enable it again.
+
+## Allowing Notifications at the OS Level
+
+Even with the browser permission granted, your operating system can silently suppress notifications. Make sure your browser is allowed to deliver them.
+
+### macOS
+
+1. Open **System Settings → Notifications**.
+2. Find your browser (Chrome, Safari, Edge, etc.) in the list.
+3. Turn **Allow notifications** on.
+4. Confirm that **Focus** or **Do Not Disturb** is not active.
+
+<Frame>
+  <img
+    src="/docs/images/macos-webnoti-settings.png"
+    style={{ borderRadius: "0.5rem" }}
+  />
+</Frame>
+
+### Windows
+
+1. Open **Settings → System → Notifications**.
+2. Locate your browser under **Notifications from apps and other senders**.
+3. Toggle it **On**.
+4. Make sure **Focus assist** / **Do not disturb** is off.
+
+## Re-enabling a Blocked Permission
+
+If you previously chose **Block** in the browser prompt, the Air Cloud console cannot ask again. Re-enable the permission in the browser's site settings.
+
+- **Chrome / Edge**: Click the lock icon in the address bar → **Site settings** → set **Notifications** to **Allow**.
+- **Firefox**: Click the lock icon → **Connection secure** → **More information** → **Permissions** → uncheck **Block** for Notifications.
+- **Safari**: **Safari → Settings → Websites → Notifications** → set the Air Cloud entry to **Allow**.
+
+<Frame>
+  <img
+    src="/docs/images/chrome-webnoti-settings.png"
+    style={{ borderRadius: "0.5rem" }}
+  />
+</Frame>
+
+After updating the permission, reload the Air Cloud console and toggle **Desktop notifications** off and on once to re-bind the permission.
+
+## Troubleshooting
+
+- **The toggle keeps reverting to off.** The browser permission is most likely set to **denied**. Reset it from site settings as described above.
+- **Toggle is on, but no popups appear.** Check the OS-level setting and any Focus / Do Not Disturb mode. On macOS, Screen Sharing and presentation modes also suppress notifications.
+- **I get in-app notifications but no desktop popups.** This is expected for events that are not high-priority. See the note at the top of this page.
+- **Safari shows nothing.** Older Safari versions only deliver web notifications to installed PWAs. Use Chrome, Edge, or Firefox if you need desktop alerts on macOS.
+
+## Supported Events
+
+| Event | Type | Desktop notification |
+| --- | --- | --- |
+| Endpoint deployment failed | `ENDPOINT` | Yes |
+| Service announcement | `ANNOUNCEMENT` | Yes |
+| Balance credited / consumed | `BALANCE` | In-app only |
+| Member invited / joined | `MEMBER` | In-app only |
+| Other endpoint events | `ENDPOINT` | In-app only |
+
+We expand the list of desktop-eligible events over time. All events remain visible in the in-app notification popover regardless of OS delivery.

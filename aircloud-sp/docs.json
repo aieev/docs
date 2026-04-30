@@ -60,6 +60,12 @@
                 ]
               },
               {
+                "group": "Console",
+                "pages": [
+                  "docs/console/desktop-notifications"
+                ]
+              },
+              {
                 "group": "Support",
                 "pages": [
                   "docs/support/faq",
@@ -175,6 +181,12 @@
                 "pages": [
                   "docs/ko/reference/infrastructure-and-resource-types",
                   "docs/ko/reference/container-runtime-reference"
+                ]
+              },
+              {
+                "group": "콘솔",
+                "pages": [
+                  "docs/ko/console/desktop-notifications"
                 ]
               },
               {
