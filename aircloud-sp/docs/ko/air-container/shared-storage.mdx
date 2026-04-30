@@ -1,0 +1,45 @@
+---
+description: "여러 엔드포인트와 replica에서 하나의 영구 볼륨을 공유하는 방법을 안내합니다"
+icon: "database"
+title: "Shared Storage"
+---
+
+Shared Storage는 여러 엔드포인트가 하나의 영구 볼륨을 동시에 마운트할 수 있게 해주는 기능입니다.
+
+이 기능을 사용하면 하나의 프로젝트 안에서 볼륨을 공유하여 데이터를 여러 엔드포인트 또는 여러 replica가 함께 사용할 수 있습니다.
+
+## Shared Storage로 할 수 있는 것
+
+- 여러 엔드포인트가 하나의 영구 볼륨을 동시에 마운트
+- 하나의 프로젝트 안에서 볼륨 공유 가능
+- 하나의 엔드포인트에서 여러 replica가 같은 볼륨 공유 가능
+
+## 사용 방법
+
+### 1. 새 볼륨 만들기
+
+엔드포인트 생성 시 영구 볼륨을 새로 생성하여 연결할 수 있습니다.
+
+![First Step](/images/first_step.png)
+
+### 2. 기존 볼륨 연결하기
+
+다른 엔드포인트에 이미 사용 중인 볼륨을 다시 연결하여 같은 볼륨을 공유할 수 있습니다.
+
+![Second Step](/images/second_step.png)
+
+### 3. 여러 replica에서 같은 볼륨 공유하기
+
+하나의 엔드포인트에서 여러 replica가 같은 볼륨을 함께 사용할 수 있습니다.
+
+![Shared Storage](/images/shared_storage.png)
+
+## 주의사항
+
+<Warning>
+  현재는 RWO 제약으로 인해 영구 볼륨이 활성화되면 replica 수는 1개로 고정되고 오토스케일링이 비활성화됩니다.
+</Warning>
+
+<Warning>
+  RWX 환경에서 발생할 수 있는 lock 문제는 application 단에서 직접 처리해야 합니다.
+</Warning>

@@ -1,0 +1,150 @@
+---
+title: "Use aircloud CLI"
+description: "Install and use the aircloud CLI for container operations"
+icon: "terminal"
+slug: "/docs/air-container/access-and-connect/aircloud-cli"
+---
+
+The `aircloud` CLI lets you inspect endpoints, open container shells, connect over SSH, and manage local CLI configuration.
+
+## Install the CLI
+
+```bash
+pip install aircloud-cli
+```
+
+## Verify installation
+
+```bash
+aircloud --help
+```
+
+Expected commands include:
+- `config`
+- `endpoints`
+- `exec`
+- `ssh`
+- `whoami`
+
+## Configure the CLI
+
+### Common commands
+```bash
+aircloud config set <key> <value>
+aircloud config get <key>
+aircloud config list
+aircloud config --help
+```
+
+### Initial setup
+```bash
+aircloud config set api-base-url https://external.aieev.cloud:5007
+aircloud config set api-key sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+aircloud config list
+```
+
+<Note>
+The CLI stores configuration in `~/.aircloud/config.json`.
+</Note>
+
+## Check authentication context
+
+```bash
+aircloud whoami
+```
+
+Example output:
+```json
+{
+  "organization_id": "org-xxxxxxxxx",
+  "project_id": "proj-yyyyyyyy",
+  "api_key_id": "123456fs-4fb4-455a-b951-612df2acaafc",
+  "user_id": "abc123da-85c3-4a46-asbb-4egfgc4df187",
+  "authenticated_via": "api_key"
+}
+```
+
+## Inspect and manage endpoints
+
+### Available commands
+```bash
+aircloud endpoints list
+aircloud endpoints get
+aircloud endpoints start
+aircloud endpoints stop
+aircloud endpoints scale
+aircloud endpoints patch
+aircloud endpoints replicas
+aircloud endpoints logs
+```
+
+### List endpoints
+```bash
+aircloud endpoints list
+aircloud endpoints list --search jupyter --active
+aircloud endpoints list --page 2 --size 20
+```
+
+### Get endpoint details
+```bash
+aircloud endpoints get <endpoint_id>
+```
+
+### Start, stop, and scale
+```bash
+aircloud endpoints stop <endpoint_id>
+aircloud endpoints start <endpoint_id>
+aircloud endpoints scale <endpoint_id> --replicas 3
+```
+
+### Patch a stopped endpoint
+```bash
+aircloud endpoints patch <endpoint_id> --command "python main.py --port 8080"
+aircloud endpoints patch <endpoint_id> --port 8080
+aircloud endpoints patch <endpoint_id> --health-check-path /healthz --health-check-timeout 30
+aircloud endpoints patch <endpoint_id> --env MODEL_NAME=llama3 --env CUDA_VISIBLE_DEVICES=0
+```
+
+<Note>
+Patching is supported only when the endpoint is stopped.
+</Note>
+
+### Check replicas
+```bash
+aircloud endpoints replicas <endpoint_id>
+```
+
+### View logs
+```bash
+aircloud endpoints logs <endpoint_id>
+aircloud endpoints logs <endpoint_id> --replica-id <replica_id>
+aircloud endpoints logs <endpoint_id> --start-line 1 --end-line 500
+aircloud endpoints logs <endpoint_id> --list-files
+```
+
+## Open a shell with `aircloud exec`
+
+`aircloud exec` opens an interactive shell inside a running container without requiring `sshd`.
+
+### Open a shell
+```bash
+aircloud exec <endpoint_id>
+```
+
+### Pin to a replica
+```bash
+aircloud exec <endpoint_id> -r <replica_id>
+```
+
+### Use a different shell
+```bash
+aircloud exec <endpoint_id> -c "/bin/sh"
+```
+
+### End the session
+Type `exit` or press `Ctrl + D`.
+
+## Use `aircloud ssh`
+For SSH-based access workflows, use `aircloud ssh`.
+
+Read [Connect with SSH](/docs/air-container/access-and-connect/ssh-access) for image preparation, SSH key registration, and examples.

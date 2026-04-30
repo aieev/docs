@@ -1,0 +1,139 @@
+---
+title: "SSH로 접속하기"
+description: "SSH 기반 접근을 위해 aircloud ssh를 사용합니다"
+icon: "key-round"
+slug: "/docs/ko/air-container/access-and-connect/ssh-access"
+---
+
+`aircloud ssh`는 로컬 터미널에서 실행 중인 컨테이너에 SSH로 접속할 수 있게 해줍니다.
+
+다음과 같은 SSH 고유 워크플로우가 필요할 때 적합합니다.
+
+- `scp`
+- SSH 터널링
+- `ssh -L` 기반 포트 포워딩
+- VS Code Remote SSH
+
+Web Terminal이나 `aircloud exec`와 달리, SSH 접근은 이미지 준비와 SSH 키 등록이 필요합니다.
+
+## 언제 사용하면 좋나요?
+
+다음과 같은 경우 `aircloud ssh`가 적합합니다.
+
+- `scp`로 파일을 전송해야 하는 경우
+- SSH 포트 포워딩이 필요한 경우
+- SSH 기반 IDE 연동이 필요한 경우
+- SSH 중심 운영 워크플로우가 필요한 경우
+
+## 콘솔에서 SSH 키 등록하기
+
+프로젝트 사이드바에서 **SSH 키** 메뉴로 이동합니다.
+
+![Ssh Menu](/images/ssh_menu.png)
+
+키를 추가할 때는 다음을 입력합니다.
+
+- 알아보기 쉬운 이름
+- OpenSSH 공개키 전체
+- 키를 주입할 엔드포인트
+
+![Ssh Open Key](/images/ssh-open-key.png)
+
+키를 추가하거나 변경할 때 엔드포인트가 이미 실행 중이면, 새 키는 다음 start 또는 재배포 시점부터 적용됩니다. 이미 실행 중인 컨테이너는 기존 키 셋을 유지합니다.
+
+![Image 8](/images/image-8.png)
+
+## 중요한 준비사항
+
+### AirCloud 제공 템플릿
+
+일부 AirCloud 제공 템플릿은 Jupyter 또는 코드 환경처럼 기본적으로 SSH를 지원할 수 있습니다.
+
+### 커스텀 이미지
+
+직접 만든 커스텀 컨테이너 이미지에서 SSH를 사용하려면 아래가 필요합니다.
+
+- `openssh-server` 설치
+- `ssh-keygen -A`를 통한 host key 생성
+- 주입된 공개키를 `authorized_keys`에 반영하는 entrypoint
+- 부팅 시 `sshd` 실행
+
+## 기본 SSH 설정 흐름
+
+### 1. 로컬에서 키 쌍 생성
+
+```bash
+ssh-keygen -t ed25519 -C "your-email@example.com"
+```
+
+### 2. 공개키 확인
+
+```bash
+cat ~/.ssh/id_ed25519.pub
+```
+
+### 3. 콘솔에서 공개키 등록
+
+AirCloud 콘솔에서:
+
+1. **Project** 로 이동
+2. **SSH Keys** 열기
+3. 새 키 추가
+4. 키를 주입할 엔드포인트 선택
+
+### 4. 필요 시 엔드포인트 재시작
+
+키를 추가하거나 변경할 때 엔드포인트가 이미 실행 중이었다면, 새 환경변수 주입이 적용되도록 엔드포인트를 중지 후 다시 시작해야 할 수 있습니다.
+
+## `aircloud ssh`로 접속하기
+
+### 기본 접속
+
+```bash
+aircloud ssh <endpoint_id>
+```
+
+### 특정 identity file 사용
+
+```bash
+aircloud ssh <endpoint_id> -i ~/.ssh/aircloud_key
+```
+
+### 특정 replica 지정
+
+```bash
+aircloud ssh <endpoint_id> -r <replica_id>
+```
+
+### 다른 사용자로 접속
+
+```bash
+aircloud ssh <endpoint_id> -u myuser
+```
+
+### 터널만 열기
+
+```bash
+aircloud ssh <endpoint_id> --tunnel-only
+```
+
+## 커스텀 이미지 최소 요구사항
+
+커스텀 이미지는 최소한 아래를 포함해야 합니다.
+
+- `openssh-server`
+- 안전한 SSH 설정
+- host key 생성
+- `authorized_keys` 초기화 및 반영 로직
+- `sshd` 프로세스 시작'
+
+## `aircloud ssh` vs `aircloud exec`
+
+| 항목 | `aircloud ssh` | `aircloud exec` |
+| --- | --- | --- |
+| `sshd` 필요 | 예 | 아니요 |
+| SSH 키 등록 필요 | 예 | 아니요 |
+| `scp` 지원 | 예 | 아니요 |
+| SSH 터널링 지원 | 예 | 아니요 |
+| Remote SSH 도구 지원 | 예 | 아니요 |
+| 접근 속도 | 조금 더 느림 | 더 빠름 |

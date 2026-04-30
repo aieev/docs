@@ -1,0 +1,139 @@
+---
+title: "Connect with SSH"
+description: "Use aircloud ssh for SSH-based access workflows"
+icon: "key-round"
+slug: "/docs/air-container/access-and-connect/ssh-access"
+---
+
+`aircloud ssh` lets you connect to a running container over SSH from your local terminal.
+
+This is the right option when you need SSH-native workflows such as:
+
+- `scp`
+- SSH tunneling
+- port forwarding with `ssh -L`
+- VS Code Remote SSH
+
+Unlike Web Terminal or `aircloud exec`, SSH access requires image preparation and SSH key registration.
+
+## When to use SSH
+
+Use `aircloud ssh` when you need:
+
+- file transfer with `scp`
+- SSH port forwarding
+- IDE integrations built on SSH
+- an SSH-native operational workflow
+
+## Register SSH keys in the console
+
+Open the project sidebar and go to **SSH Keys**.
+
+![Ssh Menu](/images/ssh_menu.png)
+
+When adding a key:
+
+- enter a readable name
+- paste the full OpenSSH public key
+- choose which endpoints should receive the key
+
+![Ssh Open Key](/images/ssh-open-key.png)
+
+If the endpoint is already running when the key is added or changed, the new key applies from the next start or redeploy. Existing running containers keep the previous key set.
+
+![Image 8](/images/image-8.png)
+
+## Important requirement
+
+### AirCloud-provided templates
+
+Some AirCloud-provided templates such as Jupyter or code-oriented images can support SSH out of the box.
+
+### Custom images
+
+For your own custom container image, SSH requires:
+
+- `openssh-server` installed
+- host key generation with `ssh-keygen -A`
+- an entrypoint that installs injected public keys into `authorized_keys`
+- `sshd` startup during container boot
+
+## Standard SSH setup flow
+
+### 1. Generate a key pair locally
+
+```bash
+ssh-keygen -t ed25519 -C "your-email@example.com"
+```
+
+### 2. Copy your public key
+
+```bash
+cat ~/.ssh/id_ed25519.pub
+```
+
+### 3. Register the public key in the console
+
+In the AirCloud console:
+
+1. Go to **Project**
+2. Open **SSH Keys**
+3. Add a new key
+4. Select which endpoints should receive the key
+
+### 4. Restart the endpoint if needed
+
+If the endpoint is already running when the key is added or changed, stop and restart it so the new environment variable injection takes effect.
+
+## Connect with `aircloud ssh`
+
+### Basic connection
+
+```bash
+aircloud ssh <endpoint_id>
+```
+
+### Explicit identity file
+
+```bash
+aircloud ssh <endpoint_id> -i ~/.ssh/aircloud_key
+```
+
+### Pin to a specific replica
+
+```bash
+aircloud ssh <endpoint_id> -r <replica_id>
+```
+
+### Connect as another user
+
+```bash
+aircloud ssh <endpoint_id> -u myuser
+```
+
+### Open tunnel only
+
+```bash
+aircloud ssh <endpoint_id> --tunnel-only
+```
+
+## Minimal image requirements for custom containers
+
+Your custom image should include:
+
+- `openssh-server`
+- secure SSH configuration
+- host key generation
+- startup logic for `authorized_keys`
+- `sshd` process startup
+
+## `aircloud ssh` vs `aircloud exec`
+
+| Item | `aircloud ssh` | `aircloud exec` |
+| --- | --- | --- |
+| Requires `sshd` | Yes | No |
+| Requires SSH key registration | Yes | No |
+| Supports `scp` | Yes | No |
+| Supports SSH tunneling | Yes | No |
+| Supports Remote SSH tools | Yes | No |
+| Access speed | Slightly slower | Faster |

@@ -1,0 +1,135 @@
+---
+title: "웹 터미널 사용하기"
+description: "콘솔에서 실행 중인 커스텀 컨테이너에 바로 접속합니다"
+icon: "monitor-smartphone"
+slug: "/docs/ko/air-container/access-and-connect/web-terminal"
+---
+
+Web Terminal은 AirCloud 콘솔에서 실행 중인 컨테이너에 브라우저 기반 셸로 접속할 수 있게 해줍니다.
+
+이 방식은 `sshd`, SSH 키 등록, 별도 로컬 터미널 설정 없이 빠르게 운영 접근을 해야 할 때 적합합니다.
+
+## 언제 사용하면 좋나요?
+
+다음과 같은 경우 Web Terminal이 적합합니다.
+
+- 콘솔에서 바로 셸을 열고 싶은 경우
+- 실행 중인 커스텀 컨테이너 안의 파일이나 프로세스를 빠르게 확인하고 싶은 경우
+- 가벼운 검증이나 디버깅 명령을 실행하고 싶은 경우
+- SSH 설정을 피하고 싶은 경우
+
+## 언제 사용할 수 있나요?
+
+### 커스텀 컨테이너
+
+사용자가 직접 배포한 커스텀 컨테이너는, 컨테이너가 실행 중일 때 엔드포인트 개요 화면에서 **Terminal** 버튼을 통해 접근할 수 있습니다.
+
+![Terminal1](/images/terminal1.png)
+
+### AirCloud 제공 템플릿 컨테이너
+
+일부 AirCloud 제공 템플릿은 자체 웹 UI 안에 터미널 기능을 포함하고 있습니다.
+
+예를 들면:
+
+- **Open Notebook** 으로 여는 노트북 환경
+- 웹 기반 IDE를 제공하는 코드 환경
+
+![Jupyter Notebook](/images/jupyter_notebook.png)
+
+![Terminal2](/images/terminal2.png)
+
+이 경우에는 엔드포인트 페이지의 **Terminal** 버튼을 사용하지 않아도, 노트북이나 IDE 화면 안에 이미 포함된 터미널을 사용할 수 있습니다.
+
+## Web Terminal 동작 방식
+
+### 1. Terminal 버튼 열기
+
+엔드포인트 개요 화면에서 **Terminal** 버튼을 클릭합니다.
+
+### 2. 처음 사용할 때 터미널 접근 활성화
+
+해당 엔드포인트에서 처음 터미널을 여는 경우에는, 세션이 시작되기 전에 활성화 안내 창이 표시됩니다.
+
+이 창에서 `sshd` 설정 없이 해당 엔드포인트의 브라우저 터미널 접근을 활성화할 수 있습니다.
+
+![활성화](/images/활성화.png)
+
+한 번 활성화한 뒤에는, 접근 정책이 초기화되지 않는 한 같은 단계가 다시 나타나지 않습니다.
+
+### 3. Replica 선택
+
+터미널 접근이 활성화된 뒤:
+
+- **라이브 replica가 1개이면** 자동 연결
+- **라이브 replica가 2개 이상이면** replica 선택창이 먼저 표시됩니다
+
+![Select Replica](/images/select_replica.png)
+
+### 4. 선택한 replica에 연결
+
+replica를 선택하면 해당 replica에 브라우저 터미널 세션이 연결됩니다.
+
+![Image 4](/images/image-4.png)
+
+### 5. 세션 종료
+
+다음과 같은 방식으로 세션을 종료할 수 있습니다.
+
+- `exit` 입력
+- `Ctrl + D` 입력
+
+세션이 종료되면 터미널 창은 약 **2초 후 자동으로 닫힙니다**.
+
+![Image 5](/images/image-5.png)
+
+## Web Terminal이 열리지 않는 경우
+
+다음 사항을 확인하세요.
+
+- 엔드포인트가 실행 중인지
+- 라이브 replica가 하나 이상 있는지
+- 해당 엔드포인트에 접근 권한이 있는지
+
+라이브 replica가 없으면, replica가 실행되기 전까지 터미널을 열 수 없습니다.
+
+## 로컬 터미널에서는 `aircloud exec` 사용하기
+
+같은 SSH-free 접근 방식을 AirCloud 콘솔이 아니라 로컬 터미널에서 사용하고 싶다면 `aircloud exec`를 사용하면 됩니다.
+
+### 셸 열기
+
+```bash
+aircloud exec <endpoint_id>
+```
+
+예시:
+
+```bash
+aircloud exec 7fe76055-4159-47a5-a68d-320564e20540
+```
+
+### 특정 replica 지정
+
+```bash
+aircloud exec <endpoint_id> -r <replica_id>
+```
+
+### 다른 셸로 시작하기
+
+```bash
+aircloud exec <endpoint_id> -c "/bin/sh"
+```
+
+### 세션 종료
+
+`exit`를 입력하거나 `Ctrl + D`를 눌러 세션을 종료할 수 있습니다.
+
+## Web Terminal과 `aircloud exec`
+
+Web Terminal과 `aircloud exec`는 모두 `sshd` 없이 셸에 접근할 수 있는 방식입니다.
+
+차이는 시작 위치입니다.
+
+- Web Terminal은 콘솔 UI에서 시작합니다.
+- `aircloud exec`는 로컬 터미널에서 시작합니다.

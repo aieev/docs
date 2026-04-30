@@ -49,7 +49,18 @@
                   "docs/air-container/index",
                   "docs/air-container/deploy-a-container",
                   "docs/air-container/autoscaling-and-scheduling",
-                  "docs/air-container/monitoring-and-troubleshooting"
+                  "docs/air-container/monitoring-and-troubleshooting",
+                  {
+                    "group": "Access and Connect",
+                    "icon": "link",
+                    "pages": [
+                      "overview",
+                      "use-web-terminal",
+                      "untitled-page",
+                      "connect-with-ssh"
+                    ]
+                  },
+                  "docs/air-container/shared-storage"
                 ]
               },
               {
@@ -173,7 +184,18 @@
                   "docs/ko/air-container/index",
                   "docs/ko/air-container/deploy-a-container",
                   "docs/ko/air-container/autoscaling-and-scheduling",
-                  "docs/ko/air-container/monitoring-and-troubleshooting"
+                  "docs/ko/air-container/monitoring-and-troubleshooting",
+                  {
+                    "group": "접속 및 연결",
+                    "icon": "link",
+                    "pages": [
+                      "file-1",
+                      "file",
+                      "aircloud-cli",
+                      "ssh"
+                    ]
+                  },
+                  "docs/ko/air-container/shared-storage"
                 ]
               },
               {

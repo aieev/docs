@@ -1,0 +1,45 @@
+---
+title: "Shared Storage"
+description: "Learn how to share one persistent volume across multiple endpoints and replicas"
+icon: "database"
+---
+
+Shared Storage allows multiple endpoints to mount the same persistent volume at the same time.
+
+With this feature, a single volume can be shared across endpoints within the same project, and multiple replicas in one endpoint can also use the same volume together.
+
+## What you can do with Shared Storage
+
+- mount one persistent volume across multiple endpoints
+- share a volume within the same project
+- allow multiple replicas in one endpoint to use the same volume
+
+## How to use Shared Storage
+
+### 1. Create a new volume
+
+When creating an endpoint, you can create and attach a new persistent volume.
+
+![First Step](/images/first_step.png)
+
+### 2. Attach an existing volume
+
+You can mount the same existing volume to another endpoint and share it across endpoints.
+
+![Second Step](/images/second_step.png)
+
+### 3. Share one volume across multiple replicas
+
+Multiple replicas in one endpoint can share the same volume.
+
+![Shared Storage](/images/shared_storage.png)
+
+## Important notes
+
+<Warning>
+  At the moment, enabling a persistent volume under the current RWO constraint fixes the replica count to 1 and disables autoscaling.
+</Warning>
+
+<Warning>
+  Any lock-related issue caused by RWX access must be handled at the application level.
+</Warning>
