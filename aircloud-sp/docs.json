@@ -48,6 +48,10 @@
                 "pages": [
                   "docs/air-container/index",
                   "docs/air-container/deploy-a-container",
+                  "docs/air-container/access-and-connect",
+                  "docs/air-container/access-and-connect/web-terminal",
+                  "docs/air-container/access-and-connect/aircloud-exec",
+                  "docs/air-container/access-and-connect/ssh-access",
                   "docs/air-container/autoscaling-and-scheduling",
                   "docs/air-container/monitoring-and-troubleshooting"
                 ]

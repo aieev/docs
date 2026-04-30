@@ -1,0 +1,68 @@
+---
+title: "Access and Connect"
+description: "Choose the right way to access and operate running containers"
+icon: "terminal-square"
+---
+
+Air Container supports multiple ways to access running workloads depending on what you need to do.
+
+In practice, users usually need one of these three paths:
+
+- **Web Terminal** for quick browser-based access from the console
+- **aircloud exec** for direct shell access from the local terminal without SSH setup
+- **aircloud ssh** for SSH-based workflows such as SCP, port forwarding, and Remote SSH tools
+
+This section explains when to use each option, what prerequisites apply, and how to choose the right access method for your container.
+
+## Access methods at a glance
+
+| Method | Where it starts | Requires SSH server in image | Requires SSH key registration | Best for |
+| --- | --- | --- | --- | --- |
+| Web Terminal | AirCloud console | No | No | Quick browser access, lightweight debugging |
+| `aircloud exec` | Local terminal | No | No | Fast shell access, debugging, ad hoc commands |
+| `aircloud ssh` | Local terminal | Yes | Yes | SCP, SSH tunneling, Remote SSH workflows |
+
+## Recommended decision flow
+
+### Use Web Terminal when
+- you want to access a running container from the console
+- you need a fast browser-based shell
+- you do not need file transfer or SSH-based tooling
+
+### Use `aircloud exec` when
+- you want direct terminal access from your local machine
+- you do not want to install or manage `sshd` in the container image
+- you want the simplest shell access path for custom containers
+
+### Use `aircloud ssh` when
+- you need SSH-based workflows such as `scp`
+- you need port forwarding with `ssh -L`
+- you want to use tools like VS Code Remote SSH
+- your image is prepared with `sshd` and injected SSH keys
+
+## Important differences by container type
+
+### AirCloud-provided template containers
+Some AirCloud-provided templates such as notebook or code-oriented environments already expose a web UI that includes terminal access. In those cases, users may already have terminal access through the notebook or IDE interface.
+
+### Custom containers
+For custom containers, access behavior depends on the method:
+- **Web Terminal** can be enabled from the endpoint overview without requiring `sshd`
+- **`aircloud exec`** works without `sshd`
+- **`aircloud ssh`** requires a custom image with `openssh-server`, startup handling, and SSH key injection
+
+## What to read next
+
+<Columns cols={2}>
+  <Card title="Use Web Terminal" icon="monitor-smartphone" href="/docs/air-container/access-and-connect/web-terminal" cta="Open guide" arrow="true">
+    Learn how browser-based terminal access works, including activation and replica selection.
+  </Card>
+
+  <Card title="Use aircloud exec" icon="terminal" href="/docs/air-container/access-and-connect/aircloud-exec" cta="Use exec" arrow="true">
+    Open an interactive shell from your local terminal without SSH setup.
+  </Card>
+
+  <Card title="Connect with SSH" icon="key-round" href="/docs/air-container/access-and-connect/ssh-access" cta="Use SSH" arrow="true">
+    Configure SSH access for advanced workflows like SCP and port forwarding.
+  </Card>
+</Columns>

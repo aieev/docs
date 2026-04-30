@@ -1,0 +1,101 @@
+---
+title: "Use Web Terminal"
+description: "Access running custom containers directly from the console"
+icon: "monitor-smartphone"
+---
+
+Web Terminal gives users browser-based shell access to a running container directly from the AirCloud console.
+
+It is designed for quick operational access without requiring `sshd`, SSH key registration, or a separate local terminal workflow.
+
+## When to use Web Terminal
+Use Web Terminal when you want to:
+- open a shell quickly from the console
+- inspect files or processes in a running custom container
+- run lightweight commands for validation or debugging
+- avoid SSH setup
+
+## When Web Terminal is available
+
+### Custom containers
+For user-deployed custom containers, the **Terminal** button becomes available from the endpoint overview page after the container is running.
+
+### AirCloud-provided template containers
+Some AirCloud-provided templates such as notebook or code environments already provide terminal access through their own web UI.
+
+Examples include:
+- notebook environments opened via **Open Notebook**
+- code environments opened via a web-based IDE
+
+In those cases, Web Terminal documentation should clarify that users may already have terminal access through the built-in application UI rather than the endpoint-level terminal entry point.
+
+## How Web Terminal works
+
+### 1. Open the Terminal button
+From the endpoint overview page, click **Terminal**.
+
+### 2. First-time activation flow
+If this is the first time terminal access is opened for that endpoint, show a terminal activation UX before connecting.
+
+Recommended UX behavior:
+- explain that browser terminal access will be enabled for the endpoint
+- clarify that `sshd` is not required
+- allow the user to proceed or cancel
+
+After the first activation, the activation step should not be shown again unless the terminal access policy is reset.
+
+### 3. Replica selection
+After terminal access is enabled:
+- if the endpoint has **1 live replica**, connect automatically
+- if the endpoint has **2 or more live replicas**, show a replica selection dialog first
+
+Replica selection UI should display at least:
+- replica ID
+- current state
+- optional node or started-at information if available
+
+### 4. Connect to the selected replica
+Once a replica is selected, open the browser terminal session and attach the shell to that replica.
+
+### 5. Exit behavior
+When the terminal session ends by:
+- typing `exit`, or
+- pressing `Ctrl + D`
+
+the terminal window should automatically close after about **2 seconds**.
+
+## Recommended UX details
+
+### Activation messaging
+Recommended copy:
+- "Enable terminal access for this endpoint"
+- "Web Terminal uses `aircloud exec` style container access and does not require SSH server setup."
+
+### Empty or unavailable states
+If terminal access cannot be opened:
+- no live replica available → show a clear message such as `No live replicas available.`
+- endpoint stopped → show `Start the endpoint to use terminal access.`
+- permission issue → show a permission error with the next action
+
+### Safety notes
+- Web Terminal is intended for operational access, not long-running interactive development sessions
+- terminal access should follow the same authorization model as endpoint access in the console
+
+## Relationship to `aircloud exec`
+Web Terminal is conceptually similar to `aircloud exec` in that it does **not** require `sshd`.
+
+The difference is the access surface:
+- Web Terminal starts from the console UI
+- `aircloud exec` starts from the local CLI
+
+## Related docs
+
+<Columns cols={2}>
+  <Card title="Access and Connect Overview" icon="terminal-square" href="/docs/air-container/access-and-connect" cta="Overview" arrow="true">
+    Compare access methods and choose the right one.
+  </Card>
+
+  <Card title="Use aircloud exec" icon="terminal" href="/docs/air-container/access-and-connect/aircloud-exec" cta="Use exec" arrow="true">
+    Open a shell from your local terminal without SSH setup.
+  </Card>
+</Columns>

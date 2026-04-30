@@ -1,0 +1,93 @@
+---
+title: "Use aircloud exec"
+description: "Open an interactive shell in a running container without SSH"
+icon: "terminal"
+---
+
+`aircloud exec` opens an interactive shell inside a running container from your local terminal.
+
+This is the simplest access path for shell-based inspection and debugging because it does **not** require:
+- `sshd`
+- SSH key registration
+- custom SSH image setup
+
+## When to use `aircloud exec`
+Use `aircloud exec` when you want to:
+- quickly open a shell in a running container
+- inspect files, processes, and environment variables
+- run debugging commands from your local terminal
+- avoid SSH-related setup
+
+## Basic usage
+
+### Open a shell
+```bash
+aircloud exec <endpoint_id>
+```
+
+Example:
+```bash
+aircloud exec 7fe76055-4159-47a5-a68d-320564e20540
+```
+
+Expected output example:
+```bash
+AirCloud Exec
+  Endpoint: 7fe76055-4159-47a5-a68d-320564e20540
+  Command:  /bin/bash
+
+root@container:/workspace#
+```
+
+## Pin to a specific replica
+If the endpoint has multiple live replicas, you can target one explicitly.
+
+```bash
+aircloud exec <endpoint_id> -r <replica_id>
+```
+
+Example:
+```bash
+aircloud exec 7fe76055-4159-47a5-a68d-320564e20540 -r 2ofqxy33
+```
+
+## Start with a different shell
+If `/bin/bash` is not available or you prefer another shell:
+
+```bash
+aircloud exec <endpoint_id> -c "/bin/sh"
+```
+
+## Exit the session
+You can close the shell by:
+- typing `exit`
+- pressing `Ctrl + D`
+
+## Common use cases
+- verify application files after deployment
+- inspect environment variables
+- check mounted paths
+- test commands manually inside the runtime
+- perform quick operational debugging
+
+## Limitations
+`aircloud exec` is not a replacement for SSH-based workflows.
+
+It does **not** provide:
+- `scp`
+- SSH port forwarding
+- Remote SSH IDE integration
+
+If you need those workflows, use [`aircloud ssh`](/docs/air-container/access-and-connect/ssh-access).
+
+## Related docs
+
+<Columns cols={2}>
+  <Card title="Use Web Terminal" icon="monitor-smartphone" href="/docs/air-container/access-and-connect/web-terminal" cta="Open guide" arrow="true">
+    Use browser-based terminal access directly from the console.
+  </Card>
+
+  <Card title="Connect with SSH" icon="key-round" href="/docs/air-container/access-and-connect/ssh-access" cta="Use SSH" arrow="true">
+    Use SSH for file transfer, tunneling, and Remote SSH workflows.
+  </Card>
+</Columns>
