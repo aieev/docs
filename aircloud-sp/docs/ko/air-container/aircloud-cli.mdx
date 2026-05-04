@@ -1,0 +1,149 @@
+---
+title: "aircloud CLI 사용하기"
+description: "컨테이너 운영을 위해 aircloud CLI를 설치하고 사용합니다"
+icon: "terminal"
+---
+
+`aircloud` CLI를 사용하면 엔드포인트를 조회하고, 컨테이너 셸에 접속하고, SSH로 연결하고, 로컬 CLI 설정을 관리할 수 있습니다.
+
+## CLI 설치
+
+```bash
+pip install aircloud-cli
+```
+
+## 설치 확인
+
+```bash
+aircloud --help
+```
+
+확인할 수 있는 주요 명령은 다음과 같습니다.
+- `config`
+- `endpoints`
+- `exec`
+- `ssh`
+- `whoami`
+
+## CLI 설정
+
+### 자주 쓰는 명령
+```bash
+aircloud config set <key> <value>
+aircloud config get <key>
+aircloud config list
+aircloud config --help
+```
+
+### 초기 설정
+```bash
+aircloud config set api-base-url https://external.aieev.cloud:5007
+aircloud config set api-key sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+aircloud config list
+```
+
+<Note>
+CLI 설정은 `~/.aircloud/config.json`에 저장됩니다.
+</Note>
+
+## 인증 정보 확인
+
+```bash
+aircloud whoami
+```
+
+예시 출력:
+```json
+{
+  "organization_id": "org-xxxxxxxxx",
+  "project_id": "proj-yyyyyyyy",
+  "api_key_id": "123456fs-4fb4-455a-b951-612df2acaafc",
+  "user_id": "abc123da-85c3-4a46-asbb-4egfgc4df187",
+  "authenticated_via": "api_key"
+}
+```
+
+## 엔드포인트 조회 및 관리
+
+### 사용 가능한 명령
+```bash
+aircloud endpoints list
+aircloud endpoints get
+aircloud endpoints start
+aircloud endpoints stop
+aircloud endpoints scale
+aircloud endpoints patch
+aircloud endpoints replicas
+aircloud endpoints logs
+```
+
+### 엔드포인트 목록 보기
+```bash
+aircloud endpoints list
+aircloud endpoints list --search jupyter --active
+aircloud endpoints list --page 2 --size 20
+```
+
+### 엔드포인트 상세 보기
+```bash
+aircloud endpoints get <endpoint_id>
+```
+
+### 시작, 중지, 스케일
+```bash
+aircloud endpoints stop <endpoint_id>
+aircloud endpoints start <endpoint_id>
+aircloud endpoints scale <endpoint_id> --replicas 3
+```
+
+### 중지된 엔드포인트 수정
+```bash
+aircloud endpoints patch <endpoint_id> --command "python main.py --port 8080"
+aircloud endpoints patch <endpoint_id> --port 8080
+aircloud endpoints patch <endpoint_id> --health-check-path /healthz --health-check-timeout 30
+aircloud endpoints patch <endpoint_id> --env MODEL_NAME=llama3 --env CUDA_VISIBLE_DEVICES=0
+```
+
+<Note>
+patch는 엔드포인트가 중지된 상태에서만 사용할 수 있습니다.
+</Note>
+
+### replica 확인
+```bash
+aircloud endpoints replicas <endpoint_id>
+```
+
+### 로그 확인
+```bash
+aircloud endpoints logs <endpoint_id>
+aircloud endpoints logs <endpoint_id> --replica-id <replica_id>
+aircloud endpoints logs <endpoint_id> --start-line 1 --end-line 500
+aircloud endpoints logs <endpoint_id> --list-files
+```
+
+## `aircloud exec`로 셸 열기
+
+`aircloud exec`는 `sshd` 없이 실행 중인 컨테이너 안에 인터랙티브 셸을 엽니다.
+
+### 셸 열기
+```bash
+aircloud exec <endpoint_id>
+```
+
+### 특정 replica 지정
+```bash
+aircloud exec <endpoint_id> -r <replica_id>
+```
+
+### 다른 셸 사용
+```bash
+aircloud exec <endpoint_id> -c "/bin/sh"
+```
+
+### 세션 종료
+`exit`를 입력하거나 `Ctrl + D`를 누르세요.
+
+## `aircloud ssh` 사용
+SSH 기반 접근이 필요하다면 `aircloud ssh`를 사용하세요.
+
+이미지 준비, SSH 키 등록, 접속 예시는 [SSH로 접속하기](/docs/ko/air-container/connect-with-ssh) 문서를 참고하세요.
