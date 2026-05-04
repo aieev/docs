@@ -191,7 +191,7 @@
                     "pages": [
                       "docs/ko/air-container/access-and-connect",
                       "docs/ko/air-container/use-web-terminal",
-                      "docs/ko/air-container/aircloud-cli",
+                      "docs/ko/air-container/use-aircloud-cli",
                       "docs/ko/air-container/connect-with-ssh"
                     ]
                   },
