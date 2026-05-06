@@ -7,6 +7,156 @@ mode: "wide"
 
 <Update label="April 2026">
 
+## Web Terminal, AirCloud CLI, SSH access, and Shared Storage
+
+AirCloud endpoint access and storage capabilities have been expanded. You can now connect to running containers from the browser or your local terminal, manage endpoints with the AirCloud CLI, use SSH-based development workflows, and share persistent storage across endpoints and replicas.
+
+**Web Terminal**
+
+Browser-based terminal access is now available for custom container endpoints.
+
+- **SSH-free terminal access**: Open a terminal session through AirCloud's exec-based connection without installing `sshd` or configuring SSH keys.
+- **Custom container support**: Custom container endpoints now show a **Terminal** button on the endpoint overview page.
+- **Template environment access**: AirCloud-provided templates such as Jupyter Notebook and Code already include terminal access through their web UI.
+- **Replica selection**: For endpoints with multiple replicas, select the replica you want to connect to. If only one replica is running, AirCloud connects automatically.
+- **Simple session exit**: Exit the terminal with `exit` or `Ctrl-D`. The terminal window closes automatically shortly after the session ends.
+- **Connection retry guidance**: If the terminal stays in the connecting state for a long time, try again from a new browser window or incognito mode.
+
+**AirCloud CLI**
+
+The new `aircloud-cli` lets you manage AirCloud endpoints and access running containers from your local terminal.
+
+```bash
+pip install aircloud-cli
+```
+
+Key capabilities:
+
+- **CLI configuration**: Configure the API base URL and API key with `aircloud config`.
+- **Authentication context**: Use `aircloud whoami` to verify your organization, project, user, and API key context.
+- **Endpoint management**: List, inspect, start, stop, scale, and patch endpoints from your terminal.
+- **Replica inspection**: View live replica status for active endpoints.
+- **Endpoint logs**: Retrieve endpoint logs, list log files, inspect per-replica logs, and fetch specific log ranges for debugging.
+- **Exec-based shell access**: Use `aircloud exec <endpoint_id>` to open an interactive shell inside a running container without SSH setup.
+- **Replica pinning**: Connect to a specific replica with `aircloud exec <endpoint_id> -r <replica_id>`.
+- **Custom shell command**: Start a different shell or command with `aircloud exec <endpoint_id> -c "/bin/sh"`.
+
+**SSH access via AirCloud CLI**
+
+AirCloud CLI now supports key-based SSH access into containers.
+
+- **CLI-based SSH access**: Use `aircloud ssh <endpoint_id>` to connect to supported containers from your local terminal.
+- **SSH key injection**: Register an SSH public key in the AirCloud console and inject it into selected endpoints.
+- **Template support**: AirCloud-provided Jupyter Notebook and Code templates support SSH access out of the box.
+- **Custom container support**: To use SSH with custom images, install `sshd`, add injected public keys to `authorized_keys`, and start the SSH server inside the container.
+- **Standard SSH workflows**: Use SSH-based workflows such as `scp` file transfer, `ssh -L` port forwarding, and VS Code Remote SSH.
+- **Replica-specific SSH**: Pin an SSH session to a specific replica with `aircloud ssh <endpoint_id> -r <replica_id>`.
+- **Tunnel-only mode**: Open only the SSH tunnel with `aircloud ssh <endpoint_id> --tunnel-only` for advanced workflows.
+
+**AirCloud Exec vs SSH**
+
+AirCloud now supports two ways to access running containers, depending on your workflow.
+
+| Feature | `aircloud exec` | `aircloud ssh` |
+|--------|------------------|----------------|
+| Image requirements | No image changes required | Custom images require `sshd` |
+| Key setup | API key only | SSH key registration required |
+| File transfer with `scp` | Not supported | Supported |
+| Port forwarding with `ssh -L` | Not supported | Supported |
+| VS Code Remote SSH | Not supported | Supported |
+| Best for | Fast shell access and debugging | SSH-based development, file transfer, and port forwarding |
+
+**Shared Storage**
+
+Shared Storage is now available for persistent volumes across endpoints and replicas.
+
+- **One volume, multiple endpoints**: Attach the same persistent volume to multiple endpoints within a project.
+- **Shared storage across replicas**: Multiple replicas in the same endpoint can mount and access the same volume.
+- **Data independent from containers**: Keep datasets, model checkpoints, logs, and output artifacts independent from the container lifecycle.
+- **Flexible volume attachment**: Create a new persistent volume when creating an endpoint, or attach an existing volume to another endpoint.
+- **Read-write shared access**: Shared volumes support read-write access, but applications should handle concurrent writes and file locking.
+
+## Web Terminal, AirCloud CLI, SSH access, and Shared Storage
+
+AirCloud endpoint access and storage capabilities have been expanded. You can now connect to running containers from the browser or your local terminal, manage endpoints with the AirCloud CLI, use SSH-based development workflows, and share persistent storage across endpoints and replicas.
+
+**Web Terminal**
+
+Browser-based terminal access is now available for custom container endpoints.
+
+- **SSH-free terminal access**: Open a terminal session through AirCloud's exec-based connection without installing `sshd` or configuring SSH keys.
+- **Custom container support**: Custom container endpoints now show a **Terminal** button on the endpoint overview page.
+- **Template environment access**: AirCloud-provided templates such as Jupyter Notebook and Code already include terminal access through their web UI.
+- **Replica selection**: For endpoints with multiple replicas, select the replica you want to connect to. If only one replica is running, AirCloud connects automatically.
+- **Simple session exit**: Exit the terminal with `exit` or `Ctrl-D`. The terminal window closes automatically shortly after the session ends.
+- **Connection retry guidance**: If the terminal stays in the connecting state for a long time, try again from a new browser window or incognito mode.
+
+**AirCloud CLI**
+
+The new `aircloud-cli` lets you manage AirCloud endpoints and access running containers from your local terminal.
+
+```bash
+pip install aircloud-cli
+```
+
+Key capabilities:
+
+- **CLI configuration**: Configure the API base URL and API key with `aircloud config`.
+- **Authentication context**: Use `aircloud whoami` to verify your organization, project, user, and API key context.
+- **Endpoint management**: List, inspect, start, stop, scale, and patch endpoints from your terminal.
+- **Replica inspection**: View live replica status for active endpoints.
+- **Endpoint logs**: Retrieve endpoint logs, list log files, inspect per-replica logs, and fetch specific log ranges for debugging.
+- **Exec-based shell access**: Use `aircloud exec <endpoint_id>` to open an interactive shell inside a running container without SSH setup.
+- **Replica pinning**: Connect to a specific replica with `aircloud exec <endpoint_id> -r <replica_id>`.
+- **Custom shell command**: Start a different shell or command with `aircloud exec <endpoint_id> -c "/bin/sh"`.
+
+**SSH access via AirCloud CLI**
+
+AirCloud CLI now supports key-based SSH access into containers.
+
+- **CLI-based SSH access**: Use `aircloud ssh <endpoint_id>` to connect to supported containers from your local terminal.
+- **SSH key injection**: Register an SSH public key in the AirCloud console and inject it into selected endpoints.
+- **Template support**: AirCloud-provided Jupyter Notebook and Code templates support SSH access out of the box.
+- **Custom container support**: To use SSH with custom images, install `sshd`, add injected public keys to `authorized_keys`, and start the SSH server inside the container.
+- **Standard SSH workflows**: Use SSH-based workflows such as `scp` file transfer, `ssh -L` port forwarding, and VS Code Remote SSH.
+- **Replica-specific SSH**: Pin an SSH session to a specific replica with `aircloud ssh <endpoint_id> -r <replica_id>`.
+- **Tunnel-only mode**: Open only the SSH tunnel with `aircloud ssh <endpoint_id> --tunnel-only` for advanced workflows.
+
+**AirCloud Exec vs SSH**
+
+AirCloud now supports two ways to access running containers, depending on your workflow.
+
+| Feature | `aircloud exec` | `aircloud ssh` |
+|--------|------------------|----------------|
+| Image requirements | No image changes required | Custom images require `sshd` |
+| Key setup | API key only | SSH key registration required |
+| File transfer with `scp` | Not supported | Supported |
+| Port forwarding with `ssh -L` | Not supported | Supported |
+| VS Code Remote SSH | Not supported | Supported |
+| Best for | Fast shell access and debugging | SSH-based development, file transfer, and port forwarding |
+
+**Shared Storage**
+
+Shared Storage is now available for persistent volumes across endpoints and replicas.
+
+- **One volume, multiple endpoints**: Attach the same persistent volume to multiple endpoints within a project.
+- **Shared storage across replicas**: Multiple replicas in the same endpoint can mount and access the same volume.
+- **Data independent from containers**: Keep datasets, model checkpoints, logs, and output artifacts independent from the container lifecycle.
+- **Flexible volume attachment**: Create a new persistent volume when creating an endpoint, or attach an existing volume to another endpoint.
+- **Read-write shared access**: Shared volumes support read-write access, but applications should handle concurrent writes and file locking.
+
+<CardGroup cols={2}>
+  <Card title="AirCloud CLI Reference" href="/docs/air-container/cli" icon="terminal">
+    Learn how to install and use the AirCloud CLI.
+  </Card>
+  <Card title="Web Terminal and SSH Guide" href="/docs/air-container/container-access" icon="display">
+    Learn how to access running containers.
+  </Card>
+  <Card title="Shared Storage Guide" href="/docs/air-container/shared-storage" icon="database">
+    Learn how to share persistent volumes across endpoints and replicas.
+  </Card>
+</CardGroup>
+
 ## Air API General Availability
 
 Air API is now generally available. Access AirCloud's AI models through an OpenAI-compatible interface with transparent per-token pricing.

@@ -7,6 +7,90 @@ mode: "wide"
 
 <Update label="2026년 4월">
 
+## 웹 터미널, AirCloud CLI, SSH 접속, 공유 스토리지
+
+AirCloud 엔드포인트에 접근하고 데이터를 관리하는 기능이 확장되었습니다. 이제 브라우저나 로컬 터미널에서 실행 중인 컨테이너에 바로 접속하고, AirCloud CLI로 엔드포인트를 관리하며, SSH 기반 개발 워크플로와 여러 엔드포인트·레플리카 간 공유 스토리지를 사용할 수 있습니다.
+
+**웹 터미널**
+
+커스텀 컨테이너 엔드포인트에서 브라우저 기반 터미널을 사용할 수 있습니다.
+
+- **SSH 설정 없는 터미널 접속**: 컨테이너 이미지에 `sshd`를 설치하거나 SSH 키를 설정하지 않아도 AirCloud의 exec 기반 연결로 터미널을 열 수 있습니다.
+- **커스텀 컨테이너 지원**: 사용자가 직접 만든 커스텀 컨테이너 엔드포인트의 개요 페이지에 **터미널** 버튼이 표시됩니다.
+- **템플릿 환경의 터미널**: AirCloud가 제공하는 Jupyter Notebook, Code 템플릿은 각 웹 UI에서 터미널을 바로 사용할 수 있습니다.
+- **레플리카 선택**: 레플리카가 2개 이상인 엔드포인트는 접속할 레플리카를 선택할 수 있고, 레플리카가 1개인 경우 자동으로 연결됩니다.
+- **간단한 세션 종료**: 터미널에서 `exit`를 입력하거나 `Ctrl-D`를 누르면 세션이 종료되고, 잠시 후 터미널 창이 자동으로 닫힙니다.
+- **연결 재시도 안내**: 터미널이 connecting 상태에서 오래 멈춰 있는 경우 새 브라우저 창이나 시크릿 모드에서 다시 접속할 수 있습니다.
+
+**AirCloud CLI**
+
+`aircloud-cli`를 통해 로컬 터미널에서 AirCloud 엔드포인트를 관리하고, 실행 중인 컨테이너에 접속할 수 있습니다.
+
+```bash
+pip install aircloud-cli
+```
+
+주요 기능:
+
+- **CLI 설정 관리**: `aircloud config`로 API base URL과 API key를 설정하고 확인할 수 있습니다.
+- **인증 컨텍스트 확인**: `aircloud whoami`로 조직, 프로젝트, 사용자, API 키 정보를 확인할 수 있습니다.
+- **엔드포인트 관리**: 엔드포인트 목록 조회, 상세 조회, 시작, 중지, 스케일링, 설정 변경을 로컬 터미널에서 수행할 수 있습니다.
+- **레플리카 조회**: 활성 엔드포인트의 실시간 레플리카 상태를 확인할 수 있습니다.
+- **로그 조회**: 엔드포인트 로그를 확인하고, 레플리카별 로그나 로그 파일 목록, 특정 라인 범위를 조회할 수 있습니다.
+- **exec 기반 쉘 접속**: `aircloud exec <endpoint_id>`로 SSH 설정 없이 실행 중인 컨테이너 안에 바로 접속할 수 있습니다.
+- **특정 레플리카 접속**: `aircloud exec <endpoint_id> -r <replica_id>`로 원하는 레플리카에 고정해 접속할 수 있습니다.
+- **쉘 명령 지정**: `aircloud exec <endpoint_id> -c "/bin/sh"`처럼 기본 bash 외의 쉘이나 명령으로 세션을 시작할 수 있습니다.
+
+**AirCloud CLI를 통한 SSH 접속**
+
+AirCloud CLI에서 SSH 키 기반 컨테이너 접속을 지원합니다.
+
+- **CLI 기반 SSH 접속**: `aircloud ssh <endpoint_id>`로 로컬 터미널에서 지원되는 컨테이너에 SSH로 접속할 수 있습니다.
+- **SSH 키 주입**: AirCloud 콘솔에 SSH 공개키를 등록하고, 사용할 엔드포인트에 키를 주입할 수 있습니다.
+- **템플릿 기본 지원**: AirCloud가 제공하는 Jupyter Notebook, Code 템플릿은 SSH 접속을 기본 지원합니다.
+- **커스텀 이미지 지원**: 커스텀 이미지에서 SSH를 사용하려면 이미지 안에 `sshd`를 설치하고, 주입된 공개키를 `authorized_keys`에 반영한 뒤 SSH 서버를 실행해야 합니다.
+- **표준 SSH 워크플로 지원**: `scp` 파일 전송, `ssh -L` 포트 포워딩, VS Code Remote SSH 같은 SSH 기반 개발 흐름을 사용할 수 있습니다.
+- **레플리카별 SSH 접속**: `aircloud ssh <endpoint_id> -r <replica_id>`로 특정 레플리카에 SSH 세션을 고정할 수 있습니다.
+- **터널 전용 모드**: `aircloud ssh <endpoint_id> --tunnel-only`로 SSH 터널만 열어 고급 워크플로에 활용할 수 있습니다.
+
+**AirCloud Exec와 SSH 비교**
+
+AirCloud에서는 작업 목적에 따라 두 가지 방식으로 컨테이너에 접속할 수 있습니다.
+
+| 항목 | `aircloud exec` | `aircloud ssh` |
+|------|------------------|----------------|
+| 이미지 요구사항 | 별도 이미지 수정 없음 | 커스텀 이미지는 `sshd` 필요 |
+| 키 설정 | API key만 필요 | SSH key 등록 필요 |
+| `scp` 파일 전송 | 미지원 | 지원 |
+| `ssh -L` 포트 포워딩 | 미지원 | 지원 |
+| VS Code Remote SSH | 미지원 | 지원 |
+| 적합한 용도 | 빠른 쉘 접속, 디버깅 | SSH 기반 개발, 파일 전송, 포트 포워딩 |
+
+**공유 스토리지**
+
+여러 엔드포인트와 레플리카에서 하나의 영구 볼륨을 함께 사용할 수 있는 공유 스토리지가 추가되었습니다.
+
+- **하나의 볼륨을 여러 엔드포인트에서 사용**: 같은 프로젝트 안의 여러 엔드포인트에 동일한 영구 볼륨을 연결할 수 있습니다.
+- **레플리카 간 볼륨 공유**: 하나의 엔드포인트 안에서 여러 레플리카가 같은 볼륨을 마운트해 사용할 수 있습니다.
+- **컨테이너와 분리된 데이터 관리**: 데이터셋, 모델 체크포인트, 로그, 결과 파일을 컨테이너 수명 주기와 독립적으로 보관할 수 있습니다.
+- **유연한 볼륨 연결**: 엔드포인트 생성 시 새 영구 볼륨을 만들거나, 기존 볼륨을 다른 엔드포인트에 연결할 수 있습니다.
+- **읽기/쓰기 공유 지원**: 공유 볼륨은 읽기/쓰기를 지원하지만, 동시 쓰기와 파일 잠금은 애플리케이션에서 직접 처리해야 합니다.
+
+<CardGroup cols={2}>
+  <Card title="웹 터미널 사용하기" href="/docs/ko/air-container/use-web-terminal" icon="terminal">
+    실행 중인 컨테이너에 브라우저 기반 터미널로 접속하는 방법을 확인하세요.
+  </Card>
+  <Card title="AirCloud CLI 사용하기" href="/docs/ko/air-container/use-aircloud-cli" icon="code">
+    AirCloud CLI 설치 및 사용법을 확인하세요.
+  </Card>
+  <Card title="SSH로 접속하기" href="/docs/ko/air-container/connect-with-ssh" icon="key">
+    컨테이너에 SSH로 접속하는 방법을 확인하세요.
+  </Card>
+  <Card title="공유 스토리지" href="/docs/ko/air-container/shared-storage" icon="database">
+    여러 엔드포인트와 레플리카에서 영구 볼륨을 공유하는 방법을 확인하세요.
+  </Card>
+</CardGroup>
+
 ## Air API 정식 출시 (GA)
 
 Air API가 정식 출시되었습니다. OpenAI 호환 인터페이스를 통해 AirCloud의 AI 모델을 바로 사용할 수 있습니다.
