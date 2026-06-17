@@ -7,7 +7,7 @@ mode: "wide"
 
 <Update label="June 2026">
 
-## Redesigned console, real-time notifications, Persistent Volume, Web Terminal, and SSH Keys
+## Redesigned console, real-time notifications, and Persistent Volume
 
 **Redesigned console pages**
 
@@ -35,28 +35,12 @@ Persistent volumes are now more flexible across your deployments.
 - **Shared across deployments**: A single volume can be attached to multiple deployments, and the picker shows which deployments are already using it.
 - **Edit while stopped**: Enable, disable, or swap the attached volume while a deployment is stopped.
 
-**Web Terminal**
-
-Open an interactive terminal into a running container directly from your browser — no SSH client or local setup required.
-
-- Launch it with one click from the container detail page.
-- When a container has multiple replicas, choose which replica to connect to; with a single replica it connects automatically.
-- The session automatically reconnects to a healthy replica if the one you're on is restarted or scaled in.
-- Available for your own custom-image containers.
-
-**Project SSH Keys**
-
-Register SSH public keys at the project level and use them for SSH access to your containers.
-
-- Add multiple keys per project with optional names, and manage them from a dedicated console page showing each key's fingerprint, creator, and creation date.
-- Common key types are supported (ed25519, ECDSA, RSA), and duplicate keys are detected at registration.
-- Scope a key to specific containers, and enable or disable it without removing it.
-- Registered keys are injected into your deployments at deploy time (as `AIRCLOUD_AUTHORIZED_KEYS`), so your container can authorize SSH access with them.
-
 **Other improvements**
 
 - **Container tags**: Organize and filter your containers with tags.
 - **Replica quota at start**: Replica quota is now checked when you start a deployment, with an in-line dialog to adjust replicas or request more quota.
+- **Web Terminal replica selection**: When a container has multiple replicas, choose which one to connect to, and the session auto-reconnects if a replica is replaced.
+- **SSH key scoping**: Apply a registered SSH key to specific containers, and enable or disable it without removing it.
 - **Inline email verification**: Enter a verification code directly during signup; disposable email domains are now blocked at registration.
 - **Better Air API usage page**: More accurate spend totals, consistent filters, and model display names across charts and records.
 - **Persistent list views**: Sorting, filters, search, and pagination are kept in the URL, so your view is restored when you navigate back from a detail page.
