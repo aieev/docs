@@ -5,6 +5,65 @@ description: "New features, fixes, and improvements for the AirCloud platform."
 mode: "wide"
 ---
 
+<Update label="June 2026">
+
+## Redesigned console, real-time notifications, Persistent Volume, Web Terminal, and SSH Keys
+
+**Redesigned console pages**
+
+We've refreshed the console's most-used pages for a cleaner, more consistent experience.
+
+- **Container create**: A rebuilt create flow — a clearer default mode, a card-based layout, and a configuration summary before you deploy. Start from a template with recommended items and an auto-filled name.
+- **Organization overview**: Redesigned organization page that surfaces status and usage at a glance.
+- **Project overview**: A reworked overview that brings your recent containers, recommended quick-start templates, and an Air API usage summary together on one page.
+- **Consistent navigation**: Cleaner, header-free pages and unified breadcrumb navigation throughout the console.
+
+**Real-time notifications**
+
+Notifications now arrive the moment something happens — no page refresh needed — and are collected in one place.
+
+- **Instant delivery**: Events such as deployment status changes and announcements appear in real time.
+- **Notification center**: Browse, page through, and dismiss past notifications from a single view.
+- **Balance & usage alerts**: Get notified about low balance, GPU usage charges, and payment failures so you can act before service is interrupted.
+
+**Persistent Volume**
+
+Persistent volumes are now more flexible across your deployments.
+
+- **Works with autoscaling**: Attach a volume to deployments that use autoscaling and multiple replicas.
+- **New or existing volume on create**: Choose a fresh volume or reuse an existing one when creating a deployment.
+- **Shared across deployments**: A single volume can be attached to multiple deployments, and the picker shows which deployments are already using it.
+- **Edit while stopped**: Enable, disable, or swap the attached volume while a deployment is stopped.
+
+**Web Terminal**
+
+Open an interactive terminal into a running container directly from your browser — no SSH client or local setup required.
+
+- Launch it with one click from the container detail page.
+- When a container has multiple replicas, choose which replica to connect to; with a single replica it connects automatically.
+- The session automatically reconnects to a healthy replica if the one you're on is restarted or scaled in.
+- Available for your own custom-image containers.
+
+**Project SSH Keys**
+
+Register SSH public keys at the project level and use them for SSH access to your containers.
+
+- Add multiple keys per project with optional names, and manage them from a dedicated console page showing each key's fingerprint, creator, and creation date.
+- Common key types are supported (ed25519, ECDSA, RSA), and duplicate keys are detected at registration.
+- Scope a key to specific containers, and enable or disable it without removing it.
+- Registered keys are injected into your deployments at deploy time (as `AIRCLOUD_AUTHORIZED_KEYS`), so your container can authorize SSH access with them.
+
+**Other improvements**
+
+- **Container tags**: Organize and filter your containers with tags.
+- **Replica quota at start**: Replica quota is now checked when you start a deployment, with an in-line dialog to adjust replicas or request more quota.
+- **Inline email verification**: Enter a verification code directly during signup; disposable email domains are now blocked at registration.
+- **Better Air API usage page**: More accurate spend totals, consistent filters, and model display names across charts and records.
+- **Persistent list views**: Sorting, filters, search, and pagination are kept in the URL, so your view is restored when you navigate back from a detail page.
+- **New brand color**: Updated the primary brand color across the console.
+
+</Update>
+
 <Update label="April 2026">
 
 ## Web Terminal, AirCloud CLI, SSH access, and Shared Storage
