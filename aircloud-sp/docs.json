@@ -210,10 +210,10 @@
               {
                 "group": "콘솔",
                 "pages": [
-                  "docs/ko/console/realtime-notifications",
-                  "docs/ko/console/desktop-notifications",
                   "docs/ko/console/organization",
-                  "docs/ko/console/billing"
+                  "docs/ko/console/billing",
+                  "docs/ko/console/realtime-notifications",
+                  "docs/ko/console/desktop-notifications"
                 ]
               },
               {
