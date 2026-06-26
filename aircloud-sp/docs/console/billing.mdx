@@ -40,9 +40,15 @@ Saved payment methods can also be reused for future credit purchases without ent
 
 ![Payment Method Eng](/images/payment-method-eng.png)
 
+![Payment Method Eng](/images/payment-method-eng.png)
+
 ## Auto Top-up
 
-Auto Top-up automatically purchases AU credits when your remaining balance falls below a specified threshold.
+![Payment Method Eng](/images/payment-method-eng.png)
+
+## Auto Top-up
+
+Auto Top-up automatically purchases AU credits when your remaining balance falls below a specified thresholdAuto Top-up automatically purchases AU credits when your remaining balance falls below a specified threshold.
 
 Payments are charged automatically using your selected payment method, allowing you to maintain sufficient credits without manual intervention.
 
@@ -56,9 +62,23 @@ Configure the following settings:
 
 ## Low Credit Notifications
 
-Email notifications can be sent to Organization Owners when the remaining AU balance falls below a configured threshold.
+Payments are charged automatically using your selected payment method, allowing you to maintain sufficient credits without manual intervention.
+
+![Auto Top Up Eng](/images/auto-top-up-eng.png)
+
+Configure the following settings:
+
+- **Threshold** — Remaining AU balance that triggers Auto Top-up.
+- **Top-up Amount** — Amount of AU to purchase automatically.
+- **Payment Method** — Saved payment method used for automatic billing.
+
+## Low Credit Notifications
+
+Email notifications can be sent to Organization Owners when the remaining AU balance falls below a configured thresholdEmail notifications can be sent to Organization Owners when the remaining AU balance falls below a configured threshold.
 
 Unlike Auto Top-up, this feature **does not automatically purchase credits**. It simply notifies Organization Owners so they can manually add credits.
+
+![Email Alert Eng](/images/email-alert-eng.png)
 
 ![Email Alert Eng](/images/email-alert-eng.png)
 
@@ -71,7 +91,22 @@ Unlike Auto Top-up, this feature **does not automatically purchase credits**. It
 
 ## Invoices
 
-Invoices are available for Organizations using **Postpaid Billing** and are intended primarily for enterprise customers.
+Unlike Auto Top-up, this feature **does not automatically purchase credits**. It simply notifies Organization Owners so they can manually add credits.
+
+![Email Alert Eng](/images/email-alert-eng.png)
+
+![Email Alert Eng](/images/email-alert-eng.png)
+
+- **Threshold** — Remaining AU balance that triggers the notification.
+- **Recipients** — Organization Owners.
+
+<Info>
+  Low credit notifications send email alerts only. They do not automatically purchase credits.
+</Info>
+
+## Invoices
+
+Invoices are available for Organizations using **Postpaid Billing** and are intended primarily for enterprise customers.Invoices are available for Organizations using **Postpaid Billing** and are intended primarily for enterprise customers.
 
 Invoices are generated automatically at the end of each month based on the total unpaid usage accumulated during the billing period.
 
@@ -81,19 +116,37 @@ Generated invoices are available from **Organization → Billing → Invoices**,
 - Download PDF invoices.
 - Complete invoice payments.
 
-### Invoice Fields
+Invoices are generated automatically at the end of each month based on the total unpaid usage accumulated during the billing period.
 
-| Column | Description |
+Generated invoices are available from **Organization → Billing → Invoices**, where you can:
+
+- View invoice status.
+- Download PDF invoices.
+- Complete invoice payments.
+
+### Invoice FieldFields
+
+| ColumnColumn | Description |
 | :-- | :-- |
-| **Billing Period** | Billing period covered by the invoice. |
-| **Status** | Current invoice payment status. |
-| **Total AU** | Total AU included in the invoice. |
-| **Amount Due** | Total amount to be paid. |
+| **Billing PeriodBilling Period** | Billing period covered by the invoiceBilling period covered by the invoice. |
+| **StatusStatus** | Current invoice payment statusCurrent invoice payment status. |
+| **Total AUTotal AU** | Total AU included in the invoiceTotal AU included in the invoice. |
+| **Amount DueAmount Due** | Total amount to be paiTotal amount to be paid. |
+| **Due Date** | Invoice payment deadline. |
+| **Pay** | Pay an unpaid invoice. |
+| **Download** | Download the invoice as a PDF. |
 | **Due Date** | Invoice payment deadline. |
 | **Pay** | Pay an unpaid invoice. |
 | **Download** | Download the invoice as a PDF. |
 
-### Invoice Status
+### Invoice StatusInvoice Status
+
+| Status | Description |
+| :-- | :-- |
+| **Pending** | Invoice has been issued but not yet paid. |
+| **Paid** | Invoice has been paid successfully. |
+| **Overdue** | Payment deadline has passed. |
+| **Canceled** | Invoice has been canceled. |
 
 | Status | Description |
 | :-- | :-- |
@@ -129,11 +182,44 @@ Payments are categorized as **Pending**, **Completed**, **Failed**, or **Cancele
 | **Auto Top-up** | Credits automatically purchased through Auto Top-up. |
 | **Invoice Payment** | Payment made toward an invoice. |
 
-Payment history can be filtered by **Type**, **Status**, and **Date Range**, and sorted by **Date**, **Amount**, or **AU**.
+The **Payment History** page displays all credit purchases, promotional credits, Auto Top-up transactions, and invoice payments.
+
+### Payment History Fields
+
+| Column | Description |
+| :-- | :-- |
+| **Date** | Payment date and time. |
+| **ID** | Unique payment identifier. |
+| **Type** | Payment type. |
+| **Status** | Payment processing status. |
+| **Amount** | Amount paid. |
+| **AU** | AU credited or purchased. |
+| **Receipt** | Download the payment receipt (when available). |
+
+Payments are categorized as **Pending**, **Completed**, **Failed**, or **Canceled**. Receipts are available for completed payments.
+
+### Payment Types
+
+| Type | Description |
+| :-- | :-- |
+| **Credit Purchase** | Purchase of AU credits. |
+| **Promotion Code** | AU credits granted through a promotion code. |
+| **Auto Top-up** | Credits automatically purchased through Auto Top-up. |
+| **Invoice Payment** | Payment made toward an invoice. |
+
+Payment history can be filtered by **Type**, **Status**, and **Date Range**, and sorted by **Date**, **Amount**, or **AU**ayment history can be filtered by **Type**, **Status**, and **Date Range**, and sorted by **Date**, **Amount**, or **AU**.
 
 ## Promotion Codes
 
 Promotion codes distributed through events, partnerships, or promotional campaigns can be redeemed from **Billing → Promotion Codes**.
+
+![Promotion Code Eng](/images/promotion-code-eng.png)
+
+## Promotion Codes
+
+Promotion codes distributed through events, partnerships, or promotional campaigns can be redeemed from **Billing → Promotion Codes**.
+
+![Promotion Code Eng](/images/promotion-code-eng.png)
 
 ![Promotion Code Eng](/images/promotion-code-eng.png)
 
