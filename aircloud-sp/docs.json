@@ -203,7 +203,6 @@
               {
                 "group": "레퍼런스",
                 "pages": [
-                  "docs/ko/reference/infrastructure-and-resource-types",
                   "docs/ko/reference/container-runtime-reference"
                 ]
               },
