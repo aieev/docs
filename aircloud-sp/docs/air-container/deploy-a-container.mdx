@@ -1,96 +1,91 @@
 ---
 title: "Deploy a Container"
-description: "From creation to running state"
-icon: "container"
+description: "Step-by-step guide to deploying a container on AirCloud"
+icon: "rocket"
 ---
 
-This page walks through the standard flow to deploy a container using Air Container.
+You can deploy containers in two ways: from a **template**, or starting **from scratch** using a custom Docker image.
 
-## 1. Select a project
+## Deploy from a template
 
-Choose the project where you want to deploy your container. The project overview also shows endpoint status and current deployments.
+Templates are pre-configured containers with popular frameworks and models. They let you get running without any Docker knowledge.
 
-![Select a project](/docs/images/air-container/select-a-project.png)
+### 1. Select a project
 
-## 2. Start creating a container
+From the AirCloud console, open a project or create a new one.
 
-In the Air Container menu, click **+ Create** to open the container creation flow. Enter a container name and proceed.
+![Select a project](/images/air-container/select-project.png)
 
-![Container page](/docs/images/air-container/container-page.png)
+### 2. Click Deploy
 
-![Enter general information](/docs/images/air-container/enter-general-information.png)
+Click **+ Deploy** to open the deployment options screen.
 
-## 3. Configure Container Image
+### 3. Select a template
 
-![Container image settings](/docs/images/air-container/enter-container-image-information.png)
+Choose **Template** and select the framework or model you want to deploy.
 
-Provide the following:
+![Select a template](/images/air-container/select-template.png)
 
-- Container image
-- Registry provider
-- Registry access type (public/private)
-- If private: username + password/token
+## Deploy from scratch
 
-Common registry providers include:
+Deploy a container from a custom Docker image you've prepared.
 
-- GCP Artifact Registry
-- AWS ECR
-- GitHub Container Registry
-- Docker Hub
+### 1. Select a project
 
-## 4. Configure Resources
+From the AirCloud console, open a project or create a new one.
 
-![Resource settings](/docs/images/air-container/resource-settings.png)
+### 2. Click Deploy
 
-Configure:
+Click **+ Deploy** to open the deployment options screen.
 
-- Cloud Type
-- Instance type
-- Enable Autoscaling (optional)
-- Replica count
+### 3. Select From Scratch
 
-We recommend balancing cost and latency based on your workload.
+Choose **From Scratch** to configure your own container.
 
-## 5. Advanced settings
+### 4. Configure resources
 
-![Advanced settings](/docs/images/air-container/advanced-settings.png)
+Set the GPU type, number of replicas, and other resource options.
 
-Optionally configure:
+#### GPU type
 
-- Start command
-- Port
-- Health check URL
-- Max wait time
-- Boot wait time
-- Environment variables
-- Endpoint ID
+Select the GPU instance type that fits your workload. See the [Infrastructure and Resource Types](/docs/reference/infrastructure-and-resource-types) page for available instances and VRAM guidance.
 
-## 6. Review and deploy
+#### Replicas
 
-![Review page](/docs/images/air-container/review-page.png)
+Set the number of replicas to run simultaneously.
 
-Review the configuration and deploy.
+AirCloud applies a **quota limit** on the number of replicas you can rent. If you need more than your current quota allows, contact an administrator to request an increase.
 
-Initial pull time depends on image size and registry performance. Pulled images may be cached on the node for faster subsequent starts.
+If your quota is sufficient but the GPU model you've selected is in high demand, you may not be able to secure the full number of replicas immediately. In that case, use **Join Waitlist** to register for the waitlist — you'll be notified when replicas become available.
 
-## 7. Start the container
+#### Ports
 
-![Deployment completion](/docs/images/air-container/deployment-completion.png)
+Specify the ports your container needs to expose.
 
-After deployment, the container may appear as **Pending**.
+#### Environment variables
 
-<Note>
-  Pending state is not billed. To run workloads, click **Start container** to switch into a running state.
-</Note>
+Add any environment variables your container requires.
 
-## Next steps
+### 5. Set the container image
+
+Enter the Docker image URL. Private registries are supported — add your registry credentials in project settings.
+
+### 6. Configure storage (optional)
+
+Attach a persistent volume to retain data across restarts. See the [Persistent Volume](/docs/air-container/shared-storage) guide.
+
+### 7. Review and deploy
+
+Review your configuration and click **Deploy**. The container will transition to **Running** state once it starts successfully.
+
+## Related docs
 
 <Columns cols={2}>
-  <Card title="Autoscaling and Scheduling" icon="activity" href="/docs/air-container/autoscaling-and-scheduling" cta="Configure" arrow="true">
-    Configure autoscaling and scheduled scaling.
+  <Card title="Container Management" icon="layers" href="/docs/air-container/start-stop-restart" cta="View" arrow="true">
+    Start, stop, restart, and tag containers.
   </Card>
 
-  <Card title="Monitoring and Troubleshooting" icon="radar" href="/docs/air-container/monitoring-and-troubleshooting" cta="Monitor" arrow="true">
-    Monitor and debug deployments with logs and usage.
+  <Card title="Persistent Volume" icon="database" href="/docs/air-container/shared-storage" cta="View" arrow="true">
+    Retain data permanently across container stops and restarts.
   </Card>
 </Columns>
