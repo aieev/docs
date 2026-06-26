@@ -28,7 +28,7 @@
               {
                 "group": "Get started",
                 "pages": [
-                  "docs/get-started/aircloud",
+                  "docs/get-started/index",
                   "docs/get-started/quickstart",
                   "docs/get-started/concepts",
                   "docs/get-started/authentication"
@@ -170,7 +170,7 @@
               {
                 "group": "시작하기",
                 "pages": [
-                  "docs/ko/get-started/aircloud",
+                  "docs/ko/index",
                   "docs/ko/get-started/quickstart",
                   "docs/ko/get-started/concepts",
                   "docs/ko/get-started/authentication"
