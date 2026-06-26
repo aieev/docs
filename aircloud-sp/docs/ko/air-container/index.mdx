@@ -33,11 +33,31 @@ Air Container는 사용자가 직접 준비한 컨테이너 이미지를 AirClou
 - Autoscaling과 Scheduled Scaling을 함께 운영하려는 경우
 - Air API보다 높은 수준의 운영 제어가 필요한 경우
 
+## 컨테이너 생명주기
+
+배포된 컨테이너는 **실행 중 → 정지 → 재시작** 흐름으로 관리할 수 있습니다. 각 상태 전환 시 과금과 데이터 보존 방식이 달라집니다.
+
+| 상태 | 과금 | 데이터 보존 |
+|---|---|---|
+| 실행 중 (Running) | 발생 | 유지 |
+| 정지 (Stopped) | 중단 | 유지 |
+| 종료 (Terminated) | 중단 | **삭제** |
+
+<Warning>
+종료(Terminate)는 되돌릴 수 없습니다. 중요한 데이터는 반드시 [영구 볼륨](/docs/ko/air-container/shared-storage)에 보관하세요.
+</Warning>
+
+재시작 시 **Cold Start**가 발생할 수 있어 요청 처리가 잠시 지연됩니다. Cold Start 영향을 줄이려면 최소 Replica 수를 1 이상으로 유지하세요.
+
 ## 다음에 읽으면 좋은 문서
 
 <Columns cols={2}>
   <Card title="컨테이너 배포" icon="container" href="/docs/ko/air-container/deploy-a-container" cta="배포하기" arrow="true">
     컨테이너 배포 단계와 주요 설정 항목을 안내합니다.
+  </Card>
+
+  <Card title="시작·정지·재시작" icon="power" href="/docs/ko/air-container/start-stop-restart" cta="자세히 보기" arrow="true">
+    상태 전이, 데이터 보존, 과금 규칙을 자세히 안내합니다.
   </Card>
 
   <Card title="오토스케일링 및 스케줄링" icon="activity" href="/docs/ko/air-container/autoscaling-and-scheduling" cta="설정 보기" arrow="true">
