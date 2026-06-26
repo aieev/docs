@@ -1,14 +1,14 @@
 ---
-title: "Overview"
+title: "Air Container"
 description: "Deploy and operate your container images"
 icon: "box"
 ---
 
 Air Container lets you deploy and operate your own container images on AirCloud.
 
-It’s a great fit when you need direct control over runtime, dependencies, ports, environment variables, resources, and autoscaling.
+It's a great fit when you need direct control over runtime, dependencies, ports, environment variables, resources, and autoscaling.
 
-## Standard flow
+## Basic flow
 
 1. Select a project
 2. Start creating a container
@@ -19,7 +19,74 @@ It’s a great fit when you need direct control over runtime, dependencies, port
 7. Start the container
 8. Monitor usage and logs
 
-## When it’s a good fit
+## Quickstart: Get started with Air Container
+
+Air Container is a good fit when you want to deploy your own container image.
+
+### 1. Select a project
+
+From your organization, select the project where you want to deploy the container. The project overview page also shows your current endpoint status.
+
+Every organization must contain at least one project.
+
+### 2. Start creating a container
+
+In the Air Container menu, click **+ Create** to go to the container creation page. Enter a container name and proceed to the next step.
+
+### 3. Configure Container Image
+
+Enter your container image details. The following items are required:
+
+- Container image
+- Registry provider
+  - GCP Artifact Registry (registry region required)
+  - AWS ECR (registry region required)
+  - GitHub Container Registry
+  - Docker Hub
+- Registry access type (public or private)
+- For private registries: username and password or token
+
+### 4. Configure Resources
+
+Select the infrastructure type and resources to use. Key configurable items include:
+
+- Cloud Type
+  - AirCloud Plus (dedicated, company-managed infrastructure)
+  - AirCloud Zero (crowdsourced infrastructure from individuals and partners)
+- Instance type
+  - RTX 4070 Ti Super
+  - RTX 4070 Super
+  - RTX 4090
+  - RTX 5090
+  - RTX PRO 6000
+- Enable Autoscaling
+- Set Replica count
+
+When using Autoscaling, you can set both the minimum number of replicas to maintain and the maximum number of replicas to scale up to.
+
+### 5. Configure Advanced settings
+
+Advanced options have defaults or are not required. Configure the following if needed:
+
+- Start command
+- Port
+- Health check URL
+- Maximum wait time
+- Boot wait time
+- Environment variables
+- Endpoint ID
+
+### 6. Review and deploy
+
+Review your deployment configuration and deploy the container. Initial download time may vary depending on image size and registry performance.
+
+Once downloaded, the image is cached on the node and will start faster on subsequent runs.
+
+### 7. Start the container
+
+Immediately after deployment, the container is shown as **Pending**. No billing occurs in the Pending state. To actually use the container, click **Start Container** to switch it to the Running state.
+
+## When it's a good fit
 
 - You want to deploy your own model server or application image
 - You need to choose GPU specs and replica counts directly
@@ -30,14 +97,14 @@ It’s a great fit when you need direct control over runtime, dependencies, port
 
 <Columns cols={2}>
   <Card title="Deploy a Container" icon="container" href="/docs/air-container/deploy-a-container" cta="Deploy" arrow="true">
-    Step-by-step container deployment flow.
+    Step-by-step container deployment flow and key configuration options.
   </Card>
 
   <Card title="Autoscaling and Scheduling" icon="activity" href="/docs/air-container/autoscaling-and-scheduling" cta="Configure" arrow="true">
-    Autoscaling and scheduled scaling best practices.
+    How to configure Autoscaling and Scheduled Scaling.
   </Card>
 
   <Card title="Monitoring and Troubleshooting" icon="radar" href="/docs/air-container/monitoring-and-troubleshooting" cta="Monitor" arrow="true">
-    What to check in Usage, Logs, Settings, and scheduling.
+    What to check in Usage, Logs, Settings, and scheduling during operations.
   </Card>
 </Columns>
