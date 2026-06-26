@@ -175,6 +175,7 @@
                   "docs/ko/air-api/index",
                   "docs/ko/air-api/models-and-playground",
                   "docs/ko/air-api/api-usage-guide",
+                  "docs/ko/air-api/monitoring",
                   "docs/ko/air-api/troubleshooting"
                 ]
               },
