@@ -15,11 +15,11 @@ Regardless of the deployment method, you'll configure the following settings dur
 
 | Item | Description |
 | --- | --- |
-| **Container Image** | The Docker image URL used to run your container. The registry provider is detected automatically from the image URL. |
-| **Registry Access** | Public images can be pulled without authentication. Private registries require a username and password (or access token). |
-| **GPU** | The GPU model assigned to the container. Available VRAM, system memory, vCPUs, and hourly pricing vary by GPU type. |
-| **Replicas** | The number of container replicas to run concurrently. When Autoscaling is enabled, AirCloud automatically scales between the configured minimum and maximum values. |
-| **Persistent Storage** | Persistent storage that remains available even if the container is stopped or restarted. Up to **30 GB** can be allocated. |
+| **Container Image** | The Docker image URL used to run your container. <br />The registry provider is detected automatically from the image URL. |
+| **Registry Access** | Public images can be pulled without authentication. <br />Private registries require a username and password (or access token). |
+| **GPU** | The GPU model assigned to the container. <br />Available VRAM, system memory, vCPUs, and hourly pricing vary by GPU type. |
+| **Replicas** | The number of container replicas to run concurrently. When Autoscaling is enabled, <br />AirCloud automatically scales between the configured minimum and maximum values. |
+| **Persistent Storage** | Persistent storage that remains available even if the container is stopped or restarted. <br />Up to **30 GB** can be allocated. |
 | **Tags** | Optional labels used to organize and filter containers. |
 
 ### 1. Select a Project
@@ -30,13 +30,13 @@ From the Organization Overview, open the Project where you want to deploy the co
 
 From the **Air Container** page, click **\+ Create** in the upper-right corner.
 
-![Aircontainer](/images/aircontainer.png)
+![Container Eng305](/images/container-eng305.png)
 
 ### 3. Choose a Deployment Method
 
 Select how you want to create your container.
 
-![Create Container1](/images/create-container1.png)
+![Container Deploy Eng1](/images/container-deploy-eng1.png)
 
 | Deployment Method | Description |
 | --- | --- |
@@ -51,17 +51,17 @@ Select how you want to create your container.
 
 Click **Select Template** and choose the template you want to use.
 
-![Template Select](/images/template-select.png)
+![Template Select Modal Eng1](/images/template-select-modal-eng1.png)
 
 After saving, the selected template is applied automatically, and the container name is initialized using the template name. You can change the container name at any time.
 
-![Container Setting](/images/container-setting.png)
+![Container Settings Eng1](/images/container-settings-eng1.png)
 
 ### 2. Configure Resources
 
 Expand the **Resources** section to select the infrastructure option and GPU model.
 
-![Container Resource](/images/container-resource.png)
+![Resource Select Eng2](/images/resource-select-eng2.png)
 
 #### Infrastructure Options
 
@@ -78,7 +78,7 @@ Each GPU option displays its available VRAM, system memory, vCPUs, maximum numbe
 
 Replicas determine how many copies of your container run simultaneously. Adjust the desired number using the slider.
 
-![Replica](/images/replica.png)
+![Replica Config Eng](/images/replica-config-eng.png)
 
 When Autoscaling is enabled, AirCloud automatically adjusts the number of replicas within the configured minimum and maximum range.
 
@@ -99,7 +99,7 @@ Persistent Storage preserves your data even if the container is stopped or resta
 
 For more information, see [Persistent Storage](/docs/air-container/shared-storage).
 
-![Shared Storage](/images/shared-storage.png)
+![Advanced Settings Eng1](/images/advanced-settings-eng1.png)
 
 | Item | Description |
 | --- | --- |
@@ -111,7 +111,7 @@ For more information, see [Persistent Storage](/docs/air-container/shared-storag
 
 Advanced Settings provide fine-grained control over container behavior. All fields are optional.
 
-![Setting2](/images/setting2.png)
+![Advanced Settings Eng840](/images/advanced-settings-eng840.png)
 
 | Item | Description |
 | --- | --- |
@@ -144,7 +144,7 @@ If disabled, the container is created in the **Pending** state and can be starte
 
 Enter a container name and optionally assign tags.
 
-![Container Name](/images/container-name.png)
+![Container Name Eng492](/images/container-name-eng492.png)
 
 | Item | Description |
 | --- | --- |
@@ -157,14 +157,14 @@ Enter the container image URL.
 
 AirCloud automatically detects the registry provider from the image URL, but you can change it manually if needed.
 
-![Container Image](/images/container-image.png)
+![Image Config Eng912](/images/image-config-eng912.png)
 
 | Item | Description |
 | --- | --- |
 | **Container Image** | URL of the container image. |
 | **Registry Provider** | Automatically detected from the image URL. Can be changed manually. |
 | **Registry Region** | Region where the image is stored. For Amazon ECR, this is detected automatically. |
-| **Registry Access** | **Public** images require no authentication. **Private** registries require a username and password (or access token). |
+| **Registry Access** | **Public** images require no authentication. <br />**Private** registries require a username and password (or access token). |
 
 Supported registry providers:
 
