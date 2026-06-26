@@ -31,7 +31,8 @@
                   "docs/index",
                   "docs/quickstart",
                   "docs/get-started/concepts",
-                  "docs/get-started/organizations-and-billing"
+                  "docs/get-started/organizations-and-billing",
+                  "docs/get-started/authentication"
                 ]
               },
               {
@@ -168,7 +169,8 @@
                   "docs/ko/index",
                   "docs/ko/quickstart",
                   "docs/ko/get-started/concepts",
-                  "docs/ko/get-started/organizations-and-billing"
+                  "docs/ko/get-started/organizations-and-billing",
+                  "docs/ko/get-started/authentication"
                 ]
               },
               {
@@ -186,8 +188,10 @@
                 "pages": [
                   "docs/ko/air-container/index",
                   "docs/ko/air-container/deploy-a-container",
+                  "docs/ko/air-container/templates",
                   "docs/ko/air-container/start-stop-restart",
                   "docs/ko/air-container/autoscaling-and-scheduling",
+                  "docs/ko/air-container/monitoring",
                   "docs/ko/air-container/monitoring-and-troubleshooting",
                   {
                     "group": "접속 및 연결",
@@ -212,7 +216,9 @@
               {
                 "group": "콘솔",
                 "pages": [
-                  "docs/ko/console/desktop-notifications"
+                  "docs/ko/console/realtime-notifications",
+                  "docs/ko/console/organization",
+                  "docs/ko/console/billing"
                 ]
               },
               {
