@@ -3,127 +3,82 @@ title: "Quickstart"
 icon: "rocket"
 ---
 
-A quickstart guide for new AirCloud users. In AirCloud, you first create an Organization and Project, then start your AI workload using either Air API or Air Container.
+AirCloud를 처음 사용하는 사용자를 위한 빠른 시작 가이드입니다. AirCloud에서는 먼저 조직과 프로젝트를 생성한 뒤, Air API 또는 Air Container 중 원하는 방식으로 AI workload를 시작할 수 있습니다.
 
-## Before you start
+## 시작 전 준비
 
-Before using AirCloud, complete sign-up and onboarding.
+AirCloud를 사용하기 전에 먼저 로그인과 온보딩을 완료해야 합니다.
 
-### 1. Select Get Started and choose a service
+### 1. Get Started 및 서비스 선택
 
-On the AirCloud homepage, click **Get Started**. In the service selection step, you can choose either **Run AI workloads** or **Provide resources**.
+AirCloud 홈페이지에서 Get Started를 눌러 시작합니다. 서비스 선택 단계에서는 AI 워크로드 실행 또는 자원 공급 중 하나를 선택할 수 있습니다.
 
-![Get Started and service selection](/docs/images/quickstart/quickstart-03.png)
+![Image](/images/image.png)
 
-- If you want to use the cloud, select **User Dashboard** to move to the cloud console.
-- If you want to register resources as an AirCloud provider, join the **Waitlist** and we will contact you in order.
-- If you want to try Air API, you can browse available models in the **AI Model** tab.
+- 클라우드를 사용하고 싶은 경우 '사용자 페이지 바로가기'를 선택해 클라우드 콘솔로 이동합니다.
+- 만약 AirCloud의 공급자로 자원을 등록하고 싶은 경우 '[베타 서비스 참여 신청하기](https://www.aieev.com/ko/contact-rp)'를 통해 Waitlist에 올려두시면 순차적으로 연락드리겠습니다.
+- 마지막으로 Air API를 활용해보고 싶은 경우, '[AI 모델 둘러보기](https://ap-1.aieev.cloud:3007/ko/models)'에서 제공 가능한 AI 모델을 확인해 볼 수 있습니다.
 
 <Info>
-Models available via Air API will be continuously updated.
+  Air API에서 제공하는 모델은 지속적으로 업데이트될 예정입니다. ([지원 모델 바로가기](https://docs.aieev.com/models/ko))
 </Info>
 
-### 2. Sign up and log in
+### 2. 회원가입 및 로그인
 
-You can sign up using email or social login.
+이메일 가입 또는 간편 로그인을 통해 회원가입할 수 있습니다.
 
-![Sign up and login](/docs/images/quickstart/quickstart-04.png)
+![Login Kor](/images/login-kor.png)
 
-The currently supported sign-up methods are:
+현재 지원되는 가입 방식은 다음과 같습니다.
 
-- Email
-- GitHub
+- 이메일 가입
+- GitHub 계정 로그인
 
-If you have issues signing up or logging in, request help via **Contact Support**.
+회원가입이나 로그인에 문제가 있다면 [Contact Support](https://www.aieev.com/ko/contact)를 통해 지원을 요청하세요.
 
-### 3. Complete onboarding
+### 3. 온보딩 완료
 
-AirCloud onboarding consists of the following three steps:
+AirCloud의 온보딩은 아래 3단계로 구성됩니다.
 
-1. Create an Organization
+1. **조직 생성**
+   조직명은 회사, 연구실, 프로젝트등 다양하게 설정할 수 있습니다. 조직에는 공동 작업자를 추가할 수 있습니다.
+   ![온보딩 - 조직 생성](/docs/images/quickstart/quickstart-05.png)
+   <Note>
+     하나의 계정은 1개의 조직에만 속할 수 있습니다. 따라서 **조직 생성 이후에는 다른 조직에 초대를 받을 수 없으며**, 조직 변경이 필요한 경우 [문의](https://www.aieev.com/ko/contact)주세요.
+   </Note>
+2. **프로젝트 생성**
+   프로젝트는 만들고 있는 서비스, 개발 프로젝트등의 단위로 생성할 수 있습니다. 한개의 프로젝트의 여러개의 엔드포인트를 생성할 수 있습니다.
+   ![프로젝트 생성 화면](/docs/images/quickstart/quickstart-08.png)
+3. **크레딧 등록** _(선택사항)_
+   온보딩을 완료한 뒤에는 콘솔로 자동 이동하며, 크레딧 충전 후 서비스를 이용할 수 있습니다.
+   ![크레딧 등록 화면](/docs/images/quickstart/quickstart-07.png)
 
-   ![Onboarding - Create organization](/docs/images/quickstart/quickstart-05.png)
+## AirCloud 시작하기
 
-   An Organization name can represent a company, lab, or project. You can also add collaborators to an Organization.
-
-2. Create a Project
-
-   ![Create a project](/docs/images/quickstart/quickstart-08.png)
-
-   A Project can represent a service you are building or a development effort. You can create multiple endpoints within a single Project.
-
-3. Add credit (optional)
-
-   ![Add credit](/docs/images/quickstart/quickstart-07.png)
-
-After completing onboarding, go to the console to follow the first-time guide and start using the service.
-
-## Choose your starting path
-
-You can start with either of the following options:
+AirCloud는 아래 두 가지 방식으로 시작할 수 있습니다.
 
 <Columns cols={2}>
-  <Card
-    title="Air API"
-    icon="sparkles"
-    href="/docs/air-api"
-    cta="Start with APIs"
-    arrow="true"
-  >
-    Create an API workload in your Project, select a supported model, issue an API key, and test immediately. You can also test directly in the Playground.
+  <Card title="Air API" icon="sparkles" href="/docs/ko/air-api" cta="API로 시작하기">
+    프로젝트 안에서 API 워크로드를 생성하고, 지원 모델을 선택한 뒤 API 키를 발급받아 바로 테스트할 수 있는 방식입니다. Playground를 통해 Web UI에서 바로 테스트할 수도 있습니다.
   </Card>
 
-  <Card
-    title="Air Container"
-    icon="box"
-    href="/docs/air-container"
-    cta="Deploy a container"
-    arrow="true"
-  >
-    Deploy your own container image and configure resources and autoscaling to build a production-ready environment.
+  <Card title="Air Container" icon="box" href="/docs/ko/air-container" cta="컨테이너 배포하기">
+    직접 준비한 컨테이너 이미지를 배포하고, 리소스와 오토스케일링 옵션까지 설정해 서비스 환경을 구성하는 방식입니다.
   </Card>
 </Columns>
 
-## Invite team members (optional)
-
-![Invite team members](/docs/images/quickstart/quickstart-invite-team.png)
-
-AirCloud supports inviting members to your Organization and Project via email. Please keep the following in mind:
-
-- Team members must sign up with the **same email address** that received the invitation.
-- If you accept an invitation while logged into another account, you may see errors. On the same device, we recommend logging out first.
-  Owners can change all settings. Members can view organization settings, but cannot change billing-related settings.
-
-## Next steps
+## 다음 단계
 
 <Columns cols={3}>
-  <Card
-    title="Air API"
-    icon="sparkles"
-    href="/docs/air-api"
-    cta="View docs"
-    arrow="true"
-  >
-    Learn the API usage flow and how to integrate models.
+  <Card title="Air API" icon="sparkles" href="/docs/ko/air-api" cta="문서 보기">
+    모델 호출 방식과 API 연동 흐름을 자세히 확인할 수 있습니다.
   </Card>
 
-  <Card
-    title="Air Container"
-    icon="box"
-    href="/docs/air-container"
-    cta="View docs"
-    arrow="true"
-  >
-    Learn how to deploy containers and configure key settings.
+  <Card title="Air Container" icon="box" href="/docs/ko/air-container" cta="문서 보기">
+    컨테이너 배포와 설정 항목을 자세히 확인할 수 있습니다.
   </Card>
 
-  <Card
-    title="Support"
-    icon="life-buoy"
-    href="/docs/support"
-    cta="Get help"
-    arrow="true"
-  >
-    Find help resources if you run into issues while using AirCloud.
+  <Card title="Support" icon="life-buoy" href="/docs/support" cta="지원 받기">
+    사용 중 문제가 발생하거나 추가 지원이 필요한 경우 참고할 수 있습니다.
   </Card>
 </Columns>
