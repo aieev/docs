@@ -1,11 +1,82 @@
 ---
 title: "Troubleshooting"
-description: "Usage, logs, settings, and status checks"
+description: "Diagnose and resolve common deployment and runtime issues"
 icon: "wrench"
 ---
 
+If you encounter issues after deploying a container, follow the steps below to identify and resolve the problem.
 
+## Check Runtime Logs
+
+If a deployment fails or behaves unexpectedly, **Runtime Logs** are the best place to start. You can view logs in real time or download them for further analysis.
+
+## Common Checks
+
+Before investigating further, verify the following:
+
+- The container image URL is correct.
+- Registry credentials are valid for private registries.
+- The configured port matches the application's listening port.
+- The startup command is correct.
+- The health check endpoint responds successfully.
+- All required environment variables are configured.
+
+## Check the Container Status
+
+### Pending
+
+If the container is in the **Pending** state after deployment, it has been created but is not yet running.
 
 <Note>
-  TODO: This page is under construction.
+  Containers in the **Pending** state do not incur charges. To start using the container, click **Start Container**.
 </Note>
+
+### Deployment Failed
+
+If the container is in the **Deployment Failed** state, check the **Runtime Logs** to identify the root cause.
+
+Common causes include:
+
+- Invalid container image URL.
+- Registry authentication failure.
+- Invalid startup command.
+
+<Note>
+  Containers in the **Deployment Failed** state are not billed.
+</Note>
+
+### Unhealthy
+
+If the container is in the **Unhealthy** state, verify that the configured health check endpoint is responding correctly.
+
+Common causes include:
+
+- Application startup failures.
+- Incorrect port configuration.
+- Invalid health check configuration.
+
+<Note>
+  Containers in the **Unhealthy** state are not billed.
+</Note>
+
+## Modify Container Settings
+
+Most container settings can be modified only after the container has been stopped. The container name is the only setting that can be changed while the container is running.
+
+Before applying configuration changes, we recommend checking the current deployment status and endpoint health.
+
+## Related Documentation
+
+<Columns cols={2}>
+  <Card title="Deploy a Container" icon="container" href="/docs/air-container/deploy-a-container" cta="Deploy a Container" arrow="true">
+    Learn how to deploy containers and configure deployment settings.
+  </Card>
+
+  <Card title="Autoscaling and Scheduled Scaling" icon="activity" href="/docs/air-container/autoscaling-and-scheduling" cta="View Guide" arrow="true">
+    Learn how to configure Autoscaling and Scheduled Scaling.
+  </Card>
+
+  <Card title="Contact and Feedback" icon="mail" href="/docs/support/contact-and-feedback" cta="Contact Us" arrow="true">
+    Contact the AirCloud team if the issue persists.
+  </Card>
+</Columns>
