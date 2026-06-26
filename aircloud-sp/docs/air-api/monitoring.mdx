@@ -1,0 +1,83 @@
+---
+title: "Monitoring"
+description: "Track API usage metrics at the project and organization level"
+icon: "chart-line"
+---
+
+The Monitoring page lets you track API usage and performance at two levels: per-project for individual workload analysis, and per-organization for aggregated spend visibility.
+
+## Project monitoring
+
+View per-request metrics for a specific API project. Use this view to analyze usage patterns, inspect individual requests, and debug performance issues.
+
+### Metrics overview
+
+| Metric | Description |
+|---|---|
+| Total requests | Total number of API calls in the selected period |
+| Success rate | Percentage of requests that returned a 2xx response |
+| Total tokens | Sum of input + output tokens consumed |
+| Input tokens | Total input tokens across all requests |
+| Output tokens | Total output tokens across all requests |
+| Average latency | Mean response time per request |
+| Error count | Number of failed requests |
+| Active API keys | Number of distinct keys used |
+| p95 latency | 95th percentile response time |
+
+### Filters
+
+| Filter | Options |
+|---|---|
+| Period | Last 1 hour / 24 hours / 7 days / 30 days / custom range |
+| Model | Filter by specific model |
+| API key | Filter by specific API key |
+| Request type | Chat / TTS / Embedding |
+
+### Request log
+
+The request log shows individual API calls with the following fields:
+
+| Field | Description |
+|---|---|
+| Timestamp | Date and time the request was made |
+| API Key | The key used for the request |
+| Model | Model name (display name shown) |
+| Request type | Chat, TTS, or Embedding |
+| Token usage | Input + output tokens for the request |
+| Latency | Response time in milliseconds |
+
+Click **Export** to download the request log as a CSV file.
+
+<Note>
+  Use project monitoring to analyze per-request behavior. For overall spend trends across the organization, use Organization Usage.
+</Note>
+
+## Organization usage
+
+View aggregated usage and spend across all projects in the organization. Use this view to monitor overall costs and identify high-usage projects.
+
+### Metrics overview
+
+| Metric | Description |
+|---|---|
+| Total AU used | Total credits consumed across all projects |
+| Total requests | Total API calls across all projects |
+| Total tokens | Total tokens consumed across all projects |
+| Active projects | Number of projects with at least one request |
+| Average cost per request | Mean cost per API call |
+
+### Usage by project
+
+A table showing per-project usage broken down by date, with request count, token consumption, and AU spend.
+
+## Related docs
+
+<Columns cols={2}>
+  <Card title="API Usage Guide" icon="code" href="/docs/air-api/api-usage-guide" cta="View guide" arrow="true">
+    Code examples and authentication setup for Air API.
+  </Card>
+
+  <Card title="Organizations and Billing" icon="credit-card" href="/docs/get-started/organizations-and-billing" cta="View billing" arrow="true">
+    AU balance, top-up, and refund policy.
+  </Card>
+</Columns>

@@ -40,6 +40,7 @@
                   "docs/air-api/index",
                   "docs/air-api/models-and-playground",
                   "docs/air-api/api-usage-guide",
+                  "docs/air-api/monitoring",
                   "docs/air-api/troubleshooting"
                 ]
               },
@@ -48,6 +49,7 @@
                 "pages": [
                   "docs/air-container/index",
                   "docs/air-container/deploy-a-container",
+                  "docs/air-container/start-stop-restart",
                   "docs/air-container/autoscaling-and-scheduling",
                   "docs/air-container/monitoring-and-troubleshooting",
                   {
@@ -166,7 +168,7 @@
                   "docs/ko/index",
                   "docs/ko/quickstart",
                   "docs/ko/get-started/concepts",
-                  "docs/ko/get-started/authentication"
+                  "docs/ko/get-started/organizations-and-billing"
                 ]
               },
               {
@@ -185,9 +187,7 @@
                   "docs/ko/air-container/index",
                   "docs/ko/air-container/deploy-a-container",
                   "docs/ko/air-container/start-stop-restart",
-                  "docs/ko/air-container/templates",
                   "docs/ko/air-container/autoscaling-and-scheduling",
-                  "docs/ko/air-container/monitoring",
                   "docs/ko/air-container/monitoring-and-troubleshooting",
                   {
                     "group": "접속 및 연결",
@@ -212,9 +212,6 @@
               {
                 "group": "콘솔",
                 "pages": [
-                  "docs/ko/console/organization",
-                  "docs/ko/console/billing",
-                  "docs/ko/console/realtime-notifications",
                   "docs/ko/console/desktop-notifications"
                 ]
               },
