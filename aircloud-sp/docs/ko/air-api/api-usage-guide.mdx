@@ -72,18 +72,6 @@ Authorization: Bearer YOUR_API_KEY
 
 <CodeGroup>
 
-```bash curl
-curl YOUR_ENDPOINT/chat/completions \
-  -H "Authorization: Bearer YOUR_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "model": "YOUR_MODEL_ID",
-    "messages": [
-      {"role": "user", "content": "안녕하세요"}
-    ]
-  }'
-```
-
 ```python Python
 from openai import OpenAI
 
@@ -118,23 +106,39 @@ const response = await client.chat.completions.create({
 console.log(response.choices[0].message.content);
 ```
 
+```bash cURL
+curl YOUR_ENDPOINT/chat/completions \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "YOUR_MODEL_ID",
+    "messages": [
+      {"role": "user", "content": "안녕하세요"}
+    ]
+  }'
+```
+
+```bash Shell
+#!/bin/bash
+
+API_KEY="YOUR_API_KEY"
+
+response=$(curl -s -X POST YOUR_ENDPOINT/chat/completions \
+  -H "Authorization: Bearer $API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "model": "YOUR_MODEL_ID",
+  "messages": [{"role": "user", "content": "안녕하세요"}]
+}')
+
+echo "$response" | jq .
+```
+
 </CodeGroup>
 
 ### TTS 모델
 
 <CodeGroup>
-
-```bash curl
-curl YOUR_ENDPOINT/audio/speech \
-  -H "Authorization: Bearer YOUR_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "model": "YOUR_MODEL_ID",
-    "input": "안녕하세요. 오늘 날씨가 좋네요.",
-    "voice": "aiden"
-  }' \
-  --output output.mp3
-```
 
 ```python Python
 from openai import OpenAI
@@ -172,21 +176,39 @@ const buffer = Buffer.from(await response.arrayBuffer());
 fs.writeFileSync("output.mp3", buffer);
 ```
 
+```bash cURL
+curl YOUR_ENDPOINT/audio/speech \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "YOUR_MODEL_ID",
+    "input": "안녕하세요. 오늘 날씨가 좋네요.",
+    "voice": "aiden"
+  }' \
+  --output output.mp3
+```
+
+```bash Shell
+#!/bin/bash
+
+API_KEY="YOUR_API_KEY"
+
+curl -s -X POST YOUR_ENDPOINT/audio/speech \
+  -H "Authorization: Bearer $API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "model": "YOUR_MODEL_ID",
+  "input": "안녕하세요. 오늘 날씨가 좋네요.",
+  "voice": "aiden"
+}' \
+  --output output.mp3
+```
+
 </CodeGroup>
 
 ### Embedding 모델
 
 <CodeGroup>
-
-```bash curl
-curl YOUR_ENDPOINT/embeddings \
-  -H "Authorization: Bearer YOUR_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "model": "YOUR_MODEL_ID",
-    "input": "텍스트를 벡터로 변환합니다."
-  }'
-```
 
 ```python Python
 from openai import OpenAI
@@ -218,6 +240,32 @@ const response = await client.embeddings.create({
 });
 
 console.log(response.data[0].embedding);
+```
+
+```bash cURL
+curl -X POST YOUR_ENDPOINT/embeddings \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "model": "YOUR_MODEL_ID",
+  "input": "텍스트를 벡터로 변환합니다."
+}'
+```
+
+```bash Shell
+#!/bin/bash
+
+API_KEY="YOUR_API_KEY"
+
+response=$(curl -s -X POST YOUR_ENDPOINT/embeddings \
+  -H "Authorization: Bearer $API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "model": "YOUR_MODEL_ID",
+  "input": "텍스트를 벡터로 변환합니다."
+}')
+
+echo "$response" | jq .
 ```
 
 </CodeGroup>
