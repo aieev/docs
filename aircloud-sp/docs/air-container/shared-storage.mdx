@@ -1,41 +1,45 @@
 ---
-title: "Shared Storage"
-description: "Learn how to share one persistent volume across multiple endpoints and replicas"
+title: "Persistent Volume"
+description: "Share one persistent volume across multiple endpoints and replicas"
 icon: "database"
 ---
 
-Shared Storage allows multiple endpoints to mount the same persistent volume at the same time.
+A persistent storage layer that retains data even when a container is restarted or stopped. Within a single project, volumes can be shared across multiple containers or used simultaneously by multiple replicas.
 
-With this feature, a single volume can be shared across endpoints within the same project, and multiple replicas in one endpoint can also use the same volume together.
+## What you can do with persistent volumes
 
-## What you can do with Shared Storage
+Persistent volumes are available throughout the deployment lifecycle with greater flexibility.
 
-- mount one persistent volume across multiple endpoints
-- share a volume within the same project
-- allow multiple replicas in one endpoint to use the same volume
+- **Autoscaling support**: Volumes can be attached to deployments that use autoscaling and multiple replicas.
+- **New or existing volume at creation**: When creating a deployment, you can create a new volume or reuse an existing one.
+- **Share across multiple deployments**: A single volume can be connected to multiple deployments. When selecting a volume, the console shows which deployments are already using it.
+- **Change while stopped**: While a deployment is stopped (Pending), you can activate, deactivate, or swap the attached volume.
 
-## How to use Shared Storage
+## How to use
 
 ### 1. Create a new volume
 
-When creating an endpoint, you can create and attach a new persistent volume.
+When creating a container, you can create and attach a new persistent volume. Maximum volume size is 30 GB.
 
-![First Step](/images/first_step.png)
+![Create new volume](/images/first_step.png)
 
 ### 2. Attach an existing volume
 
-You can mount the same existing volume to another endpoint and share it across endpoints.
+You can attach a volume already in use by another container to share it across deployments. When selecting a volume, the console lists the deployments currently using it.
 
-![Second Step](/images/second_step.png)
+![Attach existing volume](/images/second_step.png)
 
 ### 3. Share one volume across multiple replicas
 
-Multiple replicas in one endpoint can share the same volume.
+Multiple replicas within a single container can use the same volume simultaneously. This also works for autoscaling-enabled deployments.
 
-![Shared Storage](/images/shared_storage.png)
+![Shared volume across replicas](/images/shared_storage.png)
 
-## Important notes
+### 4. Change the volume while stopped
 
-<Warning>
-  Any lock-related issue caused by RWX access must be handled at the application level.
-</Warning>
+When a container is in **Pending (stopped)** state, you can modify volume settings:
+
+- **Deactivate** or **reactivate** the attached volume.
+- **Swap** the attached volume for a different one.
+
+Changes take effect when the container is started again.

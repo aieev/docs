@@ -1,7 +1,67 @@
 ---
-title: "Start Stop Restart"
+title: "Container Management"
+description: "Container lifecycle management, data retention rules, and grouping with tags"
+icon: "layers"
 ---
 
-<Note>
-  TODO: This page is under construction.
-</Note>
+## Start, Stop, and Restart
+
+Deployed containers have five states. Billing and data retention behavior vary depending on the current state.
+
+### Container states
+
+| State | Description | Billing |
+|---|---|---|
+| 🟢 **Running** | Container is running normally | Per-hour |
+| 🟡 **Updating** | Container is restarting due to a configuration change | Per-hour |
+| ⚫ **Pending** | Container is idle — no compute being performed | None |
+| 🔴 **Deploy Failed** | An error occurred during deployment (e.g. image pull failure) | None |
+| 🔴 **Unhealthy** | Container is running but not operating correctly | None |
+
+Billing only applies to the **Running** and **Updating** states where actual compute is performed. Pending, Deploy Failed, and Unhealthy states are not billed.
+
+### Stopping a container
+
+Stopping a container transitions it to **Pending** state.
+
+- Compute halts and billing stops.
+- Starting the container again from Pending state resumes execution.
+
+### Data retention
+
+Data retention behavior depends on whether a persistent volume is attached.
+
+| Scenario | Without persistent volume | With persistent volume |
+|---|---|---|
+| Stop then restart | Data is lost | Data is retained |
+| Restart | Data is lost | Data is retained |
+
+<Warning>
+Without a persistent volume, all data stored inside the container is lost when it is stopped or restarted. Use a persistent volume if you need to retain data.
+</Warning>
+
+See the [Persistent Volume](/docs/air-container/shared-storage) guide for setup instructions.
+
+## Container Tags
+
+Tags let you group multiple containers under a user-defined name. As the number of containers grows, tags make it easy to organize them by purpose or model family and filter the list quickly.
+
+### Applying tags
+
+Click **+ Add Tag** at the top of the container list, choose a name, and select the containers to apply it to. A single tag can be applied to multiple containers at once.
+
+### Filtering by tag
+
+Click a tag in the tag list to display only the containers with that tag. Click **Deselect** to return to the full list.
+
+## Related docs
+
+<Columns cols={2}>
+  <Card title="Persistent Volume" icon="database" href="/docs/air-container/shared-storage" cta="View" arrow="true">
+    Learn how to retain data permanently across container stops and restarts.
+  </Card>
+
+  <Card title="Autoscaling and Scheduling" icon="activity" href="/docs/air-container/autoscaling-and-scheduling" cta="View settings" arrow="true">
+    Configure Autoscaling and Scheduled Scaling.
+  </Card>
+</Columns>

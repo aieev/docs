@@ -1,50 +1,58 @@
 ---
 title: "Infrastructure and Resource Types"
-description: "Understand cloud types and instance types"
+description: "AirCloud infrastructure options and available GPU instance types"
 icon: "server"
 ---
 
-This page summarizes the infrastructure options (cloud types) and instance types available in AirCloud.
+This page summarizes the infrastructure options and GPU instance types available in AirCloud.
 
-## Cloud Type
+## Infrastructure options
 
-Choose a cloud type based on workload requirements.
+AirCloud offers two infrastructure options. Choose based on your workload's requirements for stability and cost.
 
-### AirCloud
+<CardGroup cols={2}>
+  <Card title="AirCloud Plus" icon="shield-check">
+    A dedicated infrastructure option operated directly by AIEEV. Well suited for workloads requiring stable, predictable performance. ISO 27001 certified.
+  </Card>
 
-Best for workloads where cost efficiency and flexibility matter.
+  <Card title="AirCloud Zero" icon="cloud">
+    A distributed infrastructure option leveraging crowdsourced GPU resources. Well suited for cost-efficient workloads. (Coming soon)
+  </Card>
+</CardGroup>
 
-### AirCloud+
+## GPU instance types
 
-Best for workloads that require higher reliability, performance, and a more predictable operating environment.
+The following GPU instances are available on AirCloud Plus. Choose based on your model's VRAM requirements.
 
-### AirCloud 0
+| Instance | VRAM | RAM | vCPU |
+|---|---|---|---|
+| RTX 4070 Super | 12 GB | 9 GB | 8 |
+| RTX 4070 Ti Super | 16 GB | 58 GB | 8 |
+| RTX 4090 | 24 GB | 58 GB | 8 |
+| RTX 5090 | 32 GB | 58 GB | 16 |
+| RTX PRO 6000 | 96 GB | 58 GB | 16 |
 
-An option that leverages distributed infrastructure (e.g., individuals, partner providers).
+## Choosing the right VRAM for your model
 
-## Instance types
+Use the table below as a general guide when selecting an instance.
 
-When deploying containers, you can select a GPU instance type. Examples include:
+| Model size | Recommended VRAM |
+|---|---|
+| 7B | 12 GB+ |
+| 13B | 16 GB+ |
+| 30B | 24 GB+ |
+| 70B | 32 GB+ |
+| Multimodal | 96 GB |
 
-- RTX 4070 Ti Super
-- RTX 4070 Super
-- RTX 4090
-- RTX 5090
-- RTX PRO 6000
+## Pricing
 
-## What to consider
-
-- Required latency
-- Model size and memory requirements
-- Expected request volume
-- Replica strategy
-- Whether autoscaling is enabled
+Pricing varies by instance type. Long-term rental discounts (3 months or more) are available. See the [pricing page](https://www.aieev.com/en/pricing) for the latest rates.
 
 ## Related docs
 
 <Columns cols={2}>
   <Card title="Deploy a Container" icon="container" href="/docs/air-container/deploy-a-container" cta="Deploy" arrow="true">
-    Deployment flow and configuration steps.
+    Deployment flow and GPU selection steps.
   </Card>
 
   <Card title="Autoscaling and Scheduling" icon="activity" href="/docs/air-container/autoscaling-and-scheduling" cta="Configure" arrow="true">
