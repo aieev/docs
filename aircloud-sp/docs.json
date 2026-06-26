@@ -166,8 +166,7 @@
                   "docs/ko/index",
                   "docs/ko/quickstart",
                   "docs/ko/get-started/concepts",
-                  "docs/ko/get-started/authentication",
-                  "docs/ko/get-started/organizations-and-billing"
+                  "docs/ko/get-started/authentication"
                 ]
               },
               {
@@ -212,7 +211,9 @@
                 "group": "콘솔",
                 "pages": [
                   "docs/ko/console/realtime-notifications",
-                  "docs/ko/console/desktop-notifications"
+                  "docs/ko/console/desktop-notifications",
+                  "docs/ko/console/organization",
+                  "docs/ko/console/billing"
                 ]
               },
               {
