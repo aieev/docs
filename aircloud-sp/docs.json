@@ -28,7 +28,7 @@
               {
                 "group": "Get started",
                 "pages": [
-                  "docs/get-started/index",
+                  "docs/index",
                   "docs/get-started/quickstart",
                   "docs/get-started/concepts",
                   "docs/get-started/authentication"
