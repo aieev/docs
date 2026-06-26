@@ -1,32 +1,179 @@
 ---
 title: "Troubleshooting"
-description: "Common issues and what to check first"
+description: "Common Air API errors and how to resolve them"
 icon: "wrench"
 ---
 
-This page covers common problems when using Air API and the first checks to perform.
+Most issues encountered while using Air API fall into one of four categories: authentication, request validation, billing, or service availability. Use the sections below to identify and resolve your issue.
 
-## If you lost your secret key
+## Error Code Reference
 
-Secret keys cannot be viewed again after creation. If you no longer have the key, generate a new one and rotate your integration.
+| Code | Meaning | Common Cause |
+| :-- | :-- | :-- |
+| **401** | Unauthorized | Missing or invalid secret key |
+| **402** | Payment Required | Insufficient credits |
+| **403** | Forbidden | No permission to access the requested model |
+| **408** | Request Timeout | Request processing exceeded the timeout |
+| **422** | Unprocessable Entity | Invalid request parameters |
+| **429** | Too Many Requests | Rate limit exceeded |
+| **502** | Bad Gateway | Temporary model service error |
+| **503** | Service Unavailable | Service maintenance or overload |
 
-## If a model doesn’t appear
+---
 
-Double-check the selected project and the Air API screen. If the model isn’t available yet, request it via the feedback channel.
+## Authentication Errors
 
-## If the code sample test fails
+<AccordionGroup>
+  <Accordion title="401 Unauthorized — Invalid API key">
+    **Cause:** The secret key is missing, invalid, or has already been deleted.
 
-Check the following first:
+    **Check the following:**
 
-- You selected the correct project
-- You pasted the secret key correctly
-- You are not using an old/invalid key
-- Your credits/billing status is valid
+    - Make sure the request includes the `Authorization: Bearer YOUR_API_KEY` header.
+    - Verify that there are no leading or trailing spaces in the API key.
+    - If you are loading the key from an environment variable, confirm that it is correctly configured.
+    - Verify that the key is still active in the Console.
+  </Accordion>
 
-## If the Playground doesn’t work
+  <Accordion title="I lost my secret key">
+    Secret keys are displayed only once when they are created and cannot be viewed again.
 
-Refresh the browser and verify the project and model selection state.
+    Delete the existing key from the Console and generate a new one. We recommend copying it immediately and storing it securely as an environment variable.
+  </Accordion>
+</AccordionGroup>
 
-## If you need support
+## Billing and Credit Issues
 
-If the issue persists, request help via [Contact & Feedback](/docs/support/contact-and-feedback).
+<AccordionGroup>
+  <Accordion title="402 Payment Required — Insufficient credits">
+    **Cause:** Your Organization's AU balance has been exhausted, preventing further API requests.
+
+    **Resolution:**
+
+    - Add credits from the **Billing** page in the Console.
+    - Retry your API request after the credits have been added.
+    - To prevent interruptions, enable **Auto Top-up**.
+
+    <Note>
+      The exact error message returned when credits are exhausted is currently being finalized.
+    </Note>
+  </Accordion>
+</AccordionGroup>
+
+## Request Validation Errors
+
+<AccordionGroup>
+  <Accordion title="422 Unprocessable Entity — Invalid request parameters">
+    **Cause:** One or more request parameters are invalid or incorrectly formatted.
+
+    **Check the following:**
+
+    - Ensure that every item in the `messages` array includes both `role` and `content`.
+    - Verify that numeric parameters such as `temperature` and `max_tokens` are provided as numbers, not strings.
+    - Refer to the API Reference for the valid range and format of each parameter.
+  </Accordion>
+
+  <Accordion title="The model ID is invalid or not recognized">
+    **Cause:** The value provided in the `model` parameter does not match a valid AirCloud model ID.
+
+    **Resolution:**
+
+    - In the Console, click **View Code** for the selected model. The generated code sample contains the correct model ID, which you can copy directly.
+  </Accordion>
+</AccordionGroup>
+
+## Rate Limits and Service Errors
+
+<AccordionGroup>
+  <Accordion title="429 Too Many Requests — Rate limit exceeded">
+    **Cause:** Your application has exceeded the allowed request rate.
+
+    **Resolution:**
+
+    - Check the `Retry-After` response header and retry after the specified delay.
+    - Distribute requests over time or implement exponential backoff.
+
+    <Note>
+      Model-specific RPM and TPM limits for Air API will be documented in a future update.
+    </Note>
+  </Accordion>
+
+  <Accordion title="408 Request Timeout — Request timed out">
+    **Cause:** The model did not complete the request within the allowed timeout. This may occur with long prompts or large `max_tokens` values.
+
+    **Resolution:**
+
+    - Reduce the `max_tokens` value.
+    - Verify that your client-side timeout is not set too low.
+    - Retry the request after a short delay.
+  </Accordion>
+
+  <Accordion title="502 Bad Gateway / 503 Service Unavailable">
+    **Cause:** The model service is temporarily unavailable or undergoing maintenance. These errors are common across cloud AI platforms such as RunPod and OpenRouter.
+
+    **Resolution:**
+
+    - Retry the request after a few seconds or minutes.
+    - If the issue persists, contact us through the [Contact and Feedback](/docs/support/contact-and-feedback) page.
+
+    <Note>
+      The AirCloud service status page URL will be published in a future update.
+    </Note>
+  </Accordion>
+
+  <Accordion title="Responses are slower than expected">
+    **Cause:** Response latency may increase depending on model load, prompt length, or the configured `max_tokens` value.
+
+    **Check the following:**
+
+    - Use only the `max_tokens` value you actually need.
+    - Test the same prompt in the Playground to compare response times.
+    - If latency remains high, consider using a smaller model.
+  </Accordion>
+</AccordionGroup>
+
+## Playground Issues
+
+<AccordionGroup>
+  <Accordion title="The Playground is not working">
+    Try the following steps:
+
+    1. Refresh your browser and try again.
+    2. Verify that the correct Project and model are selected.
+    3. Confirm that your Organization has sufficient credits.
+    4. Try using an incognito window or a different browser.
+  </Accordion>
+
+  <Accordion title="The Playground is not available for Embedding models">
+    Playground is not supported for Embedding models. This is expected behavior.
+
+    To use an Embedding model, send requests through the API. See the [API Usage Guide](/docs/air-api/api-usage-guide) for code examples.
+  </Accordion>
+</AccordionGroup>
+
+## Model Issues
+
+<AccordionGroup>
+  <Accordion title="The model I need is not available">
+    We continuously add support for new models. If the model you need is not available, you can request it through the [Contact and Feedback](/docs/support/contact-and-feedback) page.
+  </Accordion>
+
+  <Accordion title="403 Forbidden — Access to the model is denied">
+    **Cause:** Your current account or Project does not have permission to access the requested model.
+
+    <Note>
+      Details about the Air API model access policy will be documented in a future update.
+    </Note>
+  </Accordion>
+</AccordionGroup>
+
+## Still Need Help?
+
+If your issue is not resolved, please contact us through the [Contact and Feedback](/docs/support/contact-and-feedback) page.
+
+To help us investigate the issue more quickly, include the following information whenever possible:
+
+- Error code
+- Request payload (excluding secret keys)
+- Time when the issue occurred
+- Any relevant error messages or logs

@@ -1,41 +1,47 @@
 ---
-title: "Shared Storage"
-description: "Learn how to share one persistent volume across multiple endpoints and replicas"
+title: "Persistent Storage"
+description: "Share persistent storage across multiple containers and replicas"
 icon: "database"
 ---
 
-Shared Storage allows multiple endpoints to mount the same persistent volume at the same time.
+Persistent Storage preserves your data even when a container is stopped or restarted. Within a Project, a single volume can be shared across multiple containers or Replicas.
 
-With this feature, a single volume can be shared across endpoints within the same project, and multiple replicas in one endpoint can also use the same volume together.
+## What You Can Do with Persistent Storage
 
-## What you can do with Shared Storage
+Persistent Storage provides flexible data management across your deployments.
 
-- mount one persistent volume across multiple endpoints
-- share a volume within the same project
-- allow multiple replicas in one endpoint to use the same volume
+- **Support Autoscaling**: Attach the same volume to deployments using Autoscaling and multiple Replicas.
+- **Create or Reuse Volumes**: Create a new volume or attach an existing one during container deployment.
+- **Share Across Deployments**: Attach the same volume to multiple deployments. When selecting a volume, AirCloud also shows which deployments are currently using it.
+- **Modify While Stopped**: Enable, disable, or replace an attached volume while the container is in the **Pending** state.
 
-## How to use Shared Storage
+## Usage
 
-### 1. Create a new volume
+### Create a New Volume
 
-When creating an endpoint, you can create and attach a new persistent volume.
+You can create and attach a new Persistent Storage volume during container deployment. Each volume supports up to **30 GB** of storage.
 
-![First Step](/images/first_step.png)
+![Persist Volume Eng498](/images/persist-volume-eng498.png)
 
-### 2. Attach an existing volume
+### Attach an Existing Volume
 
-You can mount the same existing volume to another endpoint and share it across endpoints.
+You can attach a volume that is already in use by another container, allowing multiple deployments to share the same storage.
 
-![Second Step](/images/second_step.png)
+When selecting a volume, AirCloud displays the deployments that are currently using it.
 
-### 3. Share one volume across multiple replicas
+![Persist Volume Eng742](/images/persist-volume-eng742.png)
 
-Multiple replicas in one endpoint can share the same volume.
+<Tip>
+  **Multiple Replicas within the same deployment can share a single Persistent Storage volume.** This works seamlessly with Autoscaling-enabled deployments.
+</Tip>
 
-![Shared Storage](/images/shared_storage.png)
+### Modify a Volume While Stopped
 
-## Important notes
+You can modify Persistent Storage settings only when the container is in the **Pending (Stopped)** state.
 
-<Warning>
-  Any lock-related issue caused by RWX access must be handled at the application level.
-</Warning>
+You can:
+
+- **Disable** or **re-enable** the attached volume.
+- **Replace** the attached volume with another one.
+
+Changes take effect the next time the container is started.

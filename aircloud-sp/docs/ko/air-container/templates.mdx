@@ -1,0 +1,74 @@
+---
+title: "템플릿"
+description: "사전 구성된 컨테이너 환경으로 빠르게 배포 시작하기"
+icon: "layers"
+---
+
+템플릿은 자주 사용하는 AI/ML 환경을 사전 구성해 놓은 컨테이너 설정입니다. Docker 이미지, 포트, 환경 변수 등을 매번 직접 입력하지 않고 템플릿을 선택하는 것만으로 원하는 환경을 바로 배포할 수 있습니다.
+
+## 공식 템플릿
+
+AirCloud에서 제공하는 공식 템플릿은 컨테이너 생성 화면의 **템플릿 선택**에서 확인할 수 있습니다. 프레임워크와 CUDA 버전 태그로 필터링하거나 이름으로 직접 검색할 수 있습니다.
+
+| 카테고리 | 포함 환경 |
+| --- | --- |
+| **Jupyter AI** | PyTorch 또는 TensorFlow \+ CUDA 11/12 \+ Python 3.11 조합 |
+| **Jupyter Base** | Python 3.11 기본 환경 |
+| **Code** | VS Code Server 기반 개발 환경 (Base / CUDA 12 / CUDA 13) |
+| **Aircloud Studio Beta** | AirCloud 전용 통합 개발 환경 |
+
+<Note>
+  제공 템플릿 목록은 업데이트될 수 있습니다. 최신 목록은 컨테이너 생성 화면에서 직접 확인하세요.
+</Note>
+
+## 내 템플릿
+
+기존 컨테이너 설정을 템플릿으로 저장해 두면, 이후 배포 시 동일한 환경을 빠르게 재사용할 수 있습니다.
+
+### 템플릿 저장 방법
+
+1. Air Container 목록에서 저장할 컨테이너 카드 우측 상단의 **⋮** 아이콘 클릭
+
+![Custom Template](/images/custom-template.png)
+
+2. **템플릿 저장** 선택
+3. 템플릿 정보 입력 후 **저장**
+
+![Custom Template Modal](/images/custom-template-modal.png)
+
+| 항목 | 설명 |
+| --- | --- |
+| 템플릿 이름 | 템플릿을 구분할 이름 (필수) |
+| 설명 | 템플릿에 대한 간단한 설명 (선택) |
+| 키워드 | 템플릿 검색에 사용할 태그, 콤마로 구분 (예: web, server, database) |
+
+저장이 완료되면 이후 컨테이너 생성 시 **내 템플릿만** 필터에서 저장한 템플릿을 선택할 수 있습니다.
+
+<Note>
+  내 템플릿은 해당 프로젝트의 접근 권한이 있는 모든 멤버에게 공유됩니다.
+</Note>
+
+## 템플릿 선택 방법
+
+컨테이너 배포 시 이미지 설정 단계에서 템플릿을 선택합니다.
+
+1. 컨테이너 생성 화면에서 **템플릿 선택** 클릭
+2. 프레임워크 태그로 필터링하거나 이름으로 검색
+3. 원하는 템플릿 선택 후 **저장**
+4. 이후 단계에서 포트, 환경 변수, 리소스 등 추가 설정 진행
+
+<Tip>
+  처음 배포하는 경우 공식 템플릿으로 시작해 환경을 확인한 뒤, 필요에 따라 커스텀 이미지로 전환하는 방법을 권장합니다.
+</Tip>
+
+## 관련 문서
+
+<Columns cols={2}>
+  <Card title="컨테이너 배포" icon="container" href="/docs/ko/air-container/deploy-a-container" cta="배포하기" arrow="true">
+    템플릿을 선택한 뒤 전체 배포 과정을 안내합니다.
+  </Card>
+
+  <Card title="접속 및 연결" icon="link" href="/docs/ko/air-container/access-and-connect" cta="접속 방법 보기" arrow="true">
+    배포 후 Web Terminal, CLI, SSH로 접속하는 방법을 안내합니다.
+  </Card>
+</Columns>

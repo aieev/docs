@@ -1,96 +1,200 @@
 ---
 title: "Deploy a Container"
-description: "From creation to running state"
+description: "Create and deploy an Air Container"
 icon: "container"
 ---
 
-This page walks through the standard flow to deploy a container using Air Container.
+Air Container supports two deployment methods:
 
-## 1. Select a project
+- **Deploy from a Template** — Quickly deploy using a preconfigured template.
+- **Create from Scratch** — Configure every deployment option manually.
 
-Choose the project where you want to deploy your container. The project overview also shows endpoint status and current deployments.
+## Before You Begin
 
-![Select a project](/docs/images/air-container/select-a-project.png)
+Regardless of the deployment method, you'll configure the following settings during deployment.
 
-## 2. Start creating a container
+| Item | Description |
+| --- | --- |
+| **Container Image** | The Docker image URL used to run your container. <br />The registry provider is detected automatically from the image URL. |
+| **Registry Access** | Public images can be pulled without authentication. <br />Private registries require a username and password (or access token). |
+| **GPU** | The GPU model assigned to the container. <br />Available VRAM, system memory, vCPUs, and hourly pricing vary by GPU type. |
+| **Replicas** | The number of container replicas to run concurrently. When Autoscaling is enabled, <br />AirCloud automatically scales between the configured minimum and maximum values. |
+| **Persistent Storage** | Persistent storage that remains available even if the container is stopped or restarted. <br />Up to **30 GB** can be allocated. |
+| **Tags** | Optional labels used to organize and filter containers. |
 
-In the Air Container menu, click **+ Create** to open the container creation flow. Enter a container name and proceed.
+### 1. Select a Project
 
-![Container page](/docs/images/air-container/container-page.png)
+From the Organization Overview, open the Project where you want to deploy the container.
 
-![Enter general information](/docs/images/air-container/enter-general-information.png)
+### 2. Start Creating a Container
 
-## 3. Configure Container Image
+From the **Air Container** page, click **\+ Create** in the upper-right corner.
 
-![Container image settings](/docs/images/air-container/enter-container-image-information.png)
+![Container Eng305](/images/container-eng305.png)
 
-Provide the following:
+### 3. Choose a Deployment Method
 
-- Container image
-- Registry provider
-- Registry access type (public/private)
-- If private: username + password/token
+Select how you want to create your container.
 
-Common registry providers include:
+![Container Deploy Eng1](/images/container-deploy-eng1.png)
 
-- GCP Artifact Registry
-- AWS ECR
+| Deployment Method | Description |
+| --- | --- |
+| **Deploy from a Template** | Quickly deploy using a preconfigured template. The container image, ports, and environment variables are configured automatically. |
+| **Create from Scratch** | Configure the container image and all deployment settings manually. |
+
+---
+
+## Deploy from a Template
+
+### 1. Select a Template
+
+Click **Select Template** and choose the template you want to use.
+
+![Template Select Modal Eng1](/images/template-select-modal-eng1.png)
+
+After saving, the selected template is applied automatically, and the container name is initialized using the template name. You can change the container name at any time.
+
+![Container Settings Eng1](/images/container-settings-eng1.png)
+
+### 2. Configure Resources
+
+Expand the **Resources** section to select the infrastructure option and GPU model.
+
+![Resource Select Eng2](/images/resource-select-eng2.png)
+
+#### Infrastructure Options
+
+| Option | Description |
+| --- | --- |
+| **AirCloud Zero (Spot)** | Coming soon. |
+| **AirCloud Plus (On-demand)** | Dedicated distributed cloud infrastructure operated by AIEEV, providing stable workloads without interruption. |
+
+#### Select a GPU
+
+Each GPU option displays its available VRAM, system memory, vCPUs, maximum number of replicas, and hourly cost (AU/hr).
+
+#### Configure Replicas
+
+Replicas determine how many copies of your container run simultaneously. Adjust the desired number using the slider.
+
+![Replica Config Eng](/images/replica-config-eng.png)
+
+When Autoscaling is enabled, AirCloud automatically adjusts the number of replicas within the configured minimum and maximum range.
+
+For more information, see [Autoscaling and Scheduled Scaling](/docs/air-container/autoscaling-and-scheduling).
+
+<Card title="Replicas and Quotas" type="info">
+  - The number of Replicas is limited by your account quota. If you need additional quota, please contact your administrator.
+  - If sufficient quota is available but the selected GPU is temporarily unavailable, you can join the waitlist. Resources will be allocated automatically as GPUs become available.
+</Card>
+
+### 3. Additional Settings (Optional)
+
+When deploying from a template, **Persistent Storage** and **Advanced Settings** are preconfigured. You can modify these settings as needed.
+
+#### Persistent Storage
+
+Persistent Storage preserves your data even if the container is stopped or restarted.
+
+For more information, see [Persistent Storage](/docs/air-container/shared-storage).
+
+![Advanced Settings Eng1](/images/advanced-settings-eng1.png)
+
+| Item | Description |
+| --- | --- |
+| **Volume Source** | **Create New Volume** creates a dedicated volume for this container. **Attach Existing Volume** shares a volume with another container. |
+| **Mount Path** | The directory inside the container where the volume is mounted. Default: `/workspace`. |
+| **Capacity (GB)** | Maximum storage capacity. Default: **30 GB**. |
+
+#### Advanced Settings
+
+Advanced Settings provide fine-grained control over container behavior. All fields are optional.
+
+![Advanced Settings Eng840](/images/advanced-settings-eng840.png)
+
+| Item | Description |
+| --- | --- |
+| **Startup Command** | Overrides the default command defined in the container image. Leave blank to use the image default. |
+| **Port** | Port exposed by the application. Default: **80**. |
+| **Health Check URL** | Endpoint used to verify service health (for example, `/health`). |
+| **Metrics Path** | Endpoint used to expose application metrics (for example, `/metrics`). |
+| **Health Check Timeout (Seconds)** | Maximum time to wait for a health check response. Default: **300 seconds**. |
+| **Startup Timeout (Seconds)** | Maximum time allowed for the container to start successfully. Default: **600 seconds**. |
+| **Environment Variables** | Key-value pairs injected into the container at runtime. Click **\+ Add** to add more variables. |
+| **Container ID** | Automatically generated unique identifier for the container. |
+
+### 4. Create the Container
+
+Review your configuration and estimated cost (**1 Hour**, **1 Day**, and **30 Days**) in the **Deployment Summary** panel, then click **Create Container**.
+
+Enable **Deploy Immediately** to start deployment as soon as the container is created.
+
+If disabled, the container is created in the **Pending** state and can be started manually later.
+
+<Note>
+  Containers in the **Pending** state do not incur charges. Charges begin only after the container is started.
+</Note>
+
+---
+
+## Create from Scratch
+
+### 1. Configure the Container Name
+
+Enter a container name and optionally assign tags.
+
+![Container Name Eng492](/images/container-name-eng492.png)
+
+| Item | Description |
+| --- | --- |
+| **Name** | A descriptive name for the container. |
+| **Tags** | Optional labels used to organize and filter containers. |
+
+### 2. Configure the Container Image
+
+Enter the container image URL.
+
+AirCloud automatically detects the registry provider from the image URL, but you can change it manually if needed.
+
+![Image Config Eng912](/images/image-config-eng912.png)
+
+| Item | Description |
+| --- | --- |
+| **Container Image** | URL of the container image. |
+| **Registry Provider** | Automatically detected from the image URL. Can be changed manually. |
+| **Registry Region** | Region where the image is stored. For Amazon ECR, this is detected automatically. |
+| **Registry Access** | **Public** images require no authentication. <br />**Private** registries require a username and password (or access token). |
+
+Supported registry providers:
+
+- Google Artifact Registry
+- Amazon Elastic Container Registry (ECR)
 - GitHub Container Registry
 - Docker Hub
 
-## 4. Configure Resources
+### 3. Configure Resources
 
-![Resource settings](/docs/images/air-container/resource-settings.png)
+Infrastructure options, GPU selection, Replicas, and Persistent Storage are configured in the same way as described in **Deploy from a Template**.
 
-Configure:
+### 4. Configure Advanced Settings (Optional)
 
-- Cloud Type
-- Instance type
-- Enable Autoscaling (optional)
-- Replica count
+Startup commands, ports, health checks, and environment variables are configured in the same way as described in **Advanced Settings**.
 
-We recommend balancing cost and latency based on your workload.
+### 5. Create the Container
 
-## 5. Advanced settings
+Review the configuration and estimated cost, then click **Create Container**.
 
-![Advanced settings](/docs/images/air-container/advanced-settings.png)
+---
 
-Optionally configure:
-
-- Start command
-- Port
-- Health check URL
-- Max wait time
-- Boot wait time
-- Environment variables
-- Endpoint ID
-
-## 6. Review and deploy
-
-![Review page](/docs/images/air-container/review-page.png)
-
-Review the configuration and deploy.
-
-Initial pull time depends on image size and registry performance. Pulled images may be cached on the node for faster subsequent starts.
-
-## 7. Start the container
-
-![Deployment completion](/docs/images/air-container/deployment-completion.png)
-
-After deployment, the container may appear as **Pending**.
-
-<Note>
-  Pending state is not billed. To run workloads, click **Start container** to switch into a running state.
-</Note>
-
-## Next steps
+## Next Steps
 
 <Columns cols={2}>
-  <Card title="Autoscaling and Scheduling" icon="activity" href="/docs/air-container/autoscaling-and-scheduling" cta="Configure" arrow="true">
-    Configure autoscaling and scheduled scaling.
+  <Card title="Autoscaling and Scheduled Scaling" icon="activity" href="/docs/air-container/autoscaling-and-scheduling" cta="View Guide" arrow="true">
+    Learn how to configure Autoscaling and Scheduled Scaling.
   </Card>
 
-  <Card title="Monitoring and Troubleshooting" icon="radar" href="/docs/air-container/monitoring-and-troubleshooting" cta="Monitor" arrow="true">
-    Monitor and debug deployments with logs and usage.
+  <Card title="Monitoring" icon="chart-line" href="/docs/air-container/monitoring" cta="View Monitoring" arrow="true">
+    Learn how to monitor container metrics and logs after deployment.
   </Card>
 </Columns>

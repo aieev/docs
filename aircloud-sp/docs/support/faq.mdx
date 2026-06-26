@@ -1,29 +1,31 @@
 ---
 title: "FAQ"
-description: "Frequently asked questions"
+description: "Frequently asked questions about AirCloud"
 icon: "messages-square"
 ---
 
-## What should I do first to use AirCloud?
+<AccordionGroup>
+  <Accordion title="What should I do first to start using AirCloud?">
+    Start by creating an account, generating a secret key, and either deploying a container via **Air Container** or calling an AI model via **Air API**. The [Quickstart](/docs/quickstart) guide walks through the full process.
+  </Accordion>
 
-Sign up and log in, then create an Organization and a Project. After that, start with either Air API or Air Container depending on your workflow.
+  <Accordion title="Are credits required to use AirCloud?">
+    Yes. AirCloud uses a prepaid credit system (AU). You need to top up credits before you can deploy containers or call APIs. 1 AU = 1 KRW (supply price basis).
+  </Accordion>
 
-## Are credits required?
+  <Accordion title="Can I view a secret key again after it's been generated?">
+    No. A secret key can only be viewed at the moment it is created. If you lose a key, delete it and generate a new one from the console.
+  </Accordion>
 
-Credits may appear optional during onboarding, but we recommend confirming billing/credits readiness before running real workloads.
+  <Accordion title="Why doesn't my container start running immediately after deployment?">
+    After deployment, a container goes through image pulling and initialization before entering **Running** state. This may take a few minutes depending on image size and GPU availability. If the container transitions to **Deploy Failed**, check the logs for the specific error.
+  </Accordion>
 
-## Can I view a secret key again?
+  <Accordion title="What is the difference between Autoscaling and Scheduled Scaling?">
+    **Autoscaling** adjusts the replica count automatically in response to real-time traffic. **Scheduled Scaling** sets replica counts on a fixed schedule — useful for predictable traffic patterns like business hours. See the [Autoscaling and Scheduling](/docs/air-container/autoscaling-and-scheduling) guide for configuration details.
+  </Accordion>
 
-No. Secret keys cannot be viewed again after creation. If you lose it, generate a new key.
-
-## Why isn’t my container running immediately after deployment?
-
-Right after deployment, a container may appear as **Pending**. Pending state is not billed, and you must click **Start container** to run workloads.
-
-## What’s the difference between Autoscaling and Scheduled Scaling?
-
-Autoscaling adjusts replicas based on conditions, while Scheduled Scaling adjusts replicas on a time-based schedule.
-
-## Where can I ask for help?
-
-See [Contact & Feedback](/docs/support/contact-and-feedback).
+  <Accordion title="Where can I get help?">
+    Check the [Troubleshooting](/docs/air-container/monitoring-and-troubleshooting) guide for common issues. For direct support, use the chat widget in the console or contact us at [support@aieev.com](mailto:support@aieev.com).
+  </Accordion>
+</AccordionGroup>

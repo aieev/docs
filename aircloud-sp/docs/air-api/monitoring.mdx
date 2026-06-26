@@ -1,0 +1,91 @@
+---
+title: "Monitoring"
+description: "Monitor Air API requests, usage, and spending"
+icon: "chart-line"
+---
+
+AirCloud provides two levels of monitoring for Air API: **Project-level Monitoring** and **Organization-level Usage**.
+
+<Note>
+  Use **Project Monitoring** to analyze API requests and performance, and **Organization Usage** to track spending trends across projects over time.
+</Note>
+
+## Project Monitoring
+
+From the Project sidebar, navigate to **Monitoring** and select the **Air API** tab to view API request metrics and spending for the current project over time.
+
+![Project Monitoring Eng](/images/project-monitoring-eng.png)
+
+### Metrics
+
+| Metric | Description |
+| --- | --- |
+| **Total Requests** | Total number of API requests during the selected period. |
+| **Total Tokens** | Sum of input and output tokens. |
+| **Total Characters** | Total characters processed by character-based models such as TTS. |
+| **Total Cost** | Total spending during the selected period (AU). |
+| **Most Used Model** | The model with the highest number of requests. |
+| **Input Tokens** | Total number of input tokens. |
+| **Output Tokens** | Total number of output tokens. |
+| **Input Cost** | Cost incurred by input tokens. |
+| **Output Cost** | Cost incurred by output tokens. |
+
+### Filter Options
+
+![Filter Eng391](/images/filter-eng391.png)
+
+| Option | Description |
+| --- | --- |
+| **Service Type** | Filter by **All**, **Chat (LLM)**, or **TTS**. |
+| **Model** | View requests for a specific model only. |
+| **API Key** | View requests made using a specific API key. |
+| **Date Range** | Select the time range to analyze. |
+| **Time Interval** | Choose the aggregation interval (for example, **1 minute** or **5 minutes**). |
+| **Auto Refresh** | Enable or disable automatic updates. |
+
+### Request History
+
+Individual API requests are displayed in a table below the metrics.
+
+Click <Icon icon="download" /> **Export** to download the request history.
+
+![Export Eng329](/images/export-eng329.png)
+
+| Field | Description |
+| --- | --- |
+| **Created At** | Time when the request was made. |
+| **API Key** | API key used for the request. |
+| **Model** | Model used for the request. |
+| **Engine Type** | Request type, such as **Chat (LLM)** or **TTS**. |
+| **Usage** | Number of tokens or characters processed. |
+| **Latency** | Time taken to process the request. |
+
+## Organization Usage
+
+From the Organization page, navigate to **Usage Management** → **Usage**, then select the **Air API** filter to view Air API spending across all Projects within the Organization.
+
+The table below provides a daily spending breakdown for each Project.
+
+![Org Usage Eng392](/images/org-usage-eng392.png)
+
+### Metrics
+
+| Metric | Description |
+| --- | --- |
+| **Total Cost** | Total Air API spending during the selected period. |
+| **Highest Daily Cost** | The highest daily spending amount and the corresponding date. |
+| **Cost Distribution** | Pie chart showing spending by Project. |
+| **Service Cost** | Combined spending for other services, such as Air Container. |
+| **Active Projects** | Number of Projects that made API requests during the selected period. |
+
+## Related Documentation
+
+<Columns cols={2}>
+  <Card title="API Usage Guide" icon="code-2" href="/docs/air-api/api-usage-guide" cta="View Guide" arrow="true">
+    Learn how to authenticate and call Air API.
+  </Card>
+
+  <Card title="Billing" icon="credit-card" href="/docs/console/billing" cta="View Billing" arrow="true">
+    Learn about AU-based billing and the refund policy.
+  </Card>
+</Columns>

@@ -1,57 +1,293 @@
 ---
 title: "API Usage Guide"
-description: "Create a secret key and run your first test"
-icon: "key"
+description: "Authenticate with a secret key and integrate Air API"
+icon: "astroid"
 ---
 
-This guide walks through the minimal steps to start using Air API from your application.
+This guide explains how to call Air API from your application after generating a secret key. Air API provides an OpenAI-compatible interface, allowing you to integrate with minimal code changes. If you are already using the OpenAI SDK, simply replace the `base_url` and API key.
 
-## 1. Select Air API in your project
+## Migrate from OpenAI to AirCloud
 
-After creating an Organization and Project, open the project overview and select **Air API**.
+If your application already uses the OpenAI SDK, you only need to update two settings.
 
-## 2. Choose a model
+<CodeGroup>
 
-Create an API workload in the project and select the model you need.
+```python Python
+# Before — OpenAI
+from openai import OpenAI
+client = OpenAI(api_key="sk-...")
 
-## 3. Create a secret key
+# After — AirCloud
+from openai import OpenAI
+client = OpenAI(
+    api_key="YOUR_AIRCLOUD_API_KEY",  # Replace with your AirCloud secret key
+    base_url="YOUR_ENDPOINT"          # Replace with your AirCloud endpoint
+)
+```
 
-Select an API access endpoint, then generate a secret key.
+```javascript Node.js
+// Before — OpenAI
+import OpenAI from "openai";
+const client = new OpenAI({ apiKey: "sk-..." });
+
+// After — AirCloud
+import OpenAI from "openai";
+const client = new OpenAI({
+  apiKey: "YOUR_AIRCLOUD_API_KEY",  // Replace with your AirCloud secret key
+  baseURL: "YOUR_ENDPOINT",         // Replace with your AirCloud endpoint
+});
+```
+
+</CodeGroup>
+
+### Migration Checklist
+
+- Replace `base_url` / `baseURL` with your AirCloud endpoint from the Console.
+- Replace your OpenAI API key with an AirCloud secret key.
+- Update the `model` parameter to an AirCloud model ID.
+
+## Find Your Endpoint and Secret Key
+
+Select your API workload in the Console, then click <Icon icon="code" /> **View Code** to view the endpoint URL and code samples for the selected model.
+
+![Code Sample Eng](/images/code-sample-eng.png)
+
+Replace `YOUR_ENDPOINT` and `YOUR_API_KEY` in the sample code with the values from your Console.
+
+## Authentication
+
+Include your secret key in the `Authorization` header for every API request.
+
+```text
+Authorization: Bearer YOUR_API_KEY
+```
 
 <Warning>
-  Secret keys cannot be viewed again after creation. Copy and store them securely.
+  A secret key is displayed only once when it is created. We recommend storing it as an environment variable instead of hardcoding it in your source code. If you lose the key, generate a new one from the Console.
 </Warning>
 
-## 4. Test using code samples
+## Code Examples
 
-Return to the API screen and use the provided code sample. Replace `your-api-key` with your generated secret key, then run a connectivity test.
+### Chat Models
 
-## 5. Integrate into your application
+<CodeGroup>
 
-Once the test succeeds, integrate using the same credentials and endpoint.
+```python Python
+from openai import OpenAI
 
-Before production, we recommend testing in the Playground, reviewing usage, and evaluating whether to expand to Air Container.
+client = OpenAI(
+    api_key="YOUR_API_KEY",
+    base_url="YOUR_ENDPOINT"
+)
 
-## Checklist
+response = client.chat.completions.create(
+    model="YOUR_MODEL_ID",
+    messages=[
+        {"role": "user", "content": "Hello"}
+    ]
+)
 
-- Project selected
-- Model selected
-- Secret key copied
-- Code sample test completed
-- Playground test completed (optional)
+print(response.choices[0].message.content)
+```
 
-## Related docs
+```javascript Node.js
+import OpenAI from "openai";
+
+const client = new OpenAI({
+  apiKey: "YOUR_API_KEY",
+  baseURL: "YOUR_ENDPOINT",
+});
+
+const response = await client.chat.completions.create({
+  model: "YOUR_MODEL_ID",
+  messages: [{ role: "user", content: "Hello" }],
+});
+
+console.log(response.choices[0].message.content);
+```
+
+```bash cURL
+curl YOUR_ENDPOINT/chat/completions \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "YOUR_MODEL_ID",
+    "messages": [
+      {"role": "user", "content": "Hello"}
+    ]
+  }'
+```
+
+```bash Shell
+#!/bin/bash
+
+API_KEY="YOUR_API_KEY"
+
+response=$(curl -s -X POST YOUR_ENDPOINT/chat/completions \
+  -H "Authorization: Bearer $API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "model": "YOUR_MODEL_ID",
+  "messages": [{"role": "user", "content": "Hello"}]
+}')
+
+echo "$response" | jq .
+```
+
+</CodeGroup>
+
+### TTS Models
+
+<CodeGroup>
+
+```python Python
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="YOUR_API_KEY",
+    base_url="YOUR_ENDPOINT"
+)
+
+response = client.audio.speech.create(
+    model="YOUR_MODEL_ID",
+    input="Hello. It's a beautiful day today.",
+    voice="aiden"
+)
+
+response.stream_to_file("output.mp3")
+```
+
+```javascript Node.js
+import OpenAI from "openai";
+import fs from "fs";
+
+const client = new OpenAI({
+  apiKey: "YOUR_API_KEY",
+  baseURL: "YOUR_ENDPOINT",
+});
+
+const response = await client.audio.speech.create({
+  model: "YOUR_MODEL_ID",
+  input: "Hello. It's a beautiful day today.",
+  voice: "aiden",
+});
+
+const buffer = Buffer.from(await response.arrayBuffer());
+fs.writeFileSync("output.mp3", buffer);
+```
+
+```bash cURL
+curl YOUR_ENDPOINT/audio/speech \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "YOUR_MODEL_ID",
+    "input": "Hello. It'\''s a beautiful day today.",
+    "voice": "aiden"
+  }' \
+  --output output.mp3
+```
+
+```bash Shell
+#!/bin/bash
+
+API_KEY="YOUR_API_KEY"
+
+curl -s -X POST YOUR_ENDPOINT/audio/speech \
+  -H "Authorization: Bearer $API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "model": "YOUR_MODEL_ID",
+  "input": "Hello. It'\''s a beautiful day today.",
+  "voice": "aiden"
+}' \
+  --output output.mp3
+```
+
+</CodeGroup>
+
+### Embedding Models
+
+<CodeGroup>
+
+```python Python
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="YOUR_API_KEY",
+    base_url="YOUR_ENDPOINT"
+)
+
+response = client.embeddings.create(
+    model="YOUR_MODEL_ID",
+    input="Convert this text into an embedding."
+)
+
+print(response.data[0].embedding)
+```
+
+```javascript Node.js
+import OpenAI from "openai";
+
+const client = new OpenAI({
+  apiKey: "YOUR_API_KEY",
+  baseURL: "YOUR_ENDPOINT",
+});
+
+const response = await client.embeddings.create({
+  model: "YOUR_MODEL_ID",
+  input: "Convert this text into an embedding.",
+});
+
+console.log(response.data[0].embedding);
+```
+
+```bash cURL
+curl -X POST YOUR_ENDPOINT/embeddings \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "model": "YOUR_MODEL_ID",
+  "input": "Convert this text into an embedding."
+}'
+```
+
+```bash Shell
+#!/bin/bash
+
+API_KEY="YOUR_API_KEY"
+
+response=$(curl -s -X POST YOUR_ENDPOINT/embeddings \
+  -H "Authorization: Bearer $API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "model": "YOUR_MODEL_ID",
+  "input": "Convert this text into an embedding."
+}')
+
+echo "$response" | jq .
+```
+
+</CodeGroup>
+
+## Best Practices
+
+- **Protect your API key** — Store your secret key as an environment variable and never commit it to a source repository.
+- **Monitor usage** — Regularly review API usage and costs in the **Usage** tab of the Console.
+- **Maintain available credits** — API requests stop when your credits are exhausted. We recommend enabling automatic top-up to avoid service interruptions.
+
+## Related Documentation
 
 <Columns cols={2}>
-  <Card title="Models and Playground" icon="play" href="/docs/air-api/models-and-playground" cta="Read" arrow="true">
-    Choose models and test in the Playground.
+  <Card title="Models and Playground" icon="play" href="/docs/air-api/models-and-playground" cta="View Documentation" arrow="true">
+    Learn how to select models and test them using the Playground.
   </Card>
 
-  <Card title="Troubleshooting" icon="wrench" href="/docs/air-api/troubleshooting" cta="Fix issues" arrow="true">
-    Common issues and what to check first.
+  <Card title="Troubleshooting" icon="wrench" href="/docs/air-api/troubleshooting" cta="View Troubleshooting" arrow="true">
+    Find solutions to common issues and errors.
   </Card>
 
-  <Card title="API Reference" icon="book" href="/docs/api-reference" cta="View reference" arrow="true">
-    Review API specs, endpoints, and parameters.
+  <Card title="API Reference" icon="book" href="/api-reference/introduction" cta="View API Reference" arrow="true">
+    Explore detailed API specifications, including endpoints and parameters.
   </Card>
 </Columns>

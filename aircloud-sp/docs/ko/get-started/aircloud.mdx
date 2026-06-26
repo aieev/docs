@@ -1,0 +1,48 @@
+---
+title: "AirCloud란?"
+icon: "cloud"
+---
+
+[AirCloud](https://ap-1.aieev.cloud:3007/ko/get-started)(에어클라우드)는 AI 추론 워크로드(inference workload)를 빠르고 유연하게 배포하고 운영할 수 있도록 설계된 완전 분산형 GPU Cloud Platform입니다. 사용자는 API 기반으로 모델을 빠르게 연동할 수도 있고, 컨테이너 단위로 애플리케이션과 런타임을 직접 배포해 원하는 환경을 구성할 수도 있습니다.
+
+## 배포 방식 선택
+
+<Columns cols={2}>
+  <Card title="Air API" icon="sparkles" href="/docs/ko/air-api" cta="API로 시작하기" arrow="true">
+    인프라를 직접 관리하지 않고 API 형태로 AI 모델을 빠르게 연동하는 방식입니다. 고품질 오픈소스 모델을 빠르게 통합하고 싶거나, 운영 부담 없이 사용량 기반으로 추론 워크로드를 운영하려는 경우에 적합합니다.
+  </Card>
+
+  <Card title="Air Container" icon="box" href="/docs/ko/air-container" cta="컨테이너 배포하기" arrow="true">
+    사용자가 직접 준비한 컨테이너 이미지를 AirCloud에 배포하는 방식입니다. 커스텀 CUDA 환경, 파인튜닝 모델 서빙, 복잡한 파이프라인 구성 등 GPU 환경과 런타임을 완전히 제어해야 하는 경우에 적합합니다.
+  </Card>
+</Columns>
+
+## 인프라 옵션 선택
+
+<Columns cols={2}>
+  <Card title="AirCloud Zero" icon="cloud">
+    비용 효율이 중요한 경우에 적합한 분산형 인프라 옵션입니다.
+  </Card>
+
+  <Card title="AirCloud Plus" icon="shield-check">
+    안정성과 예측 가능한 성능이 중요한 경우에 적합한 전용 인프라 옵션입니다.
+  </Card>
+</Columns>
+
+두 옵션의 인프라 구성 방식, 할당 방식, 상세 비교는 [개념 페이지](/docs/ko/get-started/concepts#aircloud-zero제로와-aircloud-plus플러스)를 참고하세요.
+
+## 다음 단계
+
+<Columns cols={3}>
+  <Card title="Quickstart" icon="play-circle" href="/docs/ko/quickstart" cta="빠르게 시작하기" arrow="true">
+    계정 생성, 기본 설정, 첫 사용 흐름을 확인합니다.
+  </Card>
+
+  <Card title="인증" icon="key" href="/docs/ko/get-started/authentication" cta="인증 설정하기" arrow="true">
+    API 키 발급 및 인증 설정 방법을 확인합니다.
+  </Card>
+
+  <Card title="Support" icon="life-buoy" href="/docs/ko/support" cta="지원 문서 보기" arrow="true">
+    사용 중 도움이 필요한 경우 지원 문서를 확인합니다.
+  </Card>
+</Columns>

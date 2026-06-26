@@ -1,43 +1,44 @@
 ---
-title: "Overview"
-description: "Deploy and operate your container images"
+title: "Air Container"
+description: "Deploy and manage containerized applications"
 icon: "box"
 ---
 
-Air Container lets you deploy and operate your own container images on AirCloud.
+Air Container is a workload that allows you to deploy and manage your own container images on AirCloud. It is ideal when you need full control over your runtime environment, dependencies, ports, environment variables, compute resources, and autoscaling behavior.
 
-It’s a great fit when you need direct control over runtime, dependencies, ports, environment variables, resources, and autoscaling.
+## When to Use Air Container
 
-## Standard flow
+Air Container is recommended when you need to:
 
-1. Select a project
-2. Start creating a container
-3. Configure Container Image
-4. Configure Resources
-5. Configure Advanced settings
-6. Review and deploy
-7. Start the container
-8. Monitor usage and logs
+- Deploy your own model server or application container.
+- Configure GPU specifications and the number of Replicas.
+- Use Autoscaling together with Scheduled Scaling.
+- Have greater operational control than Air API provides.
 
-## When it’s a good fit
+## What You Can Do with Air Container
 
-- You want to deploy your own model server or application image
-- You need to choose GPU specs and replica counts directly
-- You want to operate Autoscaling and Scheduled Scaling together
-- You need deeper operational control than an API-first approach
-
-## What to read next
-
-<Columns cols={2}>
-  <Card title="Deploy a Container" icon="container" href="/docs/air-container/deploy-a-container" cta="Deploy" arrow="true">
-    Step-by-step container deployment flow.
+<CardGroup cols={3}>
+  <Card title="Deploy Containers" icon="container" href="/docs/air-container/deploy-a-container">
+    Deploy container images from Docker Hub, Amazon ECR, Google Artifact Registry, GitHub Container Registry, and other registries.
   </Card>
 
-  <Card title="Autoscaling and Scheduling" icon="activity" href="/docs/air-container/autoscaling-and-scheduling" cta="Configure" arrow="true">
-    Autoscaling and scheduled scaling best practices.
+  <Card title="Start, Stop, and Restart" icon="power" href="/docs/air-container/start-stop-restart">
+    Start, stop, and restart containers to efficiently manage operational costs.
   </Card>
 
-  <Card title="Monitoring and Troubleshooting" icon="radar" href="/docs/air-container/monitoring-and-troubleshooting" cta="Monitor" arrow="true">
-    What to check in Usage, Logs, Settings, and scheduling.
+  <Card title="Autoscaling and Scheduled Scaling" icon="activity" href="/docs/air-container/autoscaling-and-scheduling">
+    Automatically scale containers based on traffic and configure time-based scaling schedules.
   </Card>
-</Columns>
+
+  <Card title="Monitoring and Troubleshooting" icon="radar" href="/docs/air-container/monitoring-and-troubleshooting">
+    Monitor GPU utilization, logs, and deployment settings to quickly diagnose issues.
+  </Card>
+
+  <Card title="Access and Connect" icon="terminal" href="/docs/air-container/access-and-connect">
+    Connect to running containers using the Web Terminal, AirCloud CLI, or SSH.
+  </Card>
+
+  <Card title="Persistent Storage" icon="database" href="/docs/air-container/shared-storage">
+    Persist your data even when containers are stopped or restarted.
+  </Card>
+</CardGroup>

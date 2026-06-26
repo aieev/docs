@@ -4,55 +4,61 @@ description: "모델 API를 빠르게 연동하고 테스트하는 방법"
 icon: "sparkles"
 ---
 
-Air API는 프로젝트 안에서 지원 모델을 선택하고, 시크릿 키를 발급받아, 코드 샘플 또는 Playground를 통해 빠르게 테스트할 수 있는 API 기반 워크로드입니다. 직접 인프라를 관리하지 않고 모델을 빠르게 연동하고 싶은 경우에 적합합니다.
+Air API는 프로젝트 안에서 지원 모델을 선택하고, 시크릿 키를 발급받아 코드 샘플 또는 Playground를 통해 빠르게 연동할 수 있는 API 기반 워크로드입니다. 별도 인프라 없이 모델 API를 붙이고 싶은 경우, 초기 PoC나 프로토타입을 빠르게 검증하고 싶은 경우에 적합합니다.
 
 ## Air API로 할 수 있는 일
 
-- 프로젝트 안에서 API 워크로드 생성
-- 지원 모델 선택
-- API 액세스 엔드포인트 선택
-- 시크릿 키 발급
-- 코드 샘플 기반 연결 테스트
-- Playground 기반 Web UI 테스트
-- 동일한 설정을 바탕으로 Air Container 확장 검토
+<Columns cols={2}>
+  <Card title="지원 모델 선택" icon="sparkles">
+    프로젝트 안에서 필요한 AI 모델을 선택합니다. 지원 모델은 지속적으로 추가됩니다.
+  </Card>
 
-## 기본 흐름
+  <Card title="시크릿 키 발급" icon="key">
+    API 액세스 엔드포인트를 선택하고 시크릿 키를 발급받습니다.
+  </Card>
 
-1. 프로젝트 개요에서 Air API 선택
-2. 필요한 모델 선택
-3. 시크릿 키 생성
-4. 코드 샘플로 연결 테스트
-5. Playground 또는 애플리케이션 연동
+  <Card title="코드 샘플 테스트" icon="code-2">
+    발급받은 키로 바로 연결 테스트를 진행할 수 있습니다.
+  </Card>
 
-## Quickstart: Air API로 시작하기
+  <Card title="Playground 테스트" icon="play-circle">
+    Web UI에서 모델 동작을 브라우저로 직접 확인합니다.
+  </Card>
+</Columns>
 
-Air API는 프로젝트 안에서 모델 API를 빠르게 테스트하고 연동하려는 경우에 적합합니다.
+## Quickstart
 
 ### 1. 프로젝트 개요에서 Air API 선택
+
+![Image](/images/image-18.png)
 
 조직과 프로젝트를 생성한 뒤, 프로젝트 개요 화면으로 이동하여 **Air API**를 선택합니다.
 
 ### 2. 사용할 모델 선택
 
-프로젝트 내에서 API 워크로드를 생성하고, 필요한 AI 모델을 선택합니다. 지원 모델은 지속적으로 추가될 예정이며, 필요한 모델이 없는 경우 피드백을 통해 요청할 수 있습니다.
+![Request Model](/images/request-model.png)
 
-### 3. API 키 발급
+API 워크로드를 생성하고 필요한 모델을 선택합니다. 필요한 모델이 목록에 없는 경우 피드백을 통해 요청할 수 있습니다.
 
-API 액세스 엔드포인트를 선택한 뒤 시크릿 키를 생성합니다. 시크릿 키는 생성 이후 다시 확인할 수 없으므로, 반드시 복사해 안전하게 보관해야 합니다. 분실한 경우 재발급이 필요합니다.
+### 3. 시크릿 키 발급
+
+**API 키 \> 시크릿 키 생성** 으로 API 키를 생성합니다.
+
+![Api Key Generate](/images/api-key-generate.png)
+
+<Warning>
+  시크릿 키는 생성 이후 다시 확인할 수 없습니다. 반드시 복사해 안전하게 보관하세요. 
+</Warning>
 
 ### 4. 코드 샘플로 연결 테스트
 
-키를 발급받은 뒤 다시 API 화면으로 돌아가 코드 샘플을 확인합니다. 코드 샘플의 your-api-key 위치에 발급받은 시크릿 키를 입력해 연결 테스트를 진행합니다.
+키를 발급받은 뒤 원하는 모델 카드로 이동해 우측 상단의 <Icon icon="code" /> **코드 보기** 를 클릭합니다. `your-api-key` 위치에 시크릿 키를 입력하고 연결 테스트를 진행합니다.
 
 ### 5. Playground에서 테스트
 
-Playground를 선택하면 Web UI에서 직접 모델 테스트를 진행할 수 있습니다. 또한 동일한 configuration으로 Air Container 배포를 선택할 수 있으므로, 요구 latency와 GPU 스펙에 맞춰 더 안정적인 서비스 환경으로 확장할 수 있습니다.
+Playground를 선택하면 Web UI에서 직접 모델 테스트를 진행할 수 있습니다. 동일한 설정으로 Air Container 배포로 전환할 수 있어, latency나 GPU 스펙이 중요한 경우 안정적인 환경으로 확장할 수 있습니다.
 
-## 이런 경우에 적합합니다
-
-- 모델 API를 빠르게 붙이고 싶은 경우
-- 초기 PoC나 프로토타입을 빠르게 검증하고 싶은 경우
-- 별도 컨테이너 배포 없이 API 중심으로 시작하고 싶은 경우
+![Playground Example](/images/playground-example.png)
 
 ## 다음에 읽으면 좋은 문서
 

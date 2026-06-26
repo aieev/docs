@@ -1,44 +1,280 @@
 ---
-title: "API 사용 가이드"
-description: "시크릿 키 발급과 첫 연결 테스트"
-icon: "key"
+title: "API 호출 방법"
+description: "시크릿 키 인증과 코드 기반 API 연동"
+icon: "astroid"
 ---
 
-Air API를 실제 애플리케이션에서 사용하기 위한 기본 흐름을 안내합니다.
+시크릿 키를 발급받은 뒤 실제 애플리케이션에서 API를 호출하는 방법을 안내합니다. Air API는 OpenAI 호환 인터페이스를 제공하므로, OpenAI SDK를 사용하는 기존 코드에서 `base_url`과 API 키만 교체하면 바로 연동할 수 있습니다.
 
-## 1. 프로젝트 개요에서 Air API 선택
+## OpenAI에서 AirCloud로 전환하기
 
-조직과 프로젝트를 생성한 뒤, 프로젝트 개요 화면에서 Air API를 선택합니다.
+기존에 OpenAI SDK를 사용하고 있다면 코드 변경 없이 두 가지만 교체하면 됩니다.
 
-## 2. 사용할 모델 선택
+<CodeGroup>
 
-프로젝트 내 API 워크로드를 생성하고 필요한 모델을 선택합니다.
+```python Python
+# Before — OpenAI
+from openai import OpenAI
+client = OpenAI(api_key="sk-...")
 
-## 3. 시크릿 키 생성
+# After — AirCloud
+from openai import OpenAI
+client = OpenAI(
+    api_key="YOUR_AIRCLOUD_API_KEY",  # AirCloud 시크릿 키로 교체
+    base_url="YOUR_ENDPOINT"          # AirCloud 엔드포인트로 교체
+)
+```
 
-API 액세스 엔드포인트를 선택한 뒤 시크릿 키를 생성합니다.
+```javascript Node.js
+// Before — OpenAI
+import OpenAI from "openai";
+const client = new OpenAI({ apiKey: "sk-..." });
+
+// After — AirCloud
+import OpenAI from "openai";
+const client = new OpenAI({
+  apiKey: "YOUR_AIRCLOUD_API_KEY",  // AirCloud 시크릿 키로 교체
+  baseURL: "YOUR_ENDPOINT",         // AirCloud 엔드포인트로 교체
+});
+```
+
+</CodeGroup>
+
+### 전환 체크리스트
+
+- `base_url` / `baseURL`을 콘솔에서 확인한 AirCloud 엔드포인트로 교체
+- API 키를 AirCloud 시크릿 키로 교체
+- `model` 파라미터를 AirCloud 모델 ID로 확인 및 교체
+
+## 엔드포인트와 시크릿 키 확인
+
+콘솔에서 API 워크로드를 선택한 뒤 <Icon icon="code" /> **코드 보기** 버튼을 클릭하면 해당 모델의 엔드포인트 URL과 코드 샘플을 확인할 수 있습니다.
+
+![Air Api Code](/images/air-api-code.png)
+
+이 페이지의 예시 코드에서 `YOUR_ENDPOINT`와 `YOUR_API_KEY`는 콘솔에서 확인한 값으로 교체하세요.
+
+## 인증
+
+모든 API 요청에는 `Authorization` 헤더에 시크릿 키를 포함해야 합니다.
+
+```text
+Authorization: Bearer YOUR_API_KEY
+```
 
 <Warning>
-  시크릿 키는 생성 이후 다시 확인할 수 없으므로 반드시 복사해 안전하게 보관해야 합니다.
+  시크릿 키는 생성 시 한 번만 확인할 수 있습니다. 키는 코드에 직접 하드코딩하지 않고 환경 변수로 관리하는 것을 권장합니다. 분실한 경우 콘솔에서 재발급할 수 있습니다.
 </Warning>
 
-## 4. 코드 샘플 테스트
+## 코드 예시
 
-시크릿 키를 발급받은 뒤 API 화면으로 돌아가 코드 샘플을 확인합니다. AirCloud 콘솔에서 제공하는 코드 샘플의 `your-api-key` 위치에 발급받은 키를 입력해 연결 테스트를 진행합니다.
+### Chat 모델
 
-## 5. 실제 연동
+<CodeGroup>
 
-테스트가 성공하면 같은 인증 정보와 엔드포인트를 사용해 실제 애플리케이션에 연동할 수 있습니다.
+```python Python
+from openai import OpenAI
 
-운영 전에는 Playground 테스트, 사용량 확인, 필요한 경우 Air Container 확장 여부를 함께 검토하는 것을 권장합니다.
+client = OpenAI(
+    api_key="YOUR_API_KEY",
+    base_url="YOUR_ENDPOINT"
+)
 
-## 체크리스트
+response = client.chat.completions.create(
+    model="YOUR_MODEL_ID",
+    messages=[
+        {"role": "user", "content": "안녕하세요"}
+    ]
+)
 
-- 프로젝트 선택 완료
-- 모델 선택 완료
-- 시크릿 키 복사 완료
-- 코드 샘플 테스트 완료
-- Playground 테스트 완료 (선택사항)
+print(response.choices[0].message.content)
+```
+
+```javascript Node.js
+import OpenAI from "openai";
+
+const client = new OpenAI({
+  apiKey: "YOUR_API_KEY",
+  baseURL: "YOUR_ENDPOINT",
+});
+
+const response = await client.chat.completions.create({
+  model: "YOUR_MODEL_ID",
+  messages: [{ role: "user", content: "안녕하세요" }],
+});
+
+console.log(response.choices[0].message.content);
+```
+
+```bash cURL
+curl YOUR_ENDPOINT/chat/completions \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "YOUR_MODEL_ID",
+    "messages": [
+      {"role": "user", "content": "안녕하세요"}
+    ]
+  }'
+```
+
+```bash Shell
+#!/bin/bash
+
+API_KEY="YOUR_API_KEY"
+
+response=$(curl -s -X POST YOUR_ENDPOINT/chat/completions \
+  -H "Authorization: Bearer $API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "model": "YOUR_MODEL_ID",
+  "messages": [{"role": "user", "content": "안녕하세요"}]
+}')
+
+echo "$response" | jq .
+```
+
+</CodeGroup>
+
+### TTS 모델
+
+<CodeGroup>
+
+```python Python
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="YOUR_API_KEY",
+    base_url="YOUR_ENDPOINT"
+)
+
+response = client.audio.speech.create(
+    model="YOUR_MODEL_ID",
+    input="안녕하세요. 오늘 날씨가 좋네요.",
+    voice="aiden"
+)
+
+response.stream_to_file("output.mp3")
+```
+
+```javascript Node.js
+import OpenAI from "openai";
+import fs from "fs";
+
+const client = new OpenAI({
+  apiKey: "YOUR_API_KEY",
+  baseURL: "YOUR_ENDPOINT",
+});
+
+const response = await client.audio.speech.create({
+  model: "YOUR_MODEL_ID",
+  input: "안녕하세요. 오늘 날씨가 좋네요.",
+  voice: "aiden",
+});
+
+const buffer = Buffer.from(await response.arrayBuffer());
+fs.writeFileSync("output.mp3", buffer);
+```
+
+```bash cURL
+curl YOUR_ENDPOINT/audio/speech \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "YOUR_MODEL_ID",
+    "input": "안녕하세요. 오늘 날씨가 좋네요.",
+    "voice": "aiden"
+  }' \
+  --output output.mp3
+```
+
+```bash Shell
+#!/bin/bash
+
+API_KEY="YOUR_API_KEY"
+
+curl -s -X POST YOUR_ENDPOINT/audio/speech \
+  -H "Authorization: Bearer $API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "model": "YOUR_MODEL_ID",
+  "input": "안녕하세요. 오늘 날씨가 좋네요.",
+  "voice": "aiden"
+}' \
+  --output output.mp3
+```
+
+</CodeGroup>
+
+### Embedding 모델
+
+<CodeGroup>
+
+```python Python
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="YOUR_API_KEY",
+    base_url="YOUR_ENDPOINT"
+)
+
+response = client.embeddings.create(
+    model="YOUR_MODEL_ID",
+    input="텍스트를 벡터로 변환합니다."
+)
+
+print(response.data[0].embedding)
+```
+
+```javascript Node.js
+import OpenAI from "openai";
+
+const client = new OpenAI({
+  apiKey: "YOUR_API_KEY",
+  baseURL: "YOUR_ENDPOINT",
+});
+
+const response = await client.embeddings.create({
+  model: "YOUR_MODEL_ID",
+  input: "텍스트를 벡터로 변환합니다.",
+});
+
+console.log(response.data[0].embedding);
+```
+
+```bash cURL
+curl -X POST YOUR_ENDPOINT/embeddings \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "model": "YOUR_MODEL_ID",
+  "input": "텍스트를 벡터로 변환합니다."
+}'
+```
+
+```bash Shell
+#!/bin/bash
+
+API_KEY="YOUR_API_KEY"
+
+response=$(curl -s -X POST YOUR_ENDPOINT/embeddings \
+  -H "Authorization: Bearer $API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "model": "YOUR_MODEL_ID",
+  "input": "텍스트를 벡터로 변환합니다."
+}')
+
+echo "$response" | jq .
+```
+
+</CodeGroup>
+
+## 운영 시 주의사항
+
+- **키 보안**: 시크릿 키는 환경 변수로 관리하고, 코드 저장소에 커밋하지 마세요.
+- **사용량 확인**: 콘솔의 사용량 탭에서 모델별 호출량과 비용을 정기적으로 확인하세요.
+- **크레딧 부족**: 크레딧이 소진되면 API 호출이 중단됩니다. 자동 충전을 설정해두는 것을 권장합니다.
 
 ## 관련 문서
 
@@ -51,7 +287,7 @@ API 액세스 엔드포인트를 선택한 뒤 시크릿 키를 생성합니다.
     자주 발생하는 오류와 해결 방법을 확인합니다.
   </Card>
 
-  <Card title="API 레퍼런스" icon="book" href="/docs/ko/api-reference" cta="레퍼런스 보기" arrow="true">
+  <Card title="API 레퍼런스" icon="book" href="/api-reference/ko/introduction" cta="레퍼런스 보기" arrow="true">
     엔드포인트와 파라미터 등 API 상세 스펙을 확인합니다.
   </Card>
 </Columns>

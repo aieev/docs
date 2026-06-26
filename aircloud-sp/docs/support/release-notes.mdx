@@ -1,35 +1,58 @@
 ---
-title: "Documentation Updates"
-sidebarTitle: "Documentation Updates"
-description: "Documentation structure changes, new guides, and content improvements"
-icon: "scroll"
+title: "Release Notes"
+description: "AirCloud documentation update history"
+icon: "newspaper"
 ---
 
-This page tracks notable changes to AirCloud documentation, including new guides, structural improvements, and content updates.
-
-## 2026-04
-
-### Documentation
-
-- Refreshed the Introduction structure
-- Refined the Quickstart flow
-- Reorganized Air API, Air Container, Reference, and Support categories
-
-### Air API
-
-- Improved documentation structure
-- Clarified models and Playground guidance
+## 2026-06
 
 ### Air Container
 
-- Refined deployment flow documentation
-- Added guidance for Autoscaling and Scheduled Scaling
+- **Container Management**: The "Start/Stop/Restart" page has been reorganized as **Container Management**, consolidating lifecycle controls under a single section.
+- **Container Tags**: You can now group containers with user-defined tags and filter the list by tag.
+- **Deploy a Container — Replica Quota**: Added guidance on quota limits and how to request an increase. Added Waitlist instructions for high-demand GPU models.
+- **Persistent Volume — Change while stopped**: Documented how to activate, deactivate, or swap volumes while a container is in Pending state.
+- **SSH Key Per-Container Application**: Added instructions for applying SSH keys to specific containers and enabling/disabling keys without deletion.
+- **Web Terminal — Replica selection**: Documented replica selection in the web terminal and auto-reconnect behavior.
 
-## Writing guidelines
+### Air API
 
-We recommend capturing:
+- **Monitoring**: Added a new Monitoring page for Air API, covering project-level metrics (request count, latency, token usage, error rate) and organization-level usage aggregation.
+- **API Usage Guide**: Added Shell (bash/curl) code examples alongside Python, Node.js, and cURL for Chat, TTS, and Embedding models.
+- **Models and Playground**: Updated model display names shown in usage charts and request logs.
 
-- User-impacting feature changes
-- Newly added docs
-- Behavior changes
-- Policy/operations changes
+### Reference
+
+- **Infrastructure and Resource Types**: Added a new reference page documenting AirCloud Plus and AirCloud Zero infrastructure options, available GPU instance specs, and VRAM guidance by model size.
+
+### Console
+
+- **Billing**: Added Refund Policy section documenting AU refund eligibility and the refund request process.
+
+### Support
+
+- **FAQ**: Converted FAQ to accordion format for easier navigation.
+
+### Get Started
+
+- **What is AirCloud?**: Restructured the index page to separate deployment method selection (Air API / Air Container) from infrastructure option selection (AirCloud Zero / AirCloud Plus). Updated Next Steps to include an Authentication card.
+
+---
+
+## 2026-04
+
+### Air Container
+
+- **Autoscaling**: Added documentation for replica-based autoscaling configuration.
+- **Scheduled Scaling**: Added documentation for time-based scheduled scaling.
+- **Monitoring and Troubleshooting**: Added container metrics reference and common error resolution guide.
+
+### Air API
+
+- **Models and Playground**: Added Playground usage guide and model selection documentation.
+- **API Usage Guide**: Added OpenAI SDK migration guide and full code examples for Chat, TTS, and Embedding.
+
+### Get Started
+
+- **Authentication**: Added secret key generation and management guide.
+- **Concepts**: Added infrastructure concepts page covering AirCloud Plus and AirCloud Zero.

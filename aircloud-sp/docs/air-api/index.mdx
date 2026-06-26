@@ -1,47 +1,77 @@
 ---
-title: "Overview"
-description: "Integrate and test model APIs quickly"
+title: "Air API"
+description: "Quickly integrate and test AI models through APIs"
 icon: "sparkles"
 ---
 
-Air API is an API-based workload that lets you quickly test and integrate supported models within a project. It’s a great fit when you want fast integration without managing infrastructure directly.
+Air API is an API-based workload that lets you quickly integrate AI models by selecting a supported model within your Project and generating a secret key. You can immediately test your integration using code samples or the Playground, without managing any infrastructure. It is ideal for rapid prototyping, proof-of-concept (PoC) projects, and applications that require fast model integration.
 
-## What you can do with Air API
-
-- Create an API workload inside a project
-- Choose a supported model
-- Select an API access endpoint
-- Issue a secret key
-- Run a connectivity test with code samples
-- Test in the Playground (Web UI)
-- Consider expanding to Air Container using the same configuration
-
-## Basic flow
-
-1. Select Air API in the project overview
-2. Choose a model
-3. Create a secret key
-4. Test with code samples
-5. Test in Playground or integrate into your app
-
-## When it’s a good fit
-
-- You want to integrate model APIs quickly
-- You want to validate a PoC/prototype fast
-- You want to start API-first before deploying containers
-
-## What to read next
+## What You Can Do with Air API
 
 <Columns cols={2}>
-  <Card title="Models and Playground" icon="play" href="/docs/air-api/models-and-playground" cta="Learn how" arrow="true">
-    Pick models and test responses in the Playground.
+  <Card title="Select a Model" icon="sparkles">
+    Choose the AI model that best fits your use case. New models are continuously added.
   </Card>
 
-  <Card title="API Usage Guide" icon="key" href="/docs/air-api/api-usage-guide" cta="View guide" arrow="true">
-    Create keys and run your first connectivity test.
+  <Card title="Generate a Secret Key" icon="key">
+    Select the API endpoints you want to access and generate a secret key.
   </Card>
 
-  <Card title="Troubleshooting" icon="wrench" href="/docs/air-api/troubleshooting" cta="Fix issues" arrow="true">
-    Common issues and what to check first.
+  <Card title="Test with Code Samples" icon="code-2">
+    Verify your integration immediately using the generated secret key.
+  </Card>
+
+  <Card title="Test in Playground" icon="play-circle">
+    Interact with models directly from your browser using the web-based Playground.
+  </Card>
+</Columns>
+
+## Quickstart
+
+### 1. Select Air API from the Project Overview
+
+![Air Api Eng](/images/air-api-eng.png)
+
+After creating your Organization and Project, navigate to the Project Overview page and select **Air API**.
+
+### 2. Select a Model
+
+![Request Model Eng](/images/request-model-eng.png)
+
+Create an API workload and select the model you want to use. If the model you need is not available, you can submit a request through our feedback channel.
+
+### 3. Generate a Secret Key
+
+Go to **API Keys** → **Create New Secret Key**.
+
+![Create Api Key Eng](/images/create-api-key-eng.png)
+
+<Warning>
+  A secret key is displayed only once after it is created. Be sure to copy and store it in a secure location.
+</Warning>
+
+### 4. Test with a Code Sample
+
+After generating your secret key, open the desired model card and click <Icon icon="code" /> **View Code** in the upper-right corner. Replace `your-api-key` with your secret key and run the sample to verify your connection.
+
+### 5. Test in Playground
+
+Open the Playground to interact with the model directly from the web interface. When you need dedicated resources, lower latency, or specific GPU configurations, you can seamlessly migrate the same workload to Air Container.
+
+![Example Playground Eng](/images/example-playground-eng.png)
+
+## Related Documentation
+
+<Columns cols={2}>
+  <Card title="Models and Playground" icon="sparkles" href="/docs/air-api/models-and-playground" cta="View Documentation" arrow="true">
+    Browse supported models and learn how to use the Playground.
+  </Card>
+
+  <Card title="API Usage Guide" icon="code-2" href="/docs/air-api/api-usage-guide" cta="View Documentation" arrow="true">
+    Learn how to authenticate, call the API, and follow best practices.
+  </Card>
+
+  <Card title="Troubleshooting" icon="wrench" href="/docs/air-api/troubleshooting" cta="View Documentation" arrow="true">
+    Find solutions to common errors and troubleshooting tips.
   </Card>
 </Columns>

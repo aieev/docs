@@ -28,10 +28,10 @@
               {
                 "group": "Get started",
                 "pages": [
-                  "docs/index",
-                  "docs/quickstart",
+                  "docs/get-started/aircloud",
+                  "docs/get-started/quickstart",
                   "docs/get-started/concepts",
-                  "docs/get-started/organizations-and-billing"
+                  "docs/get-started/authentication"
                 ]
               },
               {
@@ -40,6 +40,7 @@
                   "docs/air-api/index",
                   "docs/air-api/models-and-playground",
                   "docs/air-api/api-usage-guide",
+                  "docs/air-api/monitoring",
                   "docs/air-api/troubleshooting"
                 ]
               },
@@ -48,8 +49,11 @@
                 "pages": [
                   "docs/air-container/index",
                   "docs/air-container/deploy-a-container",
+                  "docs/air-container/templates",
+                  "docs/air-container/container-management",
                   "docs/air-container/autoscaling-and-scheduling",
-                  "docs/air-container/monitoring-and-troubleshooting",
+                  "docs/air-container/monitoring",
+                  "docs/air-container/troubleshooting",
                   {
                     "group": "Access and Connect",
                     "icon": "link",
@@ -73,6 +77,9 @@
               {
                 "group": "Console",
                 "pages": [
+                  "docs/console/organization",
+                  "docs/console/billing",
+                  "docs/console/notifications",
                   "docs/console/desktop-notifications"
                 ]
               },
@@ -163,10 +170,10 @@
               {
                 "group": "시작하기",
                 "pages": [
-                  "docs/ko/index",
-                  "docs/ko/quickstart",
+                  "docs/ko/get-started/aircloud",
+                  "docs/ko/get-started/quickstart",
                   "docs/ko/get-started/concepts",
-                  "docs/ko/get-started/organizations-and-billing"
+                  "docs/ko/get-started/authentication"
                 ]
               },
               {
@@ -175,6 +182,7 @@
                   "docs/ko/air-api/index",
                   "docs/ko/air-api/models-and-playground",
                   "docs/ko/air-api/api-usage-guide",
+                  "docs/ko/air-api/monitoring",
                   "docs/ko/air-api/troubleshooting"
                 ]
               },
@@ -183,8 +191,11 @@
                 "pages": [
                   "docs/ko/air-container/index",
                   "docs/ko/air-container/deploy-a-container",
+                  "docs/ko/air-container/templates",
+                  "docs/ko/air-container/container-management",
                   "docs/ko/air-container/autoscaling-and-scheduling",
-                  "docs/ko/air-container/monitoring-and-troubleshooting",
+                  "docs/ko/air-container/monitoring",
+                  "docs/ko/air-container/troubleshooting",
                   {
                     "group": "접속 및 연결",
                     "icon": "link",
@@ -208,6 +219,9 @@
               {
                 "group": "콘솔",
                 "pages": [
+                  "docs/ko/console/organization",
+                  "docs/ko/console/billing",
+                  "docs/ko/console/notifications",
                   "docs/ko/console/desktop-notifications"
                 ]
               },

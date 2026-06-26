@@ -1,53 +1,71 @@
 ---
-title: "Infrastructure and Resource Types"
-description: "Understand cloud types and instance types"
+title: "Infrastructure and Instance Types"
+description: "Understand Cloud Types and GPU instance types"
 icon: "server"
 ---
 
-This page summarizes the infrastructure options (cloud types) and instance types available in AirCloud.
+This page provides an overview of the infrastructure options and GPU instance types available in AirCloud.
 
-## Cloud Type
+## Cloud Types
 
-Choose a cloud type based on workload requirements.
+Choose one of the following Cloud Types based on your workload requirements.
 
-### AirCloud
-
-Best for workloads where cost efficiency and flexibility matter.
-
-### AirCloud+
-
-Best for workloads that require higher reliability, performance, and a more predictable operating environment.
-
-### AirCloud 0
-
-An option that leverages distributed infrastructure (e.g., individuals, partner providers).
-
-## Instance types
-
-When deploying containers, you can select a GPU instance type. Examples include:
-
-- RTX 4070 Ti Super
-- RTX 4070 Super
-- RTX 4090
-- RTX 5090
-- RTX PRO 6000
-
-## What to consider
-
-- Required latency
-- Model size and memory requirements
-- Expected request volume
-- Replica strategy
-- Whether autoscaling is enabled
-
-## Related docs
-
-<Columns cols={2}>
-  <Card title="Deploy a Container" icon="container" href="/docs/air-container/deploy-a-container" cta="Deploy" arrow="true">
-    Deployment flow and configuration steps.
+<CardGroup cols={2}>
+  <Card title="AirCloud Plus" icon="shield-check">
+    Designed for workloads that require high availability, predictable performance, and production-grade reliability. Recommended for production environments.
   </Card>
 
-  <Card title="Autoscaling and Scheduling" icon="activity" href="/docs/air-container/autoscaling-and-scheduling" cta="Configure" arrow="true">
-    Autoscaling and scheduled scaling guidance.
+  <Card title="AirCloud Zero" icon="cpu">
+    Uses infrastructure contributed by individuals, PC cafés, and infrastructure partners. Ideal for cost-sensitive workloads where minimizing cost is the highest priority.
+  </Card>
+</CardGroup>
+
+## Instance Types
+
+The following GPU instance types are available with AirCloud Plus.
+
+| GPU Model | VRAM | System Memory | vCPUs |
+| --- | --- | --- | --- |
+| NVIDIA RTX 4070 Super | 12 GB | 9 GB | 8 |
+| NVIDIA RTX 4070 Ti Super | 16 GB | 58 GB | 8 |
+| NVIDIA RTX 4090 | 24 GB | 58 GB | 8 |
+| NVIDIA RTX 5090 | 32 GB | 58 GB | 16 |
+| NVIDIA RTX PRO 6000 | 96 GB | 58 GB | 16 |
+
+Long-term reservations (three months or longer) are eligible for discounted pricing.
+
+See the Pricing page for the latest rates.
+
+### Recommended VRAM by Model Size
+
+Choose an instance with sufficient GPU memory for your model.
+
+| Model Size | Recommended VRAM | Recommended Instance |
+| --- | --- | --- |
+| Up to 7B | 12 GB or more | RTX 4070 Super or higher |
+| 13B | 16 GB or more | RTX 4070 Ti Super or higher |
+| 30B | 24 GB or more | RTX 4090 or higher |
+| 70B | 32 GB or more | RTX 5090 or higher |
+| Multimodal or Very Large Models | 96 GB | RTX PRO 6000 |
+
+## Choosing an Instance Type
+
+Consider the following when selecting an instance type:
+
+- Required response latency
+- Model size and GPU memory requirements
+- Expected request volume
+- Replica strategy
+- Whether Autoscaling will be enabled
+
+## Related Documentation
+
+<Columns cols={2}>
+  <Card title="Deploy a Container" icon="container" href="/docs/air-container/deploy-a-container" cta="Deploy a Container" arrow="true">
+    Learn how to deploy a container and configure its resources.
+  </Card>
+
+  <Card title="Autoscaling and Scheduled Scaling" icon="activity" href="/docs/air-container/autoscaling-and-scheduling" cta="View Guide" arrow="true">
+    Learn how to configure Autoscaling and Scheduled Scaling.
   </Card>
 </Columns>

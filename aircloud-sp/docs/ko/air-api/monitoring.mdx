@@ -1,0 +1,91 @@
+---
+title: "모니터링"
+description: "Air API 요청 지표, 사용량, 지출 현황 확인"
+icon: "chart-line"
+---
+
+AirCloud는 Air API 사용 현황을 프로젝트 단위와 조직 단위, 두 단계에서 모니터링할 수 있습니다.
+
+<Note>
+  프로젝트 모니터링은 요청 단위 상세 분석에, 조직 사용량 관리는 기간별 지출 추이 파악에 활용하세요.
+</Note>
+
+## 프로젝트 모니터링
+
+프로젝트 사이드바의 **모니터링** 메뉴에서 **Air API** 탭을 선택하면, 해당 프로젝트에서 발생한 API 요청 지표와 지출을 시계열로 확인할 수 있습니다.
+
+![Airapi Monitoring](/images/airapi-monitoring.png)
+
+### 지표 카드
+
+| 지표 | 설명 |
+| --- | --- |
+| 총 요청 수 | 선택한 기간 내 전체 API 호출 횟수 |
+| 총 토큰량 | Input \+ Output 토큰 합계 |
+| 총 문자 수 | TTS 등 문자 수 기반 과금 모델의 처리 문자 수 |
+| 총 지출 | 선택한 기간 내 발생한 전체 비용 (AU) |
+| 최다 사용 모델 | 요청 수 기준 가장 많이 호출된 모델 |
+| Input 토큰량 | 입력 토큰 합계 |
+| Output 토큰량 | 출력 토큰 합계 |
+| Input 지출 | 입력 토큰 기준 비용 |
+| Output 지출 | 출력 토큰 기준 비용 |
+
+### 필터 옵션
+
+![Filter1](/images/filter1.png)
+
+| 옵션 | 설명 |
+| --- | --- |
+| 서비스 타입 | 전체 / Chat (LLM) / TTS 중 선택 |
+| 모델 선택 | 특정 모델만 필터링 |
+| API Key 선택 | 특정 API 키의 요청만 조회 |
+| 날짜 범위 | 조회할 시간 구간 선택 |
+| 시간 단위 | 1분 / 5분 등 집계 단위 선택 |
+| 자동 새로고침 | 실시간 갱신 켜기/끄기 |
+
+### 요청 기록
+
+지표 카드 하단에 개별 요청 내역이 테이블로 표시됩니다.
+
+<Icon icon="download" />**내보내기** 를 통해 요청 기록 데이터를 다운로드 받을 수 있습니다. 
+
+![Api Api Monitoring Table](/images/api-api-monitoring-table.png)
+
+| 항목 | 설명 |
+| --- | --- |
+| 생성 일시 | 요청이 발생한 시각 |
+| API Key | 요청에 사용된 API 키 |
+| Model | 호출된 모델 이름 |
+| 연진 타입 | Chat (LLM) / TTS 등 요청 유형 |
+| 사용량 | 토큰 수 또는 문자 수 |
+| 지연시간 | 요청 처리 소요 시간 |
+
+## 조직 사용량 관리
+
+조직 페이지의 **사용량 관리** \> **사용량** 탭에서 **Air API** 필터를 선택하면, 조직 전체의 Air API 지출을 프로젝트별로 집계해 확인할 수 있습니다.
+
+하단 테이블에서 프로젝트별 일별 지출 내역을 날짜 열로 펼쳐 볼 수 있습니다.
+
+![Airapi Usage Managing](/images/airapi-usage-managing.png)
+
+### 지표 카드
+
+| 지표 | 설명 |
+| --- | --- |
+| 총 지출 | 선택한 기간 내 Air API 전체 지출 |
+| 일간 최다 지출 | 일별 지출 중 가장 높은 날짜 및 금액 |
+| 지출 분포 | 프로젝트별 지출 비중 파이 차트 |
+| 서비스 지출 | Air Container 등 다른 서비스의 지출 합계 |
+| 활성 프로젝트 | 해당 기간에 API 요청이 발생한 프로젝트 수 |
+
+## 관련 문서
+
+<Columns cols={2}>
+  <Card title="API 사용 가이드" icon="code-2" href="/docs/ko/air-api/api-usage-guide" cta="가이드 보기" arrow="true">
+    모델 호출 방식과 요청 구조를 확인할 수 있습니다.
+  </Card>
+
+  <Card title="과금" icon="credit-card" href="/docs/ko/console/billing" cta="과금 안내 보기" arrow="true">
+    AU 단위 과금 방식과 환불 정책을 확인할 수 있습니다.
+  </Card>
+</Columns>

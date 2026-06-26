@@ -1,0 +1,75 @@
+---
+title: "Container Management"
+description: "Manage the container lifecycle, data persistence, and tags"
+icon: "hand-helping"
+---
+
+## Start, Stop, and Restart
+
+A deployed container can be in one of five states. Billing and data persistence depend on the current container state.
+
+### Container States
+
+| State | Description | Billing |
+| --- | --- | --- |
+| 🟢 **Running** | The container is running normally. | Charged hourly |
+| 🟡 **Updating** | The container is restarting to apply configuration changes. | Charged hourly |
+| ⚫ **Pending** | The container is not running and no compute resources are allocated. | Not charged |
+| 🔴 **Deployment Failed** | An error occurred during deployment, such as a failed image pull. | Not charged |
+| 🔴 **Unhealthy** | The container is running but has failed health checks or is not operating correctly. | Not charged |
+
+<Warning>
+  If you do not use **Persistent Storage**, all data stored inside the container will be lost when the container is stopped or restarted. To preserve your data, make sure Persistent Storage is enabled.
+</Warning>
+
+Hourly charges apply only while the container is in the **Running** or **Updating** state. Containers in the **Pending**, **Deployment Failed**, or **Unhealthy** state are not billed.
+
+### Stop a Container
+
+Stopping a container changes its state to **Pending**.
+
+- Compute resources are released and billing stops.
+- Starting the container again launches a new container instance.
+
+### Data Persistence
+
+Whether your data is preserved depends on whether **Persistent Storage** is enabled.
+
+For setup instructions, see [Persistent Storage](/docs/air-container/shared-storage).
+
+| Scenario | Without Persistent Storage | With Persistent Storage |
+| --- | --- | --- |
+| Stop and start a container | Data is lost | Data is preserved |
+| Restart a container | Data is lost | Data is preserved |
+
+## Container Tags
+
+Tags allow you to organize containers into custom groups. As the number of containers grows, tags make it easier to group and filter containers by purpose, project, or model family.
+
+<Frame>
+  ![Tag Eng](/images/tag-eng.png)
+</Frame>
+
+### Create and Assign Tags
+
+Click **\+ Add Tag** at the top of the container list, create a tag, and select the containers you want to assign it to.
+
+A single tag can be assigned to multiple containers.
+
+### Filter by Tag
+
+Click a tag in the tag list to display only the containers associated with that tag.
+
+Click **Clear Selection** to return to the full container list.
+
+## Related Documentation
+
+<Columns cols={2}>
+  <Card title="Persistent Storage" icon="database" href="/docs/air-container/shared-storage" cta="View Guide" arrow="true">
+    Learn how to persist data across container restarts.
+  </Card>
+
+  <Card title="Autoscaling and Scheduled Scaling" icon="activity" href="/docs/air-container/autoscaling-and-scheduling" cta="View Guide" arrow="true">
+    Learn how to configure Autoscaling and Scheduled Scaling.
+  </Card>
+</Columns>
