@@ -183,6 +183,7 @@
                 "pages": [
                   "docs/ko/air-container/index",
                   "docs/ko/air-container/deploy-a-container",
+                  "docs/ko/air-container/templates",
                   "docs/ko/air-container/autoscaling-and-scheduling",
                   "docs/ko/air-container/monitoring",
                   "docs/ko/air-container/monitoring-and-troubleshooting",
