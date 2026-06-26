@@ -1,7 +1,7 @@
 ---
 title: "Container Management"
 description: "Container lifecycle management, data retention rules, and grouping with tags"
-icon: "layers"
+icon: "hand-helping"
 ---
 
 ## Start, Stop, and Restart
@@ -11,7 +11,7 @@ Deployed containers have five states. Billing and data retention behavior vary d
 ### Container states
 
 | State | Description | Billing |
-|---|---|---|
+| --- | --- | --- |
 | 🟢 **Running** | Container is running normally | Per-hour |
 | 🟡 **Updating** | Container is restarting due to a configuration change | Per-hour |
 | ⚫ **Pending** | Container is idle — no compute being performed | None |
@@ -32,12 +32,12 @@ Stopping a container transitions it to **Pending** state.
 Data retention behavior depends on whether a persistent volume is attached.
 
 | Scenario | Without persistent volume | With persistent volume |
-|---|---|---|
+| --- | --- | --- |
 | Stop then restart | Data is lost | Data is retained |
 | Restart | Data is lost | Data is retained |
 
 <Warning>
-Without a persistent volume, all data stored inside the container is lost when it is stopped or restarted. Use a persistent volume if you need to retain data.
+  Without a persistent volume, all data stored inside the container is lost when it is stopped or restarted. Use a persistent volume if you need to retain data.
 </Warning>
 
 See the [Persistent Volume](/docs/air-container/shared-storage) guide for setup instructions.
@@ -48,7 +48,7 @@ Tags let you group multiple containers under a user-defined name. As the number 
 
 ### Applying tags
 
-Click **+ Add Tag** at the top of the container list, choose a name, and select the containers to apply it to. A single tag can be applied to multiple containers at once.
+Click **\+ Add Tag** at the top of the container list, choose a name, and select the containers to apply it to. A single tag can be applied to multiple containers at once.
 
 ### Filtering by tag
 
