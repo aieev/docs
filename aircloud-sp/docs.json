@@ -210,6 +210,7 @@
               {
                 "group": "콘솔",
                 "pages": [
+                  "docs/ko/console/realtime-notifications",
                   "docs/ko/console/desktop-notifications"
                 ]
               },
