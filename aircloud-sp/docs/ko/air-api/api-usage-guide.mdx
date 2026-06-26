@@ -1,7 +1,7 @@
 ---
 title: "API 호출 방법"
 description: "시크릿 키 인증과 코드 기반 API 연동"
-icon: "code-2"
+icon: "astroid"
 ---
 
 시크릿 키를 발급받은 뒤 실제 애플리케이션에서 API를 호출하는 방법을 안내합니다. Air API는 OpenAI 호환 인터페이스를 제공하므로, OpenAI SDK를 사용하는 기존 코드에서 `base_url`과 API 키만 교체하면 바로 연동할 수 있습니다.
@@ -11,6 +11,7 @@ icon: "code-2"
 기존에 OpenAI SDK를 사용하고 있다면 코드 변경 없이 두 가지만 교체하면 됩니다.
 
 <CodeGroup>
+
 ```python Python
 # Before — OpenAI
 from openai import OpenAI
@@ -36,6 +37,7 @@ const client = new OpenAI({
   baseURL: "YOUR_ENDPOINT",         // AirCloud 엔드포인트로 교체
 });
 ```
+
 </CodeGroup>
 
 ### 전환 체크리스트
@@ -56,7 +58,7 @@ const client = new OpenAI({
 
 모든 API 요청에는 `Authorization` 헤더에 시크릿 키를 포함해야 합니다.
 
-```
+```text
 Authorization: Bearer YOUR_API_KEY
 ```
 
@@ -69,6 +71,7 @@ Authorization: Bearer YOUR_API_KEY
 ### Chat 모델
 
 <CodeGroup>
+
 ```bash curl
 curl YOUR_ENDPOINT/chat/completions \
   -H "Authorization: Bearer YOUR_API_KEY" \
@@ -114,11 +117,13 @@ const response = await client.chat.completions.create({
 
 console.log(response.choices[0].message.content);
 ```
+
 </CodeGroup>
 
 ### TTS 모델
 
 <CodeGroup>
+
 ```bash curl
 curl YOUR_ENDPOINT/audio/speech \
   -H "Authorization: Bearer YOUR_API_KEY" \
@@ -166,11 +171,13 @@ const response = await client.audio.speech.create({
 const buffer = Buffer.from(await response.arrayBuffer());
 fs.writeFileSync("output.mp3", buffer);
 ```
+
 </CodeGroup>
 
 ### Embedding 모델
 
 <CodeGroup>
+
 ```bash curl
 curl YOUR_ENDPOINT/embeddings \
   -H "Authorization: Bearer YOUR_API_KEY" \
@@ -212,6 +219,7 @@ const response = await client.embeddings.create({
 
 console.log(response.data[0].embedding);
 ```
+
 </CodeGroup>
 
 ## 운영 시 주의사항
