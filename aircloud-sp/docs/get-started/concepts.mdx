@@ -1,65 +1,86 @@
 ---
 title: "Concepts"
-description: "Core concepts to understand AirCloud"
+description: "Core concepts for understanding AirCloud"
 icon: "lightbulb"
 ---
 
-This page covers the core concepts that are most helpful to understand before you start using AirCloud.
+This document introduces the core concepts you should understand when getting started with AirCloud.
 
 <Info>
-  If you're new to AirCloud, we recommend reviewing the full flow in [Quickstart](/docs/quickstart) first, then coming back to this page.
+  If you are new to AirCloud, we recommend reviewing the [Quickstart](/docs/quickstart) first to understand the overall flow.
 </Info>
 
 ## Organization
 
-An **Organization** is the top-level unit that groups users and projects. You typically create an Organization per team, company, or operating entity. Member invitations and permission management are handled at the Organization level.
+An Organization is the top-level unit that groups users and projects. Create an Organization based on a team, company, or operating entity. Member invitations and permission management are also handled at the Organization level.
+
+<Warning>
+  Each account can belong to only one Organization. Once you create or join an Organization, you cannot be invited to another Organization. If you need to change your Organization, please contact your administrator.
+</Warning>
 
 ## Project
 
-A **Project** is the unit where you manage real workloads and resources. Air API, Air Container, usage, endpoints, and monitoring information are all scoped to a project. One Organization can have multiple Projects.
+A Project is a workspace for deploying and operating Air API and Air Container. Usage, endpoints, and monitoring data are all managed at the Project level. You can create multiple Projects within a single Organization to separate environments by service or team.
 
 ## Air API
 
-**Air API** is the fastest way to integrate and test a model via APIs. Inside a project, you select a supported model, issue a secret key, and test quickly using code samples or the Playground.
+Air API allows you to integrate AI models through an API without setting up infrastructure yourself. After selecting a model in your Project and generating a secret key, you can start testing immediately using code examples or the Playground.
 
 ## Air Container
 
-**Air Container** lets you deploy your own container images. It's a good fit when you need fine-grained control over runtime, dependencies, ports, environment variables, autoscaling, and replica counts.
+Air Container allows you to deploy your own container images to AirCloud. It gives you control over the full deployment environment, including GPU resources, runtime libraries, port settings, and autoscaling. This option is suitable for custom model servers or complex pipelines that need to run as-is.
 
 ## Endpoint
 
-An **Endpoint** is the running unit you use to access a deployed API or container service. Within a project, you can check endpoint status, usage, logs, and scheduling settings.
+An Endpoint is a URL used to send external requests to a deployed service. Both Air API and Air Container are accessed through their respective Endpoints. Within a Project, you can view status, usage, logs, and scheduling settings for each Endpoint.
 
 ## Replica
 
-A **Replica** is the number of identical workload instances running. Increasing replicas helps handle more traffic. Replicas can also be adjusted automatically via autoscaling.
+A Replica is a copy of the same service running concurrently. Increasing the number of Replicas allows the service to handle more requests at the same time. Replicas can be adjusted manually or automatically through autoscaling.
 
 ## Autoscaling
 
-**Autoscaling** automatically adjusts replica counts based on traffic or configuration conditions. Setting minimum and maximum replicas helps balance cost and performance.
+Autoscaling automatically increases or decreases the number of Replicas based on request traffic. By setting minimum and maximum values, you can reduce costs during low-traffic periods and automatically expand capacity when traffic increases.
 
 ## AirCloud Zero and AirCloud Plus
 
-**AirCloud Zero** is a cloud pool built from crowdsourced nodes supplied by individuals and partner providers. It offers pricing that is **70%+ lower than traditional commercial cloud** options, making it a strong fit for workloads where cost efficiency matters most.
+AirCloud Zero and AirCloud Plus are two infrastructure options provided by AirCloud. They differ fundamentally in how nodes are organized and how resources are allocated.
 
-**AirCloud Plus** is a cloud pool built from dedicated, company-managed nodes. It offers pricing that is **about 40% lower than traditional cloud services** and is a strong fit for workloads that require predictable performance and a dedicated operating environment.
+**AirCloud Zero** is a distributed cloud pool built by crowdsourcing resources from various participants, such as PC cafés, mining operators, and individuals with idle compute resources. Because resources are allocated on a Spot basis, AirCloud Zero can be used at a lower cost than AirCloud Plus. However, interruptions may occur when resources are reclaimed, making it suitable for workloads that can tolerate interruptions. AirCloud Zero is currently being prepared for launch and will be available soon.
 
-## What to read next
+**AirCloud Plus** is a distributed cloud pool composed of dedicated AI compute nodes operated and managed directly by AIEEV. Resources are allocated on an On-demand or Reserved basis, allowing workloads to run reliably without interruption. It is suitable for production services that require continuous operation or workloads where predictable performance is important.
+
+<Note>
+  🛡️ **AirCloud Plus — ISO 27001 Certified**
+
+  Suitable for workloads with enterprise-grade security and compliance requirements.
+</Note>
+
+| Item | AirCloud Zero (Coming Soon) | AirCloud Plus |
+| :-: | :-: | :-: |
+| Infrastructure | Crowdsourced idle resources, <br />such as PC cafés and mining operators | Dedicated AI compute nodes <br />operated directly by AIEEV |
+| Allocation model | Spot — interruptions may occur | On-demand / Reserved — stable allocation |
+| Relative pricing | Lower cost | Higher than Zero |
+| Suitable workloads | Cost-sensitive workloads <br />that can tolerate interruptions | Production workloads that require stability <br />and uninterrupted operation |
+| Security certification | — | 🛡️ ISO 27001 |
+| Availability | Coming soon | Available now |
+
+## Recommended Next
 
 <Columns cols={2}>
   <Card title="Quickstart" icon="play-circle" href="/docs/quickstart" cta="Get started" arrow="true">
-    Walk through the full onboarding and first-run flow.
+    Walk through the full flow from account creation to first use.
   </Card>
 
-  <Card title="Organizations & Billing" icon="building" href="/docs/get-started/organizations-and-billing" cta="Learn the structure" arrow="true">
-    Understand Organization/Project structure and billing concepts.
+  <Card title="Organizations and Billing" icon="building" href="/docs/get-started/organizations-and-billing" cta="Learn the structure" arrow="true">
+    Learn about the Organization/Project structure and billing concepts.
   </Card>
 
-  <Card title="Air API" icon="sparkles" href="/docs/air-api" cta="Start with APIs" arrow="true">
-    Learn how to select models, create keys, and test with Playground.
+  <Card title="Air API" icon="sparkles" href="/docs/air-api" cta="Start with API" arrow="true">
+    Learn how to quickly test and integrate models through the API.
   </Card>
 
   <Card title="Air Container" icon="box" href="/docs/air-container" cta="Deploy a container" arrow="true">
-    Learn how to deploy container images and configure resources/autoscaling.
+    Learn how to deploy container images and configure resources and autoscaling.
   </Card>
 </Columns>

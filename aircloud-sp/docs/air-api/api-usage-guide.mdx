@@ -1,14 +1,14 @@
 ---
 title: "API Usage Guide"
-description: "Secret key authentication and code-based API integration"
+description: "Authenticate with a secret key and integrate Air API"
 icon: "astroid"
 ---
 
-This guide explains how to call Air APIs from your application after generating a secret key. Air API provides an OpenAI-compatible interface, so if you're already using the OpenAI SDK, you only need to swap out `base_url` and your API key.
+This guide explains how to call Air API from your application after generating a secret key. Air API provides an OpenAI-compatible interface, allowing you to integrate with minimal code changes. If you are already using the OpenAI SDK, simply replace the `base_url` and API key.
 
-## Switching from OpenAI to AirCloud
+## Migrate from OpenAI to AirCloud
 
-If you're already using the OpenAI SDK, just replace two things and your existing code works as-is.
+If your application already uses the OpenAI SDK, you only need to update two settings.
 
 <CodeGroup>
 
@@ -40,35 +40,35 @@ const client = new OpenAI({
 
 </CodeGroup>
 
-### Migration checklist
+### Migration Checklist
 
-- Replace `base_url` / `baseURL` with the AirCloud endpoint from the console
-- Replace the API key with your AirCloud secret key
-- Verify and update the `model` parameter to an AirCloud model ID
+- Replace `base_url` / `baseURL` with your AirCloud endpoint from the Console.
+- Replace your OpenAI API key with an AirCloud secret key.
+- Update the `model` parameter to an AirCloud model ID.
 
-## Finding your endpoint and secret key
+## Find Your Endpoint and Secret Key
 
-In the console, select an API workload and click **View Code** to see the endpoint URL and code samples for that model.
+Select your API workload in the Console, then click <Icon icon="code" /> **View Code** to view the endpoint URL and code samples for the selected model.
 
-![Console code view](/images/air-api/console-code-view.png)
+![Air Api Code](/images/air-api-code.png)
 
-In the example code on this page, replace `YOUR_ENDPOINT` and `YOUR_API_KEY` with the values from the console.
+Replace `YOUR_ENDPOINT` and `YOUR_API_KEY` in the sample code with the values from your Console.
 
 ## Authentication
 
-Every API request must include a secret key in the `Authorization` header.
+Include your secret key in the `Authorization` header for every API request.
 
 ```text
 Authorization: Bearer YOUR_API_KEY
 ```
 
 <Warning>
-  Secret keys can only be viewed once at creation time. Store keys as environment variables — do not hardcode them in your source code. If you lose a key, you can regenerate it from the console.
+  A secret key is displayed only once when it is created. We recommend storing it as an environment variable instead of hardcoding it in your source code. If you lose the key, generate a new one from the Console.
 </Warning>
 
-## Code examples
+## Code Examples
 
-### Chat models
+### Chat Models
 
 <CodeGroup>
 
@@ -136,7 +136,7 @@ echo "$response" | jq .
 
 </CodeGroup>
 
-### TTS models
+### TTS Models
 
 <CodeGroup>
 
@@ -150,7 +150,7 @@ client = OpenAI(
 
 response = client.audio.speech.create(
     model="YOUR_MODEL_ID",
-    input="Hello, the weather is nice today.",
+    input="Hello. It's a beautiful day today.",
     voice="aiden"
 )
 
@@ -168,7 +168,7 @@ const client = new OpenAI({
 
 const response = await client.audio.speech.create({
   model: "YOUR_MODEL_ID",
-  input: "Hello, the weather is nice today.",
+  input: "Hello. It's a beautiful day today.",
   voice: "aiden",
 });
 
@@ -182,7 +182,7 @@ curl YOUR_ENDPOINT/audio/speech \
   -H "Content-Type: application/json" \
   -d '{
     "model": "YOUR_MODEL_ID",
-    "input": "Hello, the weather is nice today.",
+    "input": "Hello. It'\''s a beautiful day today.",
     "voice": "aiden"
   }' \
   --output output.mp3
@@ -198,7 +198,7 @@ curl -s -X POST YOUR_ENDPOINT/audio/speech \
   -H "Content-Type: application/json" \
   -d '{
   "model": "YOUR_MODEL_ID",
-  "input": "Hello, the weather is nice today.",
+  "input": "Hello. It'\''s a beautiful day today.",
   "voice": "aiden"
 }' \
   --output output.mp3
@@ -206,7 +206,7 @@ curl -s -X POST YOUR_ENDPOINT/audio/speech \
 
 </CodeGroup>
 
-### Embedding models
+### Embedding Models
 
 <CodeGroup>
 
@@ -220,7 +220,7 @@ client = OpenAI(
 
 response = client.embeddings.create(
     model="YOUR_MODEL_ID",
-    input="Convert this text to a vector."
+    input="Convert this text into an embedding."
 )
 
 print(response.data[0].embedding)
@@ -236,7 +236,7 @@ const client = new OpenAI({
 
 const response = await client.embeddings.create({
   model: "YOUR_MODEL_ID",
-  input: "Convert this text to a vector.",
+  input: "Convert this text into an embedding.",
 });
 
 console.log(response.data[0].embedding);
@@ -248,7 +248,7 @@ curl -X POST YOUR_ENDPOINT/embeddings \
   -H "Content-Type: application/json" \
   -d '{
   "model": "YOUR_MODEL_ID",
-  "input": "Convert this text to a vector."
+  "input": "Convert this text into an embedding."
 }'
 ```
 
@@ -262,7 +262,7 @@ response=$(curl -s -X POST YOUR_ENDPOINT/embeddings \
   -H "Content-Type: application/json" \
   -d '{
   "model": "YOUR_MODEL_ID",
-  "input": "Convert this text to a vector."
+  "input": "Convert this text into an embedding."
 }')
 
 echo "$response" | jq .
@@ -270,24 +270,24 @@ echo "$response" | jq .
 
 </CodeGroup>
 
-## Production considerations
+## Best Practices
 
-- **Key security**: Store secret keys as environment variables. Never commit them to a code repository.
-- **Usage monitoring**: Regularly check call volume and costs by model in the Usage tab of the console.
-- **Insufficient credits**: API calls will stop if credits run out. We recommend setting up auto top-up.
+- **Protect your API key** — Store your secret key as an environment variable and never commit it to a source repository.
+- **Monitor usage** — Regularly review API usage and costs in the **Usage** tab of the Console.
+- **Maintain available credits** — API requests stop when your credits are exhausted. We recommend enabling automatic top-up to avoid service interruptions.
 
-## Related docs
+## Related Documentation
 
 <Columns cols={2}>
-  <Card title="Models and Playground" icon="play" href="/docs/air-api/models-and-playground" cta="View docs" arrow="true">
-    Learn how to select models and test with the Playground.
+  <Card title="Models and Playground" icon="play" href="/docs/air-api/models-and-playground" cta="View Documentation" arrow="true">
+    Learn how to select models and test them using the Playground.
   </Card>
 
-  <Card title="Troubleshooting" icon="wrench" href="/docs/air-api/troubleshooting" cta="View troubleshooting" arrow="true">
-    Find common errors and how to resolve them.
+  <Card title="Troubleshooting" icon="wrench" href="/docs/air-api/troubleshooting" cta="View Troubleshooting" arrow="true">
+    Find solutions to common issues and errors.
   </Card>
 
-  <Card title="API Reference" icon="book" href="/api-reference/introduction" cta="View reference" arrow="true">
-    Explore full API specs including endpoints and parameters.
+  <Card title="API Reference" icon="book" href="/api-reference/introduction" cta="View API Reference" arrow="true">
+    Explore detailed API specifications, including endpoints and parameters.
   </Card>
 </Columns>

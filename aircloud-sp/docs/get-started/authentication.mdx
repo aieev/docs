@@ -1,8 +1,73 @@
 ---
 title: "Authentication"
 icon: "key"
+description: "Generate and securely manage API keys"
 ---
 
-<Note>
-  TODO: This page is under construction.
-</Note>
+All AirCloud APIs use secret key–based authentication. Once you generate a secret key and include it in the request headers, the same authentication method applies to both Air API and Air Container.
+
+## Generate an API Key
+
+Navigate to the Project where you want to create an API key. In the Console, select **API Keys** from the left navigation menu, then click **Create New Secret Key**.
+
+![Create Api Key](/images/create-api-key.png)
+
+Configure the following options in the key creation dialog.
+
+![Api Key Modal](/images/api-key-modal.png)
+
+| Field | Description |
+| --- | --- |
+| **Name** | A descriptive name that identifies the purpose and usage of the key for easier management. |
+| **Air API Access** | Specifies which Air API endpoints can be accessed using this key. |
+| **Container Access** | Specifies which Air Container deployments can be accessed using this key. |
+
+<Warning>
+  **A secret key is displayed only once when it is created.** Be sure to copy and store it in a secure location. If you lose the key, you must delete it and generate a new one.
+</Warning>
+
+## Authentication Header
+
+Include your secret key in the `Authorization` header for every API request.
+
+```text
+Authorization: Bearer YOUR_API_KEY
+```
+
+## Security Best Practices
+
+Never hardcode your secret key in your source code. If it is committed to a repository, it may be exposed to others. We recommend storing it as an environment variable.
+
+<CodeGroup>
+
+```bash .env
+AIRCLOUD_API_KEY=YOUR_API_KEY
+```
+
+```python Python
+import os
+
+api_key = os.environ["AIRCLOUD_API_KEY"]
+```
+
+```javascript Node.js
+const apiKey = process.env.AIRCLOUD_API_KEY;
+```
+
+</CodeGroup>
+
+## If Your Key Is Lost or Compromised
+
+Immediately delete the affected key from the **API Keys** page in the Console and generate a new one. A compromised key remains valid until it is revoked, so we strongly recommend deleting it as soon as possible.
+
+## Related Documentation
+
+<Columns cols={2}>
+  <Card title="Making API Requests" icon="code-2" href="/docs/air-api/api-usage-guide" cta="View Documentation" arrow="true">
+    Learn how to authenticate and call Air API using your secret key.
+  </Card>
+
+  <Card title="Troubleshooting" icon="wrench" href="/docs/air-api/troubleshooting" cta="View Documentation" arrow="true">
+    Learn how to resolve authentication errors and other common issues.
+  </Card>
+</Columns>

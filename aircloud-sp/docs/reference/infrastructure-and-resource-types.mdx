@@ -1,61 +1,71 @@
 ---
-title: "Infrastructure and Resource Types"
-description: "AirCloud infrastructure options and available GPU instance types"
+title: "Infrastructure and Instance Types"
+description: "Understand Cloud Types and GPU instance types"
 icon: "server"
 ---
 
-This page summarizes the infrastructure options and GPU instance types available in AirCloud.
+This page provides an overview of the infrastructure options and GPU instance types available in AirCloud.
 
-## Infrastructure options
+## Cloud Types
 
-AirCloud offers two infrastructure options. Choose based on your workload's requirements for stability and cost.
+Choose one of the following Cloud Types based on your workload requirements.
 
 <CardGroup cols={2}>
   <Card title="AirCloud Plus" icon="shield-check">
-    A dedicated infrastructure option operated directly by AIEEV. Well suited for workloads requiring stable, predictable performance. ISO 27001 certified.
+    Designed for workloads that require high availability, predictable performance, and production-grade reliability. Recommended for production environments.
   </Card>
 
-  <Card title="AirCloud Zero" icon="cloud">
-    A distributed infrastructure option leveraging crowdsourced GPU resources. Well suited for cost-efficient workloads. (Coming soon)
+  <Card title="AirCloud Zero" icon="cpu">
+    Uses infrastructure contributed by individuals, PC cafés, and infrastructure partners. Ideal for cost-sensitive workloads where minimizing cost is the highest priority.
   </Card>
 </CardGroup>
 
-## GPU instance types
+## Instance Types
 
-The following GPU instances are available on AirCloud Plus. Choose based on your model's VRAM requirements.
+The following GPU instance types are available with AirCloud Plus.
 
-| Instance | VRAM | RAM | vCPU |
-|---|---|---|---|
-| RTX 4070 Super | 12 GB | 9 GB | 8 |
-| RTX 4070 Ti Super | 16 GB | 58 GB | 8 |
-| RTX 4090 | 24 GB | 58 GB | 8 |
-| RTX 5090 | 32 GB | 58 GB | 16 |
-| RTX PRO 6000 | 96 GB | 58 GB | 16 |
+| GPU Model | VRAM | System Memory | vCPUs |
+| --- | --- | --- | --- |
+| NVIDIA RTX 4070 Super | 12 GB | 9 GB | 8 |
+| NVIDIA RTX 4070 Ti Super | 16 GB | 58 GB | 8 |
+| NVIDIA RTX 4090 | 24 GB | 58 GB | 8 |
+| NVIDIA RTX 5090 | 32 GB | 58 GB | 16 |
+| NVIDIA RTX PRO 6000 | 96 GB | 58 GB | 16 |
 
-## Choosing the right VRAM for your model
+Long-term reservations (three months or longer) are eligible for discounted pricing.
 
-Use the table below as a general guide when selecting an instance.
+See the Pricing page for the latest rates.
 
-| Model size | Recommended VRAM |
-|---|---|
-| 7B | 12 GB+ |
-| 13B | 16 GB+ |
-| 30B | 24 GB+ |
-| 70B | 32 GB+ |
-| Multimodal | 96 GB |
+### Recommended VRAM by Model Size
 
-## Pricing
+Choose an instance with sufficient GPU memory for your model.
 
-Pricing varies by instance type. Long-term rental discounts (3 months or more) are available. See the [pricing page](https://www.aieev.com/en/pricing) for the latest rates.
+| Model Size | Recommended VRAM | Recommended Instance |
+| --- | --- | --- |
+| Up to 7B | 12 GB or more | RTX 4070 Super or higher |
+| 13B | 16 GB or more | RTX 4070 Ti Super or higher |
+| 30B | 24 GB or more | RTX 4090 or higher |
+| 70B | 32 GB or more | RTX 5090 or higher |
+| Multimodal or Very Large Models | 96 GB | RTX PRO 6000 |
 
-## Related docs
+## Choosing an Instance Type
+
+Consider the following when selecting an instance type:
+
+- Required response latency
+- Model size and GPU memory requirements
+- Expected request volume
+- Replica strategy
+- Whether Autoscaling will be enabled
+
+## Related Documentation
 
 <Columns cols={2}>
-  <Card title="Deploy a Container" icon="container" href="/docs/air-container/deploy-a-container" cta="Deploy" arrow="true">
-    Deployment flow and GPU selection steps.
+  <Card title="Deploy a Container" icon="container" href="/docs/air-container/deploy-a-container" cta="Deploy a Container" arrow="true">
+    Learn how to deploy a container and configure its resources.
   </Card>
 
-  <Card title="Autoscaling and Scheduling" icon="activity" href="/docs/air-container/autoscaling-and-scheduling" cta="Configure" arrow="true">
-    Autoscaling and scheduled scaling guidance.
+  <Card title="Autoscaling and Scheduled Scaling" icon="activity" href="/docs/air-container/autoscaling-and-scheduling" cta="View Guide" arrow="true">
+    Learn how to configure Autoscaling and Scheduled Scaling.
   </Card>
 </Columns>

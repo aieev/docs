@@ -1,46 +1,92 @@
 ---
-title: "Autoscaling and Scheduling"
-description: "Replica autoscaling and time-based scheduling"
+title: "Autoscaling and Scheduled Scaling"
+description: "Automatically scale replicas based on traffic or schedules"
 icon: "activity"
 ---
 
-Air Container supports **Autoscaling** and **Scheduled Scaling** so you can operate replica counts based on your traffic patterns.
+Air Container supports both **Autoscaling** and **Scheduled Scaling**, allowing you to automatically adjust the number of Replicas based on traffic patterns or predefined schedules.
 
 ## Autoscaling
 
-Autoscaling automatically adjusts replica counts based on conditions. When enabled during resource configuration, you can set minimum and maximum replicas.
+Autoscaling automatically increases or decreases the number of Replicas based on incoming traffic. It is useful when:
 
-### When you need autoscaling
+- Traffic varies significantly throughout the day.
+- You want to reduce response latency while improving resource efficiency.
+- Manually adjusting the number of Replicas is impractical.
 
-- Request volume varies significantly by time of day
-- You want to reduce latency while improving operational efficiency
-- Manual replica management is not practical
+Autoscaling can be enabled during container deployment or later from the **Settings** page.
+
+![Autoscaling Option](/images/autoscaling-option.png)
+
+### Configuration
+
+| Setting | Description |
+| --- | --- |
+| **Minimum Replicas** | Minimum number of Replicas to keep running. |
+| **Maximum Replicas** | Maximum number of Replicas that Autoscaling can provision. |
+| **Scaling Sensitivity** | Controls how aggressively Autoscaling responds to traffic changes (**Low**, **Medium**, or **High**). |
+
+### Scaling Sensitivity
+
+Scaling Sensitivity determines how quickly AirCloud responds to changes in traffic.
+
+| Sensitivity | Behavior | Recommended For |
+| --- | --- | --- |
+| **Low** | Conservative scaling | Workloads with gradual traffic changes where excessive scale-outs should be avoided. |
+| **Medium** | Balanced scaling | General API services and model serving workloads. Recommended for most deployments. |
+| **High** | Aggressive scaling | Workloads with sudden traffic spikes and strict latency requirements. |
 
 ## Scheduled Scaling
 
-Scheduled Scaling adjusts replicas on a **time-based** schedule. For predictable traffic patterns, you can turn autoscaling on/off at certain times and set replica counts.
+<Card title="Best Practices" type="tip">
+  - Set **Minimum Replicas** to **1** if your service must always remain available. Setting it to **0** allows containers to scale down completely when there is no traffic.
+  - Start with **Medium** scaling sensitivity and adjust it based on actual usage patterns.
+  - Create multiple schedules to apply different scaling policies throughout the day.
+  - Switching between fixed Replicas and Autoscaling restarts the container. Schedule these changes during periods of low traffic whenever possible.
+</Card>
 
-### Example
+Scheduled Scaling automatically adjusts the number of Replicas according to a predefined schedule. It is particularly effective for workloads with predictable traffic patterns and can be used together with Autoscaling.
 
-If traffic increases daily from 11:30 AM to 6:30 PM:
+![Scheduling](/images/scheduling.png)
 
-- 11:30 AM: Autoscale On, Min 1 / Max 3
-- 6:30 PM: Autoscale Off, Replica 1
+### Create a Schedule
 
-## Operational tips
+From the container details page, navigate to **Scheduled Scaling** and click **\+ Add Schedule**.
 
-- Keep minimum replicas low when baseline traffic is small
-- Use Scheduled Scaling for expected events/time windows
-- Review real replica changes regularly in the Usage view
+Each schedule can have its own independent scaling configuration.
 
-## Related docs
+| Setting | Description |
+| --- | --- |
+| **Name** | A descriptive name for the schedule (for example, **Business Hours Scale Up**). |
+| **Enable Autoscaling** | Choose whether to use Autoscaling (minimum and maximum Replicas) or a fixed number of Replicas during this schedule. |
+| **Minimum Replicas** | Minimum number of Replicas to maintain while Autoscaling is enabled. |
+| **Maximum Replicas** | Maximum number of Replicas that Autoscaling can provision. |
+| **Initial Replicas** | Number of Replicas to start when the schedule becomes active. |
+| **Scaling Sensitivity** | Autoscaling responsiveness (**Low**, **Medium**, or **High**). |
+| **Schedule** | Currently supports daily recurring schedules. |
+| **Start Time** | Date and time when the schedule starts. (Optional, KST) |
+| **End Time** | Time when the schedule ends. (Optional) |
+| **Enabled** | Enables or disables the schedule. |
+
+<Warning>
+  Switching between **fixed Replicas** and **Autoscaling** restarts the container. Zero-downtime deployment is not guaranteed, and additional time may be required for initialization and deployment.
+</Warning>
+
+### Example: Business Hours Traffic
+
+Suppose your application experiences higher traffic between **9:00 AM and 7:00 PM (KST)** every day.
+
+- **Schedule 1** — **Business Hours Scale Up**: Autoscaling **Enabled**, Minimum Replicas **2**, Maximum Replicas **5**, Start Time **09:00 KST**
+- **Schedule 2** — **Scale Down at Night**: Autoscaling **Disabled**, Fixed Replicas **1**, Start Time **19:00 KST**
+
+## Related Documentation
 
 <Columns cols={2}>
-  <Card title="Deploy a Container" icon="container" href="/docs/air-container/deploy-a-container" cta="Deploy" arrow="true">
-    Deployment flow and configuration steps.
+  <Card title="Deploy a Container" icon="container" href="/docs/air-container/deploy-a-container" cta="Deploy a Container" arrow="true">
+    Learn how to deploy a container and configure its resources.
   </Card>
 
-  <Card title="Monitoring and Troubleshooting" icon="radar" href="/docs/air-container/monitoring-and-troubleshooting" cta="Monitor" arrow="true">
-    Monitor usage and review logs/settings.
+  <Card title="Monitoring and Troubleshooting" icon="radar" href="/docs/air-container/monitoring-and-troubleshooting" cta="View Guide" arrow="true">
+    Learn how to monitor usage, logs, and deployment settings.
   </Card>
 </Columns>

@@ -220,8 +220,8 @@
                 "group": "콘솔",
                 "pages": [
                   "docs/ko/console/organization",
-                  "docs/ko/console/notifications",
                   "docs/ko/console/billing",
+                  "docs/ko/console/notifications",
                   "docs/ko/console/desktop-notifications"
                 ]
               },

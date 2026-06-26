@@ -1,45 +1,47 @@
 ---
-title: "Persistent Volume"
-description: "Share one persistent volume across multiple endpoints and replicas"
+title: "Persistent Storage"
+description: "Share persistent storage across multiple containers and replicas"
 icon: "database"
 ---
 
-A persistent storage layer that retains data even when a container is restarted or stopped. Within a single project, volumes can be shared across multiple containers or used simultaneously by multiple replicas.
+Persistent Storage preserves your data even when a container is stopped or restarted. Within a Project, a single volume can be shared across multiple containers or Replicas.
 
-## What you can do with persistent volumes
+## What You Can Do with Persistent Storage
 
-Persistent volumes are available throughout the deployment lifecycle with greater flexibility.
+Persistent Storage provides flexible data management across your deployments.
 
-- **Autoscaling support**: Volumes can be attached to deployments that use autoscaling and multiple replicas.
-- **New or existing volume at creation**: When creating a deployment, you can create a new volume or reuse an existing one.
-- **Share across multiple deployments**: A single volume can be connected to multiple deployments. When selecting a volume, the console shows which deployments are already using it.
-- **Change while stopped**: While a deployment is stopped (Pending), you can activate, deactivate, or swap the attached volume.
+- **Support Autoscaling**: Attach the same volume to deployments using Autoscaling and multiple Replicas.
+- **Create or Reuse Volumes**: Create a new volume or attach an existing one during container deployment.
+- **Share Across Deployments**: Attach the same volume to multiple deployments. When selecting a volume, AirCloud also shows which deployments are currently using it.
+- **Modify While Stopped**: Enable, disable, or replace an attached volume while the container is in the **Pending** state.
 
-## How to use
+## Usage
 
-### 1. Create a new volume
+### Create a New Volume
 
-When creating a container, you can create and attach a new persistent volume. Maximum volume size is 30 GB.
+You can create and attach a new Persistent Storage volume during container deployment. Each volume supports up to **30 GB** of storage.
 
-![Create new volume](/images/first_step.png)
+![Shared Storage1](/images/shared-storage1.png)
 
-### 2. Attach an existing volume
+### Attach an Existing Volume
 
-You can attach a volume already in use by another container to share it across deployments. When selecting a volume, the console lists the deployments currently using it.
+You can attach a volume that is already in use by another container, allowing multiple deployments to share the same storage.
 
-![Attach existing volume](/images/second_step.png)
+When selecting a volume, AirCloud displays the deployments that are currently using it.
 
-### 3. Share one volume across multiple replicas
+![Shared Storage2](/images/shared-storage2.png)
 
-Multiple replicas within a single container can use the same volume simultaneously. This also works for autoscaling-enabled deployments.
+<Tip>
+  **Multiple Replicas within the same deployment can share a single Persistent Storage volume.** This works seamlessly with Autoscaling-enabled deployments.
+</Tip>
 
-![Shared volume across replicas](/images/shared_storage.png)
+### Modify a Volume While Stopped
 
-### 4. Change the volume while stopped
+You can modify Persistent Storage settings only when the container is in the **Pending (Stopped)** state.
 
-When a container is in **Pending (stopped)** state, you can modify volume settings:
+You can:
 
-- **Deactivate** or **reactivate** the attached volume.
-- **Swap** the attached volume for a different one.
+- **Disable** or **re-enable** the attached volume.
+- **Replace** the attached volume with another one.
 
-Changes take effect when the container is started again.
+Changes take effect the next time the container is started.

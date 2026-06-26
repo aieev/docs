@@ -1,4 +1,74 @@
 ---
 title: "Templates"
 icon: "layers"
+description: "Deploy quickly with preconfigured container environments"
 ---
+
+Templates are preconfigured container configurations for commonly used AI and ML environments. Instead of manually configuring the container image, ports, and environment variables each time, you can simply select a template to deploy your environment in just a few clicks.
+
+## Official Templates
+
+Official templates provided by AirCloud are available from **Select Template** during container creation. You can filter templates by framework or CUDA version, or search for a template by name.
+
+| Category | Included Environments |
+| --- | --- |
+| **Jupyter AI** | PyTorch or TensorFlow with CUDA 11/12 and Python 3.11 |
+| **Jupyter Base** | Python 3.11 base environment |
+| **Code** | VS Code Server–based development environment (Base / CUDA 12 / CUDA 13) |
+| **AirCloud Studio Beta** | AirCloud's integrated development environment |
+
+<Note>
+  The list of available templates may change over time. Refer to the container creation page for the latest templates.
+</Note>
+
+## My Templates
+
+You can save an existing container configuration as a reusable template, allowing you to quickly deploy the same environment in future deployments.
+
+### Save a Template
+
+1. From the **Air Container** list, click the **⋮** menu in the upper-right corner of the container card you want to save.
+
+![Custom Template](/images/custom-template.png)
+
+2. Select **Save as Template**.
+3. Enter the template information and click **Save**.
+
+![Custom Template Modal](/images/custom-template-modal.png)
+
+| Field | Description |
+| --- | --- |
+| **Template Name** | A name used to identify the template. (Required) |
+| **Description** | A brief description of the template. (Optional) |
+| **Keywords** | Comma-separated tags used to search for the template (for example, `web`, `server`, `database`). |
+
+After saving, the template will appear under the **My Templates** filter during container creation.
+
+<Note>
+  Templates are shared with all members who have access to the current Project.
+</Note>
+
+## Use a Template
+
+Select a template during the image configuration step when deploying a container.
+
+1. Click **Select Template** on the container creation page.
+2. Filter by framework or search by template name.
+3. Select the desired template and click **Save**.
+4. Continue configuring ports, environment variables, resources, and other deployment settings.
+
+<Tip>
+  If this is your first deployment, we recommend starting with an official template to verify your environment. You can later switch to a custom container image if needed.
+</Tip>
+
+## Related Documentation
+
+<Columns cols={2}>
+  <Card title="Deploy a Container" icon="container" href="/docs/air-container/deploy-a-container" cta="Deploy a Container" arrow="true">
+    Learn the complete deployment workflow after selecting a template.
+  </Card>
+
+  <Card title="Access and Connect" icon="link" href="/docs/air-container/access-and-connect" cta="View Guide" arrow="true">
+    Learn how to connect to deployed containers using the Web Terminal, AirCloud CLI, or SSH.
+  </Card>
+</Columns>

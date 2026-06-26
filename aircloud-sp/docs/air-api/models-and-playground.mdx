@@ -1,46 +1,100 @@
 ---
 title: "Models and Playground"
-description: "Choose models and test in the Playground"
+description: "Select supported models and test them in Playground"
 icon: "play"
 ---
 
-With Air API, you can choose a supported model within a project and run quick tests using the Playground.
+Air API lets you select supported models within your Project and test them directly in your browser using the Playground.
 
-## Choosing a model
+## Supported Models
 
-In the Air API screen of your project, select the model you want to use. Supported models may expand over time—if a model you need isn't available, you can request it via the feedback channel.
+<Info>
+  For detailed specifications and usage examples of each model, see the [Models](/models) page.
+</Info>
 
-## What to consider when choosing
+| Model | Type |
+| :-: | :-: |
+| Qwen: Qwen3-Embedding-8B | Embedding |
+| Qwen: Qwen3-TTS | TTS |
+| Qwen: Qwen3.5-9B | Chat |
+| Qwen: Qwen3.5-35B-A3B | Chat |
 
-- Use case (e.g., chat, summarization, generation)
-- Latency requirements
-- Cost and expected usage
-- Whether you may later expand to Air Container
+- **Chat**: Conversational models that generate responses from text prompts. Suitable for tasks such as chatbots, summarization, and code generation. Pricing is based on input and output tokens (/M tokens).
+- **Embedding**: Models that convert text into vector embeddings for semantic search, classification, and similarity search. Pricing is based on input tokens (/M tokens).
+- **TTS**: Models that convert text into speech. Pricing is based on the number of input characters (/K chars).
+
+If the model you need is not available, you can request it through our feedback channel.
 
 ## Playground
 
-The Playground is a browser-based interface for testing model responses. After creating a secret key, the Playground is a fast way to verify behavior before integrating into your application.
+The Playground is a web-based interface for testing models directly in your browser. It allows you to quickly validate model behavior and experiment with parameters before integrating the API into your application.
 
-## Recommended workflow
+<Note>
+  Playground is available only for **Chat** and **TTS** models. Embedding models do not provide a Playground and can only be used through the API.
+</Note>
 
-1. Choose a model
-2. Create a secret key
-3. Test with code samples
-4. Test in the Playground
-5. Integrate into your app or expand via containers
+The Playground provides two tabs:
 
-## Related docs
+- **Playground** — Interact with the selected model directly.
+- **README** — Learn about the selected model's capabilities and usage.
+
+You can also access **Generate API Key** and **View Code** from the buttons in the upper-right corner.
+
+The Playground interface and available settings vary depending on the model type.
+
+### Chat Models
+
+The Chat Playground provides a conversational interface where you can enter prompts and receive responses from the selected model.
+
+![Chat Playground](/images/chat-playground.png)
+
+Use the **Chat Settings** panel on the right to configure model behavior.
+
+| Setting | Description |
+| :-- | :-- |
+| **System Prompt** | Sets the initial instruction that defines the model's role or behavior. This prompt is applied throughout the conversation. |
+| **Reasoning** | Enables reasoning before generating a response. This may increase latency and token usage but can improve accuracy on complex tasks. |
+| **Temperature** | Controls the randomness of generated responses. Higher values produce more diverse and creative outputs, while lower values generate more consistent and deterministic responses. |
+| **Max Tokens** | Sets the maximum number of tokens the model can generate in a single response. The sum of the prompt tokens and `max_tokens` cannot exceed the model's context length. |
+| **Top P** | Uses nucleus sampling as an alternative to temperature sampling. Only tokens within the top cumulative probability are considered, allowing you to control response diversity together with Temperature. |
+| **Frequency Penalty** | Reduces the likelihood of repeating words or phrases based on how frequently they have already appeared in the generated text. |
+| **Presence Penalty** | Encourages the model to introduce new topics by penalizing tokens that have already appeared in the conversation. |
+
+### TTS Models
+
+The TTS Playground lets you generate speech from text. Enter the text you want to convert, then click **Generate** to create and play the audio.
+
+![Tts Playground](/images/tts-playground.png)
+
+Use the **TTS Settings** panel on the right to configure speech generation.
+
+| Setting | Description |
+| :-- | :-- |
+| **Instructions** | Provides guidance for the voice style or speaking tone (for example, _"Speak in a friendly and engaging tone."_). |
+| **Voice** | Selects the voice used for speech generation. (Currently supports 9 voice options.) |
+| **Speed** | Adjusts the playback speed of the generated audio. The default value is **1×**. |
+| **Response Format** | Selects the output audio format. <br />Supported formats: **MP3, Opus, AAC, FLAC, WAV, and PCM**. |
+
+<Tip>
+  Chat and Embedding models are priced per **million tokens (/M tokens)**, while TTS models are priced per **thousand characters (/K chars)**. Use the currency toggle (₩ / \$) to switch between KRW and USD pricing.
+</Tip>
+
+## Related Documentation
 
 <Columns cols={2}>
-  <Card title="Air API Overview" icon="sparkles" href="/docs/air-api" cta="View overview" arrow="true">
-    Learn the full Air API flow and usage scenarios.
+  <Card title="Air API" icon="sparkles" href="/docs/air-api" cta="View Overview" arrow="true">
+    Learn the overall Air API workflow and complete the Quickstart.
   </Card>
 
-  <Card title="API Usage Guide" icon="code-2" href="/docs/air-api/api-usage-guide" cta="View guide" arrow="true">
-    API call methods, key usage, and production considerations.
+  <Card title="API Usage Guide" icon="code-2" href="/docs/air-api/api-usage-guide" cta="View Guide" arrow="true">
+    Learn how to call the API and follow operational best practices.
   </Card>
 
-  <Card title="Troubleshooting" icon="wrench" href="/docs/air-api/troubleshooting" cta="Fix issues" arrow="true">
-    Common errors and how to resolve them.
+  <Card title="Troubleshooting" icon="wrench" href="/docs/air-api/troubleshooting" cta="View Troubleshooting" arrow="true">
+    Find solutions to common issues and errors.
+  </Card>
+
+  <Card title="Models" icon="list" href="/models" cta="Browse Models" arrow="true">
+    Explore detailed specifications and usage examples for each supported model.
   </Card>
 </Columns>

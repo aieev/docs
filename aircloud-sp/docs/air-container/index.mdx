@@ -1,110 +1,44 @@
 ---
 title: "Air Container"
-description: "Deploy and operate your container images"
+description: "Deploy and manage containerized applications"
 icon: "box"
 ---
 
-Air Container lets you deploy and operate your own container images on AirCloud.
+Air Container is a workload that allows you to deploy and manage your own container images on AirCloud. It is ideal when you need full control over your runtime environment, dependencies, ports, environment variables, compute resources, and autoscaling behavior.
 
-It's a great fit when you need direct control over runtime, dependencies, ports, environment variables, resources, and autoscaling.
+## When to Use Air Container
 
-## Basic flow
+Air Container is recommended when you need to:
 
-1. Select a project
-2. Start creating a container
-3. Configure Container Image
-4. Configure Resources
-5. Configure Advanced settings
-6. Review and deploy
-7. Start the container
-8. Monitor usage and logs
+- Deploy your own model server or application container.
+- Configure GPU specifications and the number of Replicas.
+- Use Autoscaling together with Scheduled Scaling.
+- Have greater operational control than Air API provides.
 
-## Quickstart: Get started with Air Container
+## What You Can Do with Air Container
 
-Air Container is a good fit when you want to deploy your own container image.
-
-### 1. Select a project
-
-From your organization, select the project where you want to deploy the container. The project overview page also shows your current endpoint status.
-
-Every organization must contain at least one project.
-
-### 2. Start creating a container
-
-In the Air Container menu, click **+ Create** to go to the container creation page. Enter a container name and proceed to the next step.
-
-### 3. Configure Container Image
-
-Enter your container image details. The following items are required:
-
-- Container image
-- Registry provider
-  - GCP Artifact Registry (registry region required)
-  - AWS ECR (registry region required)
-  - GitHub Container Registry
-  - Docker Hub
-- Registry access type (public or private)
-- For private registries: username and password or token
-
-### 4. Configure Resources
-
-Select the infrastructure type and resources to use. Key configurable items include:
-
-- Cloud Type
-  - AirCloud Plus (dedicated, company-managed infrastructure)
-  - AirCloud Zero (crowdsourced infrastructure from individuals and partners)
-- Instance type
-  - RTX 4070 Ti Super
-  - RTX 4070 Super
-  - RTX 4090
-  - RTX 5090
-  - RTX PRO 6000
-- Enable Autoscaling
-- Set Replica count
-
-When using Autoscaling, you can set both the minimum number of replicas to maintain and the maximum number of replicas to scale up to.
-
-### 5. Configure Advanced settings
-
-Advanced options have defaults or are not required. Configure the following if needed:
-
-- Start command
-- Port
-- Health check URL
-- Maximum wait time
-- Boot wait time
-- Environment variables
-- Endpoint ID
-
-### 6. Review and deploy
-
-Review your deployment configuration and deploy the container. Initial download time may vary depending on image size and registry performance.
-
-Once downloaded, the image is cached on the node and will start faster on subsequent runs.
-
-### 7. Start the container
-
-Immediately after deployment, the container is shown as **Pending**. No billing occurs in the Pending state. To actually use the container, click **Start Container** to switch it to the Running state.
-
-## When it's a good fit
-
-- You want to deploy your own model server or application image
-- You need to choose GPU specs and replica counts directly
-- You want to operate Autoscaling and Scheduled Scaling together
-- You need deeper operational control than an API-first approach
-
-## What to read next
-
-<Columns cols={2}>
-  <Card title="Deploy a Container" icon="container" href="/docs/air-container/deploy-a-container" cta="Deploy" arrow="true">
-    Step-by-step container deployment flow and key configuration options.
+<CardGroup cols={3}>
+  <Card title="Deploy Containers" icon="container" href="/docs/air-container/deploy-a-container">
+    Deploy container images from Docker Hub, Amazon ECR, Google Artifact Registry, GitHub Container Registry, and other registries.
   </Card>
 
-  <Card title="Autoscaling and Scheduling" icon="activity" href="/docs/air-container/autoscaling-and-scheduling" cta="Configure" arrow="true">
-    How to configure Autoscaling and Scheduled Scaling.
+  <Card title="Start, Stop, and Restart" icon="power" href="/docs/air-container/start-stop-restart">
+    Start, stop, and restart containers to efficiently manage operational costs.
   </Card>
 
-  <Card title="Monitoring and Troubleshooting" icon="radar" href="/docs/air-container/monitoring-and-troubleshooting" cta="Monitor" arrow="true">
-    What to check in Usage, Logs, Settings, and scheduling during operations.
+  <Card title="Autoscaling and Scheduled Scaling" icon="activity" href="/docs/air-container/autoscaling-and-scheduling">
+    Automatically scale containers based on traffic and configure time-based scaling schedules.
   </Card>
-</Columns>
+
+  <Card title="Monitoring and Troubleshooting" icon="radar" href="/docs/air-container/monitoring-and-troubleshooting">
+    Monitor GPU utilization, logs, and deployment settings to quickly diagnose issues.
+  </Card>
+
+  <Card title="Access and Connect" icon="terminal" href="/docs/air-container/access-and-connect">
+    Connect to running containers using the Web Terminal, AirCloud CLI, or SSH.
+  </Card>
+
+  <Card title="Persistent Storage" icon="database" href="/docs/air-container/shared-storage">
+    Persist your data even when containers are stopped or restarted.
+  </Card>
+</CardGroup>
