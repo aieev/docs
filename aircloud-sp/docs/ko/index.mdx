@@ -5,61 +5,33 @@ icon: "cloud"
 
 [AirCloud](https://ap-1.aieev.cloud:3007/ko/get-started)(에어클라우드)는 AI 추론 워크로드(inference workload)를 빠르고 유연하게 배포하고 운영할 수 있도록 설계된 완전 분산형 GPU Cloud Platform입니다. 사용자는 API 기반으로 모델을 빠르게 연동할 수도 있고, 컨테이너 단위로 애플리케이션과 런타임을 직접 배포해 원하는 환경을 구성할 수도 있습니다.
 
-간단한 프로토타이핑부터 프로덕션 서비스까지, AirCloud는 서비스 목적과 운영 방식에 맞는 다양한 시작 경로를 제공합니다. 처음 사용하는 경우에는 먼저 Air API와 Air Container 중 적합한 시작점을 선택한 뒤, 서비스 요구사항에 따라 AirCloud Zero 또는 AirCloud Plus 인프라 옵션을 함께 검토하는 흐름을 권장합니다.
-
-## 모델 API를 호출하거나 직접 컨테이너 이미지를 배포하세요
+## 배포 방식 선택
 
 <Columns cols={2}>
   <Card title="Air API" icon="sparkles" href="/docs/ko/air-api" cta="API로 시작하기" arrow="true">
-    인프라를 직접 관리하지 않고 API 형태로 AI 모델을 빠르게 연동할 수 있는 방식입니다. 사용량 기반 과금과 자동 확장을 바탕으로, 빠른 통합과 간편한 운영이 필요한 추론 워크로드에 적합합니다.
+    인프라를 직접 관리하지 않고 API 형태로 AI 모델을 빠르게 연동하는 방식입니다. 고품질 오픈소스 모델을 빠르게 통합하고 싶거나, 운영 부담 없이 사용량 기반으로 추론 워크로드를 운영하려는 경우에 적합합니다.
   </Card>
 
   <Card title="Air Container" icon="box" href="/docs/ko/air-container" cta="컨테이너 배포하기" arrow="true">
-    사용자가 직접 준비한 컨테이너 이미지를 AirCloud에 배포하는 방식입니다. GPU 환경, 라이브러리 버전, 프로세스 구성을 완전히 제어하며, 커스텀 모델 서버나 복잡한 파이프라인을 그대로 클라우드에 올릴 수 있습니다.
+    사용자가 직접 준비한 컨테이너 이미지를 AirCloud에 배포하는 방식입니다. 커스텀 CUDA 환경, 파인튜닝 모델 서빙, 복잡한 파이프라인 구성 등 GPU 환경과 런타임을 완전히 제어해야 하는 경우에 적합합니다.
   </Card>
 </Columns>
 
-## AirCloud는 2가지 인프라 옵션을 제공합니다
+## 인프라 옵션 선택
 
 <Columns cols={2}>
   <Card title="AirCloud Zero" icon="cloud">
-    비용 효율과 유연성이 중요한 워크로드를 위한 분산형 인프라 옵션입니다. 합리적인 비용으로 AI 추론 워크로드를 운영하려는 팀에 적합합니다.
+    유연하고 비용 효율적인 분산형 인프라 옵션입니다. 합리적인 비용으로 AI 추론 워크로드를 운영하려는 경우에 적합합니다.
   </Card>
 
   <Card title="AirCloud Plus" icon="shield-check">
-    더 높은 수준의 안정성, 성능, 가용성, 운영 통제가 필요한 워크로드를 위한 전용 인프라 옵션입니다. 엔터프라이즈 환경이나 중요한 프로덕션 워크로드에 적합합니다.
+    높은 안정성, 예측 가능한 성능, 전용 운영 환경이 필요한 경우를 위한 인프라 옵션입니다. 엔터프라이즈 환경이나 중요한 프로덕션 워크로드에 적합합니다.
 
     <Note>
       🛡️ ISO 27001 인증 획득\
       엔터프라이즈급 보안/컴플라이언스 \
       요구사항이 중요한 워크로드에 적합합니다.
     </Note>
-  </Card>
-</Columns>
-
-## 어떤 경우에 무엇을 선택하면 되나요?
-
-### 배포 방식 정하기
-
-<Columns cols={2}>
-  <Card title="빠르게 시작하고 싶은 경우" icon="rocket">
-    고품질의 오픈소스 모델 API를 빠르게 연동하고 운영 부담을 줄이고 싶다면 [Air API](/docs/ko/air-api)가 적합합니다.
-  </Card>
-
-  <Card title="직접 제어하고 싶은 경우" icon="settings">
-    커스텀 CUDA 환경이 필요하거나, 파인튜닝 모델을 서빙하거나, 여러 서비스가 조합된 구성을 배포해야 한다면 [Air Container](/docs/ko/air-container)가 적합합니다.
-  </Card>
-</Columns>
-
-### 인프라 옵션 정하기
-
-<Columns cols={2}>
-  <Card title="비용 효율이 중요한 경우" icon="wallet">
-    유연하고 비용 효율적인 인프라가 중요하다면 AirCloud Zero가 적합합니다.
-  </Card>
-
-  <Card title="안정성이 중요한 경우" icon="badge-check">
-    더 높은 안정성, 예측 가능한 성능, 전용 운영 환경이 중요하다면 AirCloud Plus가 적합합니다.
   </Card>
 </Columns>
 
