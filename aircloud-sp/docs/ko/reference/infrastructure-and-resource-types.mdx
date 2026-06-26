@@ -1,44 +1,108 @@
 ---
 title: "인프라 및 리소스 타입"
-description: "Cloud Type과 인스턴스 타입 이해하기"
+description: "Cloud Type과 GPU 인스턴스 스펙 레퍼런스"
 icon: "server"
 ---
 
-AirCloud에서 사용할 수 있는 인프라 유형과 리소스 타입을 정리한 문서입니다.
+AirCloud에서 사용할 수 있는 인프라 유형과 GPU 인스턴스 스펙을 정리한 문서입니다.
 
 ## Cloud Type
 
-AirCloud에서는 워크로드 특성에 따라 서로 다른 Cloud Type을 선택할 수 있습니다.
+컨테이너 배포 시 워크로드 특성에 따라 두 가지 Cloud Type 중 하나를 선택할 수 있습니다.
 
-### AirCloud
+<CardGroup cols={2}>
+  <Card title="AirCloud Zero" icon="zap">
+    **Spot 인프라** — 준비 중
 
-비용 효율과 유연성이 중요한 워크로드에 적합한 인프라 옵션입니다.
+    비용 효율이 중요한 워크로드에 적합합니다. 가용 자원 상황에 따라 인스턴스가 회수될 수 있어, 중단에 강한 워크로드에 권장합니다.
+  </Card>
+  <Card title="AirCloud Plus" icon="server">
+    **On-demand 인프라**
 
-### AirCloud+
+    AIEEV가 직접 운영하는 분산 클라우드입니다. 작업 중단 없이 안정적으로 워크로드를 운영할 수 있습니다.
+  </Card>
+</CardGroup>
 
-더 높은 수준의 안정성, 성능, 예측 가능한 운영 환경이 중요한 워크로드에 적합합니다.
+## GPU 인스턴스 타입
 
-### AirCloud 0
+AirCloud Plus(On-demand)에서 선택할 수 있는 GPU 인스턴스 스펙입니다.
 
-개인, PC방, 공급 파트너사 기반 인프라를 활용하는 옵션입니다.
+<div style="overflow-x: auto; margin: 1.5rem 0;">
+  <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
+    <thead>
+      <tr style="background: #F9FAFB; border-bottom: 2px solid #E5E7EB;">
+        <th style="text-align: left; padding: 12px 20px; font-weight: 600; color: #111827; white-space: nowrap;">GPU 모델</th>
+        <th style="text-align: center; padding: 12px 16px; font-weight: 600; color: #111827;">VRAM</th>
+        <th style="text-align: center; padding: 12px 16px; font-weight: 600; color: #111827;">RAM</th>
+        <th style="text-align: center; padding: 12px 16px; font-weight: 600; color: #111827;">vCPU</th>
+        <th style="text-align: right; padding: 12px 20px; font-weight: 600; color: #111827; white-space: nowrap;">시간당 비용</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom: 1px solid #F3F4F6;">
+        <td style="padding: 14px 20px; font-weight: 500; color: #111827; white-space: nowrap;">NVIDIA RTX 4070 Super</td>
+        <td style="text-align: center; padding: 14px 16px;"><span style="background: #EFF6FF; color: #1D4ED8; padding: 3px 10px; border-radius: 6px; font-size: 0.82rem; font-weight: 600;">12GB</span></td>
+        <td style="text-align: center; padding: 14px 16px;"><span style="background: #F3F4F6; color: #374151; padding: 3px 10px; border-radius: 6px; font-size: 0.82rem;">9GB</span></td>
+        <td style="text-align: center; padding: 14px 16px;"><span style="background: #F3F4F6; color: #374151; padding: 3px 10px; border-radius: 6px; font-size: 0.82rem;">8</span></td>
+        <td style="text-align: right; padding: 14px 20px; font-weight: 700; color: #111827; white-space: nowrap;">570 AU/hr</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #F3F4F6;">
+        <td style="padding: 14px 20px; font-weight: 500; color: #111827; white-space: nowrap;">NVIDIA RTX 4070 Ti Super</td>
+        <td style="text-align: center; padding: 14px 16px;"><span style="background: #EFF6FF; color: #1D4ED8; padding: 3px 10px; border-radius: 6px; font-size: 0.82rem; font-weight: 600;">16GB</span></td>
+        <td style="text-align: center; padding: 14px 16px;"><span style="background: #F3F4F6; color: #374151; padding: 3px 10px; border-radius: 6px; font-size: 0.82rem;">58GB</span></td>
+        <td style="text-align: center; padding: 14px 16px;"><span style="background: #F3F4F6; color: #374151; padding: 3px 10px; border-radius: 6px; font-size: 0.82rem;">8</span></td>
+        <td style="text-align: right; padding: 14px 20px; font-weight: 700; color: #111827; white-space: nowrap;">654 AU/hr</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #F3F4F6;">
+        <td style="padding: 14px 20px; font-weight: 500; color: #111827; white-space: nowrap;">NVIDIA RTX 4090</td>
+        <td style="text-align: center; padding: 14px 16px;"><span style="background: #EFF6FF; color: #1D4ED8; padding: 3px 10px; border-radius: 6px; font-size: 0.82rem; font-weight: 600;">24GB</span></td>
+        <td style="text-align: center; padding: 14px 16px;"><span style="background: #F3F4F6; color: #374151; padding: 3px 10px; border-radius: 6px; font-size: 0.82rem;">58GB</span></td>
+        <td style="text-align: center; padding: 14px 16px;"><span style="background: #F3F4F6; color: #374151; padding: 3px 10px; border-radius: 6px; font-size: 0.82rem;">8</span></td>
+        <td style="text-align: right; padding: 14px 20px; font-weight: 700; color: #111827; white-space: nowrap;">744 AU/hr</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #F3F4F6;">
+        <td style="padding: 14px 20px; font-weight: 500; color: #111827; white-space: nowrap;">NVIDIA RTX 5090</td>
+        <td style="text-align: center; padding: 14px 16px;"><span style="background: #EFF6FF; color: #1D4ED8; padding: 3px 10px; border-radius: 6px; font-size: 0.82rem; font-weight: 600;">32GB</span></td>
+        <td style="text-align: center; padding: 14px 16px;"><span style="background: #F3F4F6; color: #374151; padding: 3px 10px; border-radius: 6px; font-size: 0.82rem;">58GB</span></td>
+        <td style="text-align: center; padding: 14px 16px;"><span style="background: #F3F4F6; color: #374151; padding: 3px 10px; border-radius: 6px; font-size: 0.82rem;">16</span></td>
+        <td style="text-align: right; padding: 14px 20px; font-weight: 700; color: #111827; white-space: nowrap;">1,104 AU/hr</td>
+      </tr>
+      <tr>
+        <td style="padding: 14px 20px; font-weight: 500; color: #111827; white-space: nowrap;">NVIDIA RTX PRO 6000</td>
+        <td style="text-align: center; padding: 14px 16px;"><span style="background: #EFF6FF; color: #1D4ED8; padding: 3px 10px; border-radius: 6px; font-size: 0.82rem; font-weight: 600;">96GB</span></td>
+        <td style="text-align: center; padding: 14px 16px;"><span style="background: #F3F4F6; color: #374151; padding: 3px 10px; border-radius: 6px; font-size: 0.82rem;">58GB</span></td>
+        <td style="text-align: center; padding: 14px 16px;"><span style="background: #F3F4F6; color: #374151; padding: 3px 10px; border-radius: 6px; font-size: 0.82rem;">16</span></td>
+        <td style="text-align: right; padding: 14px 20px; font-weight: 700; color: #111827; white-space: nowrap;">2,316 AU/hr</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
-## 인스턴스 타입
+<Info>
+  1 AU = 1원(공급가 기준). 가격은 AirCloud Plus(On-demand) 기준이며 변경될 수 있습니다.
+</Info>
 
-컨테이너 배포 시 워크로드에 맞는 GPU 인스턴스 타입을 선택할 수 있습니다. 예시는 다음과 같습니다.
+## VRAM 기준 GPU 선택 가이드
 
-- RTX 4070 Ti Super
-- RTX 4070 Super
-- RTX 4090
-- RTX 5090
-- RTX PRO 6000
+모델을 올릴 때 VRAM이 부족하면 로드 자체가 불가능합니다. 아래는 모델 파라미터 크기별 최소 VRAM 기준입니다.
+
+| 모델 크기 | 최소 VRAM (fp16 기준) | 권장 GPU |
+|---------|---------------------|---------|
+| ~7B | 14GB 이상 | RTX 4070 Ti Super (16GB) |
+| ~13B | 26GB 이상 | RTX 4090 (24GB, 양자화 적용 시) |
+| ~30B | 60GB 이상 | RTX 5090 (32GB, 양자화 적용 시) |
+| ~70B | 140GB 이상 | RTX PRO 6000 (96GB, 양자화 적용 시) |
+
+<Note>
+  위 수치는 fp16 기준 대략적인 참고값입니다. 실제 VRAM 사용량은 배치 크기, 시퀀스 길이, 양자화 방식에 따라 달라집니다.
+</Note>
 
 ## 선택 시 고려할 사항
 
-- 필요한 응답 속도
-- 모델 크기와 메모리 요구사항
-- 예상 요청량
-- Replica 운영 계획
-- Autoscaling 사용 여부
+- **모델 크기**: 로드하려는 모델의 파라미터 수와 정밀도에 따라 필요한 VRAM이 결정됩니다.
+- **응답 속도**: VRAM이 클수록 추론 처리 속도가 빠르고, 더 큰 배치를 처리할 수 있습니다.
+- **레플리카 수**: 트래픽이 많다면 Autoscaling 범위를 고려해 GPU 비용을 계획하세요.
+- **배치 크기**: 동시 요청 수가 많을수록 더 많은 VRAM이 필요합니다.
 
 ## 관련 문서
 
