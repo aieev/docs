@@ -1,7 +1,64 @@
 ---
-title: "Start Stop Restart"
+title: "시작·정지·재시작"
+description: "컨테이너 생명주기와 각 상태에서의 데이터 보존 및 과금 규칙"
+icon: "power"
 ---
 
+배포된 컨테이너는 **실행 중 → 정지 → 재시작** 흐름으로 관리할 수 있습니다. 각 상태 전환 시 데이터 보존 여부와 과금 적용 방식이 다르므로, 운영 전에 반드시 확인하세요.
+
+## 컨테이너 상태 전이
+
+```
+생성 완료 → 실행 중 → 정지 → 재시작 → 실행 중
+                  ↓
+               종료 (삭제)
+```
+
+| 상태 | 설명 | 과금 | 데이터 보존 |
+|---|---|---|---|
+| **실행 중** (Running) | 컨테이너가 정상 작동 중 | 발생 | 유지 |
+| **정지** (Stopped) | 컨테이너 프로세스가 중단된 상태 | 중단 | 유지 |
+| **재시작** (Restarting) | 컨테이너를 다시 시작하는 과정 | 재개 | 유지 |
+| **종료** (Terminated) | 컨테이너가 완전히 삭제된 상태 | 중단 | **삭제** |
+
+<Warning>
+**종료(Terminate)는 되돌릴 수 없습니다.** 컨테이너와 함께 저장된 데이터가 영구 삭제됩니다. 중요한 데이터는 [영구 볼륨(Shared Storage)](/docs/ko/air-container/shared-storage)에 보관하세요.
+</Warning>
+
+## 정지(Stop)
+
+- 컨테이너 프로세스가 멈추고 GPU/CPU 사용이 중단됩니다.
+- **과금이 중단**됩니다.
+- 컨테이너 내 파일시스템 데이터는 그대로 보존됩니다.
+- 정지 상태에서 다시 시작하면 이전 상태에서 재개됩니다.
+
+## 재시작(Restart)
+
+- 실행 중 또는 정지 상태에서 컨테이너를 다시 시작합니다.
+- 재시작 시 **Cold Start**가 발생할 수 있습니다 — 컨테이너 이미지를 다시 로드하는 과정에서 요청 처리가 잠시 지연됩니다.
+- 데이터는 유지되며, 영구 볼륨에 마운트된 파일은 재시작 후에도 접근 가능합니다.
+
 <Note>
-  TODO: 이 문서는 아직 작성 중입니다.
+Cold Start 영향을 최소화하려면 [Autoscaling](/docs/ko/air-container/autoscaling-and-scheduling) 설정에서 최소 Replica 수를 1 이상으로 유지하세요.
 </Note>
+
+## 데이터 보존 정리
+
+| 저장 위치 | 정지 후 | 재시작 후 | 종료 후 |
+|---|---|---|---|
+| 컨테이너 내 파일시스템 | 유지 | 유지 | **삭제** |
+| 영구 볼륨 (Shared Storage) | 유지 | 유지 | 유지 |
+
+중요한 데이터는 반드시 영구 볼륨에 저장하세요.
+
+## 관련 문서
+
+<Columns cols={2}>
+  <Card title="영구 볼륨" icon="database" href="/docs/ko/air-container/shared-storage" cta="보기" arrow="true">
+    컨테이너 간 데이터를 영속적으로 보관하는 방법을 안내합니다.
+  </Card>
+
+  <Card title="오토스케일링 및 스케줄링" icon="activity" href="/docs/ko/air-container/autoscaling-and-scheduling" cta="보기" arrow="true">
+    Cold Start 최소화를 위한 Replica 설정을 안내합니다.
+  </Card>
+</Columns>
