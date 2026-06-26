@@ -10,7 +10,7 @@ Air Container는 사용자가 직접 준비한 컨테이너 이미지를 AirClou
 
 <CardGroup cols={3}>
   <Card title="컨테이너 배포" icon="container" href="/docs/ko/air-container/deploy-a-container">
-    Docker Hub, GCP, AWS ECR, GitHub Container Registry 등 다양한 레지스트리의 이미지를 배포합니다.
+    Docker, GCP, AWS ECR, GitHub  등 다양한 레지스트리의 이미지를 배포합니다.
   </Card>
 
   <Card title="시작·정지·재시작" icon="power" href="/docs/ko/air-container/start-stop-restart">
@@ -46,7 +46,7 @@ Air Container는 사용자가 직접 준비한 컨테이너 이미지를 AirClou
 컨테이너는 5가지 상태를 가지며, 실제 컴퓨팅이 수행되는 **실행중·업데이트중** 상태에서만 시간당 과금이 발생합니다.
 
 | 상태 | 설명 | 과금 |
-|---|---|---|
+| --- | --- | --- |
 | 🟢 실행중 | 컨테이너가 정상적으로 실행 중인 상태 | 발생 |
 | 🟡 업데이트중 | 설정 변경 등으로 컨테이너가 재시작 중인 상태 | 발생 |
 | ⚫ 대기중 | 컴퓨팅이 수행되지 않는 대기 상태. 컨테이너 중지 시 이 상태로 전환됨 | 없음 |
@@ -54,5 +54,5 @@ Air Container는 사용자가 직접 준비한 컨테이너 이미지를 AirClou
 | 🔴 비정상 | 컨테이너가 실행 중이나 정상 동작하지 않는 상태 | 없음 |
 
 <Warning>
-영구 볼륨을 사용하지 않으면, 컨테이너를 중지하거나 재시작할 때 컨테이너 내부 데이터가 유지되지 않습니다. 데이터를 보존하려면 [영구 볼륨](/docs/ko/air-container/shared-storage)을 사용하세요.
+  영구 볼륨을 사용하지 않으면, 컨테이너를 중지하거나 재시작할 때 컨테이너 내부 데이터가 유지되지 않습니다. 데이터를 보존하려면 [영구 볼륨](/docs/ko/air-container/shared-storage)을 사용하세요.
 </Warning>
