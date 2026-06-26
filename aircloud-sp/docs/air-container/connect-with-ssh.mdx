@@ -1,45 +1,150 @@
 ---
 title: "Connect with SSH"
-description: "Register SSH keys and connect to containers via SSH"
-icon: "terminal"
+description: "Access running containers over SSH using aircloud ssh"
+icon: "key-round"
+slug: "/air-container/access-and-connect/ssh-access"
 ---
 
-You can connect to a running container via SSH using a registered public key.
+`aircloud ssh` allows you to connect to a running container from your local terminal using SSH.
 
-## Register SSH keys in the console
+It is the preferred option when your workflow depends on native SSH features, such as:
 
-### 1. Go to SSH Key settings
+- `scp`
+- SSH tunneling
+- Port forwarding with `ssh -L`
+- VS Code Remote SSH
 
-In the console, open **Settings** and select **SSH Keys**.
+Unlike the Web Terminal or `aircloud exec`, SSH access requires a container image with SSH support and a registered SSH public key.
 
-### 2. Register your public key
+## When to Use `aircloud ssh`
 
-Click **+ Add SSH Key**, paste your public key, and save.
+Use `aircloud ssh` when you need to:
 
-Registered keys are available across all containers in the project.
+- Transfer files using `scp`.
+- Create SSH tunnels or port forwarding.
+- Connect using SSH-based IDEs.
+- Work with an SSH-centric operational workflow.
 
-## SSH Key Per-Container Application
+## Register an SSH Key
 
-You can apply a registered SSH key to specific containers only, or enable and disable keys without deleting them.
+Open **SSH Keys** from the Project sidebar.
 
-### Apply to a specific container only
+![Ssh Menu](/images/ssh_menu.png)
 
-In the container detail view, open **SSH Keys** and select the keys you want to enable for that container. Keys not selected here will not be accepted even if they are registered at the project level.
+When adding a new SSH key, provide:
 
-### Enable or disable without deleting
+- A descriptive name.
+- Your complete OpenSSH public key.
+- The endpoint where the key should be injected.
 
-You can temporarily disable a key without removing it. This lets you revoke access quickly and restore it later without re-registering the key.
+![Ssh Open Key](/images/ssh-open-key.png)
+
+If the endpoint is already running when a key is added or updated, the new key is applied the next time the endpoint starts or is redeployed. Existing running containers continue using their current key set.
+
+![Image 8](/images/image-8.png)
+
+## Apply SSH Keys to Specific Containers
+
+Registered SSH keys can be managed independently for each endpoint.
+
+- **Apply to specific endpoints** — Select which endpoint should receive the SSH key during registration.
+- **Enable or Disable** — Disable a key without deleting it. Disabled keys are no longer injected after the next container restart and can be re-enabled later.
 
 <Note>
-  SSH key changes take effect after the container is restarted.
+  Changes to SSH key settings take effect only after the container has been stopped and started again.
 </Note>
 
-## Connect via SSH
+## Prerequisites
 
-Once a key is registered and applied, use the SSH command shown in the container detail view to connect.
+### AirCloud Templates
+
+Some AirCloud-provided templates, such as Jupyter environments and code workspaces, already include SSH support.
+
+### Custom Container Images
+
+To enable SSH in your own container image, your image should include:
+
+- `openssh-server`
+- Host key generation using `ssh-keygen -A`
+- An entrypoint that installs injected public keys into `authorized_keys`
+- Startup of the `sshd` service
+
+## Basic Setup
+
+### 1. Generate an SSH Key Pair
 
 ```bash
-ssh -i ~/.ssh/your-private-key <user>@<host> -p <port>
+ssh-keygen -t ed25519 -C "your-email@example.com"
 ```
 
-The host and port are shown on the container detail page.
+### 2. View Your Public Key
+
+```bash
+cat ~/.ssh/id_ed25519.pub
+```
+
+### 3. Register the Public Key
+
+In the AirCloud Console:
+
+1. Open your **Project**.
+2. Navigate to **SSH Keys**.
+3. Click **Add SSH Key**.
+4. Select the endpoint where the key should be injected.
+
+### 4. Restart the Endpoint (If Required)
+
+If the endpoint was already running when the key was added or updated, stop and restart the endpoint to apply the new SSH key.
+
+## Connect Using `aircloud ssh`
+
+### Connect to an Endpoint
+
+```bash
+aircloud ssh <endpoint_id>
+```
+
+### Use a Specific Identity File
+
+```bash
+aircloud ssh <endpoint_id> -i ~/.ssh/aircloud_key
+```
+
+### Connect to a Specific Replica
+
+```bash
+aircloud ssh <endpoint_id> -r <replica_id>
+```
+
+### Connect as a Different User
+
+```bash
+aircloud ssh <endpoint_id> -u myuser
+```
+
+### Open a Tunnel Only
+
+```bash
+aircloud ssh <endpoint_id> --tunnel-only
+```
+
+## Minimum Requirements for Custom Images
+
+To support SSH access, your custom container image should include:
+
+- `openssh-server`
+- Secure SSH configuration
+- Host key generation
+- Logic to initialize and populate `authorized_keys`
+- Startup of the `sshd` process
+
+## `aircloud ssh` vs. `aircloud exec`
+
+| Feature | `aircloud ssh` | `aircloud exec` |
+| --- | --- | --- |
+| Requires `sshd` | ✅ Yes | ❌ No |
+| Requires SSH key registration | ✅ Yes | ❌ No |
+| Supports `scp` | ✅ Yes | ❌ No |
+| Supports SSH tunneling | ✅ Yes | ❌ No |
+| Supports Remote SSH tools | ✅ Yes | ❌ No |
+| Connection speed | Slightly slower | Faster |

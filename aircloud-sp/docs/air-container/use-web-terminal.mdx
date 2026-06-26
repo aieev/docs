@@ -1,31 +1,137 @@
 ---
-title: "Use the Web Terminal"
-description: "Connect to your container directly from the browser"
-icon: "square-terminal"
+title: "Using the Web Terminal"
+description: "Access running custom containers directly from the AirCloud Console"
+icon: "monitor-smartphone"
+slug: "/air-container/access-and-connect/web-terminal"
 ---
 
-You can open a terminal session directly inside a running container from the AirCloud console, without any SSH setup.
+The Web Terminal lets you connect to a running container through a browser-based shell directly from the AirCloud Console.
 
-## How to open
+It is ideal when you need quick operational access without configuring `sshd`, registering SSH keys, or setting up a local terminal.
 
-### 1. Go to the container detail page
+## When to Use the Web Terminal
 
-From the project, click on the running container you want to access.
+The Web Terminal is recommended when you want to:
 
-### 2. Click Web Terminal
+- Open a shell directly from the Console.
+- Quickly inspect files or running processes inside a container.
+- Run lightweight verification or debugging commands.
+- Avoid configuring SSH access.
 
-Click **Web Terminal** in the top action bar.
+## Availability
 
-### 3. Select a replica
+### Custom Containers
 
-You can select which replica to connect to. If the replica is replaced or restarted during the session, the terminal will automatically attempt to reconnect.
+For custom containers deployed by users, click **Terminal** from the endpoint overview page while the container is running.
 
-### 4. Start your session
+![Terminal1](/images/terminal1.png)
 
-A terminal session opens in the browser. You can run commands, inspect files, and debug directly inside the container.
+### AirCloud Templates
 
-## Notes
+Some AirCloud-provided templates include their own built-in terminal interface.
 
-- The web terminal connects to a running container. It is not available for containers in Pending, Deploy Failed, or Unhealthy states.
-- The session is not persistent. If the browser tab is closed, the session ends.
-- For persistent connections, use [SSH access](/docs/air-container/connect-with-ssh) instead.
+Examples include:
+
+- Notebook environments opened with **Open Notebook**
+- Web-based IDE environments
+
+![Jupyter Notebook](/images/jupyter_notebook.png)
+
+![Terminal2](/images/terminal2.png)
+
+In these cases, you can use the terminal already provided within the notebook or IDE without opening the **Terminal** button on the endpoint page.
+
+## How the Web Terminal Works
+
+### 1. Open the Terminal
+
+From the endpoint overview page, click **Terminal**.
+
+### 2. Enable Terminal Access
+
+The first time you open the terminal for an endpoint, an activation dialog appears before the session starts.
+
+This enables browser-based terminal access for the endpoint without requiring an `sshd` configuration.
+
+![Enable Terminal Access](/images/활성화.png)
+
+Once terminal access has been enabled, you will not be prompted again unless the endpoint's access policy is reset.
+
+### 3. Select a Replica
+
+After terminal access has been enabled:
+
+- If there is **one running Replica**, the session connects automatically.
+- If there are **multiple running Replicas**, you are prompted to choose which Replica to connect to.
+
+![Select Replica](/images/select_replica.png)
+
+If the selected Replica is restarted or replaced while the session is active, the Web Terminal automatically attempts to reconnect.
+
+### 4. Connect to the Replica
+
+After selecting a Replica, a browser-based terminal session is opened for that Replica.
+
+![Image 4](/images/image-4.png)
+
+### 5. End the Session
+
+You can close the session by:
+
+- Running `exit`
+- Pressing `Ctrl + D`
+
+After the session ends, the terminal window automatically closes after approximately **2 seconds**.
+
+![Image 5](/images/image-5.png)
+
+## If the Web Terminal Does Not Open
+
+Check the following:
+
+- The endpoint is running.
+- At least one Replica is running.
+- You have permission to access the endpoint.
+
+If no running Replica is available, the terminal cannot be opened until a Replica becomes available.
+
+## Using `aircloud exec` from a Local Terminal
+
+If you prefer SSH-free shell access from your local terminal instead of the AirCloud Console, use `aircloud exec`.
+
+### Open a Shell
+
+```bash
+aircloud exec <endpoint_id>
+```
+
+Example:
+
+```bash
+aircloud exec 7fe76055-4159-47a5-a68d-320564e20540
+```
+
+### Connect to a Specific Replica
+
+```bash
+aircloud exec <endpoint_id> -r <replica_id>
+```
+
+### Use a Different Shell
+
+```bash
+aircloud exec <endpoint_id> -c "/bin/sh"
+```
+
+### End the Session
+
+Run `exit` or press `Ctrl + D` to close the session.
+
+## Web Terminal vs. `aircloud exec`
+
+Both **Web Terminal** and **`aircloud exec`** provide SSH-free shell access to running containers.
+
+The difference is where you start the session:
+
+- **Web Terminal** starts from the AirCloud Console.
+- **`aircloud exec`** starts from your local terminal.
