@@ -1,58 +1,127 @@
 ---
-title: "Contact and Feedback"
-description: "Support requests, technical inquiries, and model requests"
+title: "Contact and Support"
+description: "We're here to help you get the most out of AirCloud."
 icon: "mail"
 ---
 
-If you need help while using AirCloud, have technical questions, or want to request a model, please reach out through the channels below.
+If you need help, have a technical inquiry, or want to request a model, reach out through the channels below.
 
-## What can you contact us about?
+<div onClick={openSearch} style={{ cursor: "pointer" }}>
+  <Card title="Ask the Docs" icon="message-circle-question">
+    Ask our AI assistant trained on AirCloud documentation.
+  </Card>
+</div>
 
-- Air API usage
+<Card title="Send Us a Message" icon="message-circle-question-mark" href="https://www.aieev.com/ko/contact">
+  Submit your inquiry through our Contact Us page.
+</Card>
+
+For sales inquiries or technical support, feel free to reach out directly.
+
+<Columns cols={2}>
+  <Column>
+    <Card title="Hyunkyung Kim" icon="mail" href="mailto:hk.kim@aieev.com">
+      For general inquiries, email \
+      [hk.kim@aieev.com](mailto:hk.kim@aieev.com).
+    </Card>
+  </Column>
+  <Column>
+    <Card title="Byungsoo Park" icon="mail" href="mailto:bspark@aieev.com">
+      For technical inquiries, email \
+      [bspark@aieev.com](mailto:bspark@aieev.com).
+    </Card>
+  </Column>
+</Columns>
+
+## What Can You Contact Us About?
+
+- How to use Air API
 - Air Container deployment issues
 - Model addition requests
-- Adoption and technical consulting
+- Sales and technical consultation
 - Onboarding and organization setup
 - Other technical inquiries
 
-## Information to include
+## Helpful Information to Include
 
-Including the following information helps us respond faster.
+Providing the following details helps us respond faster.
 
 - Organization or Project name
 - Feature in use (e.g., Air API, Air Container)
 - Description of the issue
 - Steps to reproduce
-- Screenshots or log information (if available)
+- Screenshots or log output (if available)
+- For model requests: model name, intended use case, expected traffic or scale, and preferred response speed or deployment type
 
-## Contact
+## Common HTTP Errors
 
-For adoption consulting or technical support, please reach out below.
+The following are frequently encountered issues and how to resolve them.
 
-- Hyunkyung Kim: **hk.kim@aieev.com**
-- Byungsoo Park: **bspark@aieev.com**
+<AccordionGroup>
+  <Accordion title="401 Unauthorized">
+    Authentication failed. Please verify your API key or access credentials.
+  </Accordion>
 
-## Feedback and model requests
+  <Accordion title="404 Not Found">
+    The requested container ID or endpoint path is incorrect. Please check the container ID or route.
+  </Accordion>
 
-If you need a model that is not currently supported, or have product improvement suggestions, please include the following details.
+  <Accordion title="500 Internal Server Error">
+    If an internal server error occurs, please try again later or contact the AirCloud support team at [**contact@aieev.com**](mailto:contact@aieev.com).
+  </Accordion>
+</AccordionGroup>
 
-- Model name
-- Intended use case
-- Expected scale or traffic characteristics
-- Preferred response speed or operating model
+## Troubleshooting
 
-## Related docs
+Common issues encountered during use and how to resolve them.
 
-<Columns cols={2}>
-  <Card title="FAQ" icon="help-circle" href="/docs/support/faq" cta="View FAQ" arrow="true">
-    Check frequently asked questions.
-  </Card>
+<AccordionGroup>
+  <Accordion title="[A]. API Key Authentication Failure">
+    - Symptom: API request authentication fails
+    - Cause: Expired or invalid API key
+    - Resolution:
+      - Verify that the API key is still valid (check expiration)
+      - Generate a new API key from the AirCloud dashboard
+  </Accordion>
 
-  <Card title="Air API" icon="sparkles" href="/docs/air-api" cta="View docs" arrow="true">
-    Learn the API integration flow.
-  </Card>
+  <Accordion title="[B]. GPU Allocation Error">
+    - Symptom: GPU not detected when starting a container
+    - Cause: Node instability or driver mismatch
+    - Resolution:
+      - Redeploy to a new instance
+      - Check compatibility between the container runtime and GPU driver
+  </Accordion>
 
-  <Card title="Air Container" icon="box" href="/docs/air-container" cta="View docs" arrow="true">
-    Learn container deployment and operations.
-  </Card>
-</Columns>
+  <Accordion title="[C]. Network Connection Failure">
+    - Symptom: Container cannot connect to external endpoints
+    - Cause: Incorrect port configuration, DNS issue, or firewall blocking
+    - Resolution:
+      - Verify that the container exposes the correct port and the service is listening
+      - Test external connectivity using curl from inside the container
+      - Check that outbound traffic is not blocked in security group settings
+  </Accordion>
+
+  <Accordion title="[D]. Health Check Failure / Stuck at Initialization">
+    - Symptom: Deployment stalls at the health check stage
+    - Cause: The /health endpoint is not returning HTTP 200 OK
+    - Resolution:
+      - Confirm the correct health check URL and port are exposed
+      - Review logs for error messages or model loading delays
+  </Accordion>
+
+  <Accordion title="[E]. Autoscaling Not Triggering">
+    - Symptom: No scaling occurs despite high load
+    - Cause: Scaling threshold set too high or replicas in an unhealthy state
+    - Resolution:
+      - Adjust autoscaling parameters such as CPU threshold and latency
+      - Ensure all replicas pass health checks
+  </Accordion>
+
+  <Accordion title="[F]. 502/503 Gateway Error">
+    - Symptom: API returns a server error (502/503)
+    - Cause: Application not bound to the expected port or crashed during startup
+    - Resolution:
+      - Confirm the service is running on `0.0.0.0:<PORT>`
+      - If model loading takes time, increase the health check timeout
+  </Accordion>
+</AccordionGroup>
