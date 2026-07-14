@@ -14,7 +14,7 @@ It is the preferred option when your workflow depends on native SSH features, su
 - Port forwarding with `ssh -L`
 - VS Code Remote SSH
 
-Unlike the Web Terminal or `aircloud exec`, SSH access requires a container image with SSH support and a registered SSH public key.
+Unlike the Web Terminal or `aircloud exec`, SSH access requires a registered SSH public key.
 
 ## When to Use `aircloud ssh`
 
@@ -59,15 +59,6 @@ Registered SSH keys can be managed independently for each endpoint.
 ### AirCloud Templates
 
 Some AirCloud-provided templates, such as Jupyter environments and code workspaces, already include SSH support.
-
-### Custom Container Images
-
-To enable SSH in your own container image, your image should include:
-
-- `openssh-server`
-- Host key generation using `ssh-keygen -A`
-- An entrypoint that installs injected public keys into `authorized_keys`
-- Startup of the `sshd` service
 
 ## Basic Setup
 
@@ -128,21 +119,32 @@ aircloud ssh <endpoint_id> -u myuser
 aircloud ssh <endpoint_id> --tunnel-only
 ```
 
-## Minimum Requirements for Custom Images
+## Use with VS Code Remote SSH, scp, and other tools
 
-To support SSH access, your custom container image should include:
+To use external SSH tools such as VS Code Remote SSH, `scp`, or `rsync`, register a reusable SSH config entry once:
 
-- `openssh-server`
-- Secure SSH configuration
-- Host key generation
-- Logic to initialize and populate `authorized_keys`
-- Startup of the `sshd` process
+```bash
+aircloud ssh-config <endpoint_id> --install -i ~/.ssh/id_ed25519
+```
+
+Then connect by host alias:
+
+```bash
+ssh aircloud-<endpoint_id>
+scp ./file aircloud-<endpoint_id>:/workspace/
+# VS Code: Remote-SSH → Connect to Host → aircloud-<endpoint_id>
+```
+
+To remove the entry later:
+
+```bash
+aircloud ssh-config <endpoint_id> --uninstall
+```
 
 ## `aircloud ssh` vs. `aircloud exec`
 
 | Feature | `aircloud ssh` | `aircloud exec` |
 | --- | --- | --- |
-| Requires `sshd` | ✅ Yes | ❌ No |
 | Requires SSH key registration | ✅ Yes | ❌ No |
 | Supports `scp` | ✅ Yes | ❌ No |
 | Supports SSH tunneling | ✅ Yes | ❌ No |
