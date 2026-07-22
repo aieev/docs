@@ -48,99 +48,97 @@ Then complete the following steps:
 
 ### Usage
 
-The **Usage** page provides an overview of your Organization's spending over time. Summary cards display total spending, highest daily spending, service costs, and the number of active Projects. Spending trends are also visualized using charts and tables.
+![Image](/images/image-21.png)
 
-<Frame>
-  ![Usage Management Eng482](/images/usage-management-eng482.png)
-</Frame>
+The **Usage** page provides an overview of your Organization's spending over time. Container and API usage is measured every 10 minutes; actual credit deductions are available on the **Settlement** tab.
 
-### Service Filters
+#### View Options
 
-| Service | Description |
+Expand **Options** at the top of the page to configure the following:
+
+| Option | Description |
 | :-- | :-- |
-| **All** | Combined usage for Air Container and Air API. |
-| **Air Container** | Usage for Air Container only. |
-| **Air API** | Usage for Air API only. |
+| **Date Range** | Set a custom start and end date, or pick a preset — **Today, 7D, 1M, 3M, 6M, 1Y, or All time**. |
+| **Granularity** | Aggregate the chart and table by **Daily** or **Monthly**. |
+| **Service** | Filter by **All**, **Air Container**, or **Air API**. |
+| **Unused Items** | Choose whether to **Include** or **Exclude** items with no usage in the results. |
 
-### Group By
+#### Summary Cards
 
-| Service | Available Grouping Options |
+| Card | Description |
 | :-- | :-- |
-| **Air Container** | Project / Container / Instance Type |
-| **Air API** | Project / Model / Model Type |
+| **TOTAL SPEND** | Total spend across the selected period. |
+| **ON DEMAND** | Cost from on-demand GPU usage. |
+| **RESERVED** | Cost from Reserved Instance usage. |
+| **API CALL** | Cost from Air API calls. |
 
-### Time Filters
+#### Usage Trend
 
-- **Date Range** — Select a custom start and end date.
-- **Preset Range** — Quickly select common ranges such as **1 Month** or **3 Months**.
-- **Aggregation** — View usage aggregated by **Day** or **Month**.
+The chart displays Air Container and Air API usage cost, excluding RESERVED cost. The table below breaks down usage by Organization for each day (or month) in the selected range.
 
-### Transaction History
+### Settlement
 
-The **Transactions** page records **all AU deductions in 10-minute intervals**. Rather than simply showing billing history, it provides a detailed operational view of workload spending over time.
+![Image](/images/image-22.png)
 
-![Transaction History Eng](/images/transaction-history-eng.png)
+The **Settlement** page records the credits actually **deducted or credited** to your Organization. While Usage shows cost measured every 10 minutes, Settlement reflects how that usage was actually billed.
 
-Transaction history can help you:
+#### View Options
 
-- **Identify Autoscaling events** by correlating increases in AU consumption with Replica scaling.
-- **Verify actual costs** by reviewing spending at 10-minute intervals.
-- **Analyze resource efficiency**, such as identifying workloads that continue to incur costs during periods of low traffic.
+| Option | Description |
+| :-- | :-- |
+| **Date Range** | Set a custom start and end date, or use a preset (Today, 7D, 1M, 3M, 6M, 1Y, All time). |
+| **View Unit** | Choose **Organization**, **Project**, or **Container**. Selecting Project or Container reveals a tag list to filter down to specific items. |
+| **Unused Items** | Choose whether to **Include** or **Exclude** items with no usage. |
+| **Usage Type** | Options depend on the selected View Unit<br /><br />\* **Organization**: Reserved / On Demand / API Call<br />\* **Project**: On Demand / API Call<br />\* **Container**: On Demand. |
+| **Transaction Type** | Filter by **All**, **Deposit**, or **Withdrawal**. |
 
-### Transaction Table
+<Tip>
+  To see how much a specific container cost, set **View Unit** to **Container**. Deleted containers are included, which is useful for historical cost analysis.
+</Tip>
+
+#### Aggregate View vs. Item View
+
+Use the toggle in the upper-right to switch between two ways of viewing Settlement data.
+
+| View | Description |
+| :-- | :-- |
+| **Aggregate View** | Groups transactions by type — RESERVED, ON DEMAND, and API CALL. Each group is collapsible and includes a totals row. |
+| **Item View** | Lists individual transactions recorded at 10-minute intervals. Each row can be expanded to show detailed billing information. |
+
+**Aggregate View columns**
+
+| Group | Columns |
+| :-- | :-- |
+| **RESERVED** | Payment Date, GPU Model, Quantity, Applied Period, Amount, Status |
+| **ON DEMAND** | Organization, GPU Type, Usage Time, Amount |
+| **API CALL** | Organization, Model, Calls, Tokens, Amount |
+
+**Item View columns**
 
 | Column | Description |
 | :-- | :-- |
-| **Transaction Date** | Time when AU was deducted. |
-| **Type** | Transaction type (for example, **Debit**). |
-| **Usage Type** | Billing type, such as `ON_DEMAND`, `RESERVED`, or `API_CALL`. |
-| **Description** | Billing period associated with the transaction. |
-| **Amount (AU)** | AU deducted during the billing interval. |
+| **Payment Date** | Time the transaction was deducted or credited. |
+| **Type** | Transaction type (Deposit or Withdrawal). |
+| **Usage Type** | Billing type, such as On Demand, Reserved, or API Call. |
+| **Interval** | Billing period for the transaction (for example, `2026-07-22 11:20:00 ~ 2026-07-22 11:30:00`). |
+| **Points** | AU deducted or credited for the interval. |
 
-### Filters
+Click the chevron on a row to expand its detail and see the fields below.
 
-The Transactions page provides several filters to help you analyze billing data more effectively.
+![Image](/images/image-23.png)
 
-#### Group By
-
-<Tip>
-  To identify which container generated a particular cost, change **Group By** to **Container**. Deleted containers are also included, making it useful for historical cost analysis.
-</Tip>
-
-| Option | Description |
+| Detail Field | Description |
 | :-- | :-- |
-| **Organization** | Displays all transactions across the Organization. |
-| **Project** | Filters transactions by selected Projects. |
-| **Container** | Displays transactions by container, including deleted containers. |
+| **GPU** | GPU model used. |
+| **Interval** | The 10-minute billing interval. |
+| **Hourly Rate** | Hourly rate for the GPU. |
+| **Job Type** | Workload type (for example, `SERVE_REPLICA`). |
+| **Amount** | AU deducted for the interval. |
+| **Raw Description** | Original description recorded by the billing system. |
 
-#### Usage Type
+#### Export Settlement Data
 
-| Option | Description |
-| :-- | :-- |
-| **All** | Display all usage types. |
-| **ON\_DEMAND** | On-demand GPU usage. |
-| **RESERVED** | Reserved Instance usage. |
-| **API\_CALL** | Air API usage. |
-
-#### Transaction Type
-
-| Option | Description |
-| :-- | :-- |
-| **All** | Display both credits and debits. |
-| **Debit** | AU deducted for service usage. |
-| **Credit** | AU added through credit purchases or promotional codes. |
-
-#### Date Range
-
-Select a start and end date to display transactions within the specified period.
-
-<Tip>
-  If spending is unexpectedly high during a particular period, narrow the date range and group transactions by **Container** to identify the responsible workload.
-</Tip>
-
-### Export Transactions
-
-Click **Export** in the upper-right corner to download the filtered transaction history.
+Click **Export** in the upper-right corner to download the filtered Settlement data.
 
 You can configure:
 
