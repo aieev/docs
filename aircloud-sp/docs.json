@@ -40,6 +40,7 @@
                   "docs/air-api/index",
                   "docs/air-api/models-and-playground",
                   "docs/air-api/api-usage-guide",
+                  "docs/air-api/openai-compatible-api",
                   "docs/air-api/monitoring",
                   "docs/air-api/troubleshooting"
                 ]
@@ -182,6 +183,7 @@
                   "docs/ko/air-api/index",
                   "docs/ko/air-api/models-and-playground",
                   "docs/ko/air-api/api-usage-guide",
+                  "docs/ko/air-api/openai-compatible-api",
                   "docs/ko/air-api/monitoring",
                   "docs/ko/air-api/troubleshooting"
                 ]

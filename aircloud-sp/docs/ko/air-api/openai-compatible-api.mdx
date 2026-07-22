@@ -1,7 +1,205 @@
 ---
-title: "Openai Compatible API"
+title: "OpenAI 호환 API"
+description: "OpenAI SDK 코드 그대로 Air API에 연결하는 방법"
+icon: "arrow-left-right"
 ---
 
+Air API는 OpenAI API와 호환되는 엔드포인트를 제공합니다. 기존 OpenAI 코드에서 **base URL과 API 키 두 가지만 변경**하면 바로 사용할 수 있습니다.
+
+## Quick Start
+
+기존 OpenAI 코드에서 아래 두 줄만 바꾸세요.
+
+<CodeGroup>
+
+```python Python
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="YOUR_AIEEV_API_KEY",                            # 변경: Air API 키
+    base_url="https://ap-1.aieev.cloud/endpoints/<model_id>"  # 변경: Air API base URL
+)
+
+response = client.chat.completions.create(
+    model="qwen/qwen3.5-9b",
+    messages=[
+        {"role": "user", "content": "안녕하세요!"}
+    ]
+)
+
+print(response.choices[0].message.content)
+```
+
+```javascript Node.js
+import OpenAI from "openai";
+
+const client = new OpenAI({
+  apiKey: "YOUR_AIEEV_API_KEY",                            // 변경: Air API 키
+  baseURL: "https://ap-1.aieev.cloud/endpoints/<model_id>", // 변경: Air API base URL
+});
+
+const response = await client.chat.completions.create({
+  model: "qwen/qwen3.5-9b",
+  messages: [{ role: "user", content: "안녕하세요!" }],
+});
+
+console.log(response.choices[0].message.content);
+```
+
+```bash cURL
+curl https://ap-1.aieev.cloud/endpoints/<model_id>/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_AIEEV_API_KEY" \
+  -d '{
+    "model": "qwen/qwen3.5-9b",
+    "messages": [
+      {"role": "user", "content": "안녕하세요!"}
+    ]
+  }'
+```
+
+```bash Shell
+#!/bin/bash
+
+API_KEY="YOUR_AIEEV_API_KEY"
+
+response=$(curl -s -X POST https://ap-1.aieev.cloud/endpoints/<model_id>/v1/chat/completions \
+  -H "Authorization: Bearer $API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "model": "qwen/qwen3.5-9b",
+  "messages": [{"role": "user", "content": "안녕하세요!"}]
+}')
+
+echo "$response" | jq .
+```
+
+</CodeGroup>
+
+<Tip>
+  API 키 발급 방법은 [Authentication](/docs/ko/get-started/authentication) 페이지를 참고하세요.
+</Tip>
+
+## Base URL
+
+모델마다 엔드포인트 URL이 다릅니다. `<model_id>` 자리에 아래 표의 모델 ID를 입력하세요.
+
+```text
+https://ap-1.aieev.cloud/endpoints/<model_id>
+```
+
+## 모델별 지원 기능
+
+| 모델 | 모델 ID | 타입 | Tool Calling | Streaming |
+| :-- | :-- | :-- | :-: | :-: |
+| Qwen3.6-35B-A3B | `qwen/qwen3.6-35b-a3b` | chat | ✅ | ✅ |
+| Qwen3.5-9B | `qwen/qwen3.5-9b` | chat | ✅ | ✅ |
+| Qwen3-32B | *(Coming Soon)* | chat | ✅ | ✅ |
+| Llama3-70B | *(Coming Soon)* | chat | ✅ | ✅ |
+| Qwen3-Embedding-8B | `qwen/qwen3-embedding-8b` | embedding | ❌ | - |
+| Qwen3-TTS | `qwen/qwen3-tts-customvoice` | tts | ❌ | - |
+
 <Note>
-  TODO: 이 문서는 아직 작성 중입니다.
+  Qwen3-TTS는 별도 엔드포인트를 사용합니다. 엔드포인트 URL은 Air API 콘솔 내 Qwen3-TTS 모델 README에서 확인하세요.
 </Note>
+
+## Streaming
+
+`stream` 옵션을 `true`로 설정하면 실시간으로 응답을 받을 수 있습니다. (기본값: `false`)
+
+```python
+response = client.chat.completions.create(
+    model="qwen/qwen3.5-9b",
+    messages=[{"role": "user", "content": "안녕하세요!"}],
+    stream=True
+)
+
+for chunk in response:
+    print(chunk.choices[0].delta.content, end="")
+```
+
+<Note>
+  현재 Streaming은 **Qwen3.6-35B-A3B**, **Qwen3.5-9B**, **Qwen3-32B** 모델에서 지원됩니다. **Llama3-70B**는 Coming Soon입니다.
+</Note>
+
+## Tool Calling (Function Calling)
+
+AI가 외부 함수나 서비스를 호출할 수 있도록 하는 기능입니다. **Qwen3.6-35B-A3B**, **Qwen3.5-9B** 모델에서 지원됩니다. **Qwen3-32B**, **Llama3-70B**는 Coming Soon입니다.
+
+```python
+tools = [
+    {
+        "type": "function",
+        "function": {
+            "name": "get_weather",
+            "description": "특정 지역의 날씨를 조회합니다.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "location": {
+                        "type": "string",
+                        "description": "도시 이름 (예: Seoul)"
+                    }
+                },
+                "required": ["location"]
+            }
+        }
+    }
+]
+
+response = client.chat.completions.create(
+    model="qwen/qwen3.5-9b",
+    messages=[{"role": "user", "content": "서울 날씨 알려줘"}],
+    tools=tools,
+    tool_choice="auto"
+)
+```
+
+## Embedding
+
+텍스트를 벡터로 변환하는 기능입니다. 시맨틱 검색, 추천 시스템 등에 활용할 수 있습니다.
+
+```python
+response = client.embeddings.create(
+    model="qwen/qwen3-embedding-8b",
+    input="임베딩할 텍스트를 입력하세요."
+)
+
+print(response.data[0].embedding)
+```
+
+## 지원 파라미터
+
+vLLM 공식 스펙 기반으로 주요 OpenAI 파라미터를 지원합니다.
+
+| 파라미터 | 설명 |
+| :-- | :-- |
+| `model` | 사용할 모델 ID |
+| `messages` | 대화 메시지 배열 |
+| `stream` | 스트리밍 응답 여부 (기본값: false) |
+| `temperature` | 응답 다양성 조절 (0.0 ~ 2.0) |
+| `max_tokens` | 최대 응답 토큰 수 |
+| `top_p` | 누클리어스 샘플링 확률 |
+| `stop` | 응답 종료 문자열 |
+| `tools` | Tool calling 함수 정의 |
+| `tool_choice` | Tool 호출 방식 (`auto`, `none`, 특정 함수) |
+
+## 관련 문서
+
+<Columns cols={2}>
+  <Card title="API 호출 방법" icon="astroid" href="/docs/ko/air-api/api-usage-guide" cta="문서 보기" arrow="true">
+    시크릿 키 인증과 코드 기반 API 연동 전체 흐름을 확인합니다.
+  </Card>
+
+  <Card title="지원 모델 전체 보기" icon="list" href="/models/ko" cta="모델 보기" arrow="true">
+    모든 모델의 스펙과 가격을 확인합니다.
+  </Card>
+
+  <Card title="문제 해결" icon="wrench" href="/docs/ko/air-api/troubleshooting" cta="문제 해결 보기" arrow="true">
+    자주 발생하는 오류와 해결 방법을 확인합니다.
+  </Card>
+
+  <Card title="API 레퍼런스" icon="book" href="/api-reference/ko/introduction" cta="레퍼런스 보기" arrow="true">
+    엔드포인트와 파라미터 등 API 상세 스펙을 확인합니다.
+  </Card>
+</Columns>
