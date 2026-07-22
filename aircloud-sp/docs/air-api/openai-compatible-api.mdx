@@ -1,7 +1,205 @@
 ---
-title: "Openai Compatible API"
+title: "OpenAI Compatible API"
+description: "Connect your existing OpenAI SDK code to Air API"
+icon: "arrow-left-right"
 ---
 
+Air API provides an endpoint that is compatible with the OpenAI API. If your application already uses the OpenAI SDK, you only need to replace **two settings — the base URL and the API key** — to get started.
+
+## Quick Start
+
+Update just two lines in your existing OpenAI code.
+
+<CodeGroup>
+
+```python Python
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="YOUR_AIEEV_API_KEY",                            # Replace: Air API key
+    base_url="https://ap-1.aieev.cloud/endpoints/<model_id>"  # Replace: Air API base URL
+)
+
+response = client.chat.completions.create(
+    model="qwen/qwen3.5-9b",
+    messages=[
+        {"role": "user", "content": "Hello!"}
+    ]
+)
+
+print(response.choices[0].message.content)
+```
+
+```javascript Node.js
+import OpenAI from "openai";
+
+const client = new OpenAI({
+  apiKey: "YOUR_AIEEV_API_KEY",                            // Replace: Air API key
+  baseURL: "https://ap-1.aieev.cloud/endpoints/<model_id>", // Replace: Air API base URL
+});
+
+const response = await client.chat.completions.create({
+  model: "qwen/qwen3.5-9b",
+  messages: [{ role: "user", content: "Hello!" }],
+});
+
+console.log(response.choices[0].message.content);
+```
+
+```bash cURL
+curl https://ap-1.aieev.cloud/endpoints/<model_id>/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_AIEEV_API_KEY" \
+  -d '{
+    "model": "qwen/qwen3.5-9b",
+    "messages": [
+      {"role": "user", "content": "Hello!"}
+    ]
+  }'
+```
+
+```bash Shell
+#!/bin/bash
+
+API_KEY="YOUR_AIEEV_API_KEY"
+
+response=$(curl -s -X POST https://ap-1.aieev.cloud/endpoints/<model_id>/v1/chat/completions \
+  -H "Authorization: Bearer $API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "model": "qwen/qwen3.5-9b",
+  "messages": [{"role": "user", "content": "Hello!"}]
+}')
+
+echo "$response" | jq .
+```
+
+</CodeGroup>
+
+<Tip>
+  See the [Authentication](/docs/get-started/authentication) page for how to generate an API key.
+</Tip>
+
+## Base URL
+
+Each model has its own endpoint URL. Replace `<model_id>` with the model ID from the table below.
+
+```text
+https://ap-1.aieev.cloud/endpoints/<model_id>
+```
+
+## Supported Models and Features
+
+| Model | Model ID | Type | Tool Calling | Streaming |
+| :-- | :-- | :-- | :-: | :-: |
+| Qwen3.6-35B-A3B | `qwen/qwen3.6-35b-a3b` | chat | ✅ | ✅ |
+| Qwen3.5-9B | `qwen/qwen3.5-9b` | chat | ✅ | ✅ |
+| Qwen3-32B | *(Coming Soon)* | chat | ✅ | - |
+| Llama3-70B | *(Coming Soon)* | chat | ✅ | ✅ |
+| Qwen3-Embedding-8B | `qwen/qwen3-embedding-8b` | embedding | ❌ | - |
+| Qwen3-TTS | `qwen/qwen3-tts-customvoice` | tts | ❌ | - |
+
 <Note>
-  TODO: This page is under construction.
+  Qwen3-TTS uses a separate endpoint. Find its endpoint URL in the Qwen3-TTS model README in the Air API Console.
 </Note>
+
+## Streaming
+
+Set the `stream` option to `true` to receive the response in real time. (Default: `false`)
+
+```python
+response = client.chat.completions.create(
+    model="qwen/qwen3.5-9b",
+    messages=[{"role": "user", "content": "Hello!"}],
+    stream=True
+)
+
+for chunk in response:
+    print(chunk.choices[0].delta.content, end="")
+```
+
+<Note>
+  Streaming is currently supported on **Qwen3.6-35B-A3B** and **Qwen3.5-9B**. **Llama3-70B** support is coming soon.
+</Note>
+
+## Tool Calling (Function Calling)
+
+Lets the model call external functions or services. Supported on **Qwen3.6-35B-A3B** and **Qwen3.5-9B**. **Qwen3-32B** and **Llama3-70B** support is coming soon.
+
+```python
+tools = [
+    {
+        "type": "function",
+        "function": {
+            "name": "get_weather",
+            "description": "Look up the weather for a given location.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "location": {
+                        "type": "string",
+                        "description": "City name (e.g. Seoul)"
+                    }
+                },
+                "required": ["location"]
+            }
+        }
+    }
+]
+
+response = client.chat.completions.create(
+    model="qwen/qwen3.5-9b",
+    messages=[{"role": "user", "content": "What's the weather in Seoul?"}],
+    tools=tools,
+    tool_choice="auto"
+)
+```
+
+## Embedding
+
+Converts text into vectors, useful for semantic search and recommendation systems.
+
+```python
+response = client.embeddings.create(
+    model="qwen/qwen3-embedding-8b",
+    input="Text to embed."
+)
+
+print(response.data[0].embedding)
+```
+
+## Supported Parameters
+
+Air API supports the core OpenAI parameters based on the official vLLM spec.
+
+| Parameter | Description |
+| :-- | :-- |
+| `model` | The model ID to use |
+| `messages` | Array of conversation messages |
+| `stream` | Whether to stream the response (default: false) |
+| `temperature` | Controls response randomness (0.0 – 2.0) |
+| `max_tokens` | Maximum number of tokens to generate |
+| `top_p` | Nucleus sampling probability |
+| `stop` | String(s) that stop generation |
+| `tools` | Tool calling function definitions |
+| `tool_choice` | How tools are invoked (`auto`, `none`, or a specific function) |
+
+## Related Documentation
+
+<Columns cols={2}>
+  <Card title="API Usage Guide" icon="astroid" href="/docs/air-api/api-usage-guide" cta="View Documentation" arrow="true">
+    Learn the full flow for secret key authentication and code-based API integration.
+  </Card>
+
+  <Card title="Available Models" icon="list" href="/models" cta="Browse Models" arrow="true">
+    See specs and pricing for every model.
+  </Card>
+
+  <Card title="Troubleshooting" icon="wrench" href="/docs/air-api/troubleshooting" cta="View Troubleshooting" arrow="true">
+    Find solutions to common issues and errors.
+  </Card>
+
+  <Card title="API Reference" icon="book" href="/api-reference/introduction" cta="View API Reference" arrow="true">
+    Explore detailed API specifications, including endpoints and parameters.
+  </Card>
+</Columns>
