@@ -92,7 +92,7 @@ https://ap-1.aieev.cloud/endpoints/<model_id>
 
 | Model | Model ID | Type | Tool Calling | Streaming |
 | :-- | :-- | :-- | :-: | :-: |
-| Qwen3.6-35B-A3B | `qwen/qwen3.6-35b-a3b` | chat | ✅ | ✅ |
+| Qwen3.5-35B-A3B | `qwen/qwen3.5-35b-a3b` | chat | ✅ | ✅ |
 | Qwen3.5-9B | `qwen/qwen3.5-9b` | chat | ✅ | ✅ |
 | Qwen3-32B | *(Coming Soon)* | chat | ✅ | ✅ |
 | Llama3-70B | *(Coming Soon)* | chat | ✅ | ✅ |
@@ -119,12 +119,12 @@ for chunk in response:
 ```
 
 <Note>
-  Streaming is currently supported on **Qwen3.6-35B-A3B**, **Qwen3.5-9B**, and **Qwen3-32B**. **Llama3-70B** support is coming soon.
+  Streaming is currently supported on **Qwen3.5-35B-A3B**, **Qwen3.5-9B**, and **Qwen3-32B**. **Llama3-70B** support is coming soon.
 </Note>
 
 ## Tool Calling (Function Calling)
 
-Lets the model call external functions or services. Supported on **Qwen3.6-35B-A3B** and **Qwen3.5-9B**. **Qwen3-32B** and **Llama3-70B** support is coming soon.
+Lets the model call external functions or services. Supported on **Qwen3.5-35B-A3B** and **Qwen3.5-9B**. **Qwen3-32B** and **Llama3-70B** support is coming soon.
 
 ```python
 tools = [

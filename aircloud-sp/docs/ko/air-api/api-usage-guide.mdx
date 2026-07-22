@@ -8,37 +8,7 @@ icon: "astroid"
 
 ## OpenAI에서 AirCloud로 전환하기
 
-기존에 OpenAI SDK를 사용하고 있다면 코드 변경 없이 두 가지만 교체하면 됩니다.
-
-<CodeGroup>
-
-```python Python
-# Before — OpenAI
-from openai import OpenAI
-client = OpenAI(api_key="sk-...")
-
-# After — AirCloud
-from openai import OpenAI
-client = OpenAI(
-    api_key="YOUR_AIRCLOUD_API_KEY",  # AirCloud 시크릿 키로 교체
-    base_url="YOUR_ENDPOINT"          # AirCloud 엔드포인트로 교체
-)
-```
-
-```javascript Node.js
-// Before — OpenAI
-import OpenAI from "openai";
-const client = new OpenAI({ apiKey: "sk-..." });
-
-// After — AirCloud
-import OpenAI from "openai";
-const client = new OpenAI({
-  apiKey: "YOUR_AIRCLOUD_API_KEY",  // AirCloud 시크릿 키로 교체
-  baseURL: "YOUR_ENDPOINT",         // AirCloud 엔드포인트로 교체
-});
-```
-
-</CodeGroup>
+기존에 OpenAI SDK를 사용하고 있다면 두 가지만 교체하면 됩니다. 전체 Quick Start와 코드 예시는 [OpenAI 호환 API](/docs/ko/air-api/openai-compatible-api) 페이지를 참고하세요.
 
 ### 전환 체크리스트
 
@@ -68,73 +38,7 @@ Authorization: Bearer YOUR_API_KEY
 
 ## 코드 예시
 
-### Chat 모델
-
-<CodeGroup>
-
-```python Python
-from openai import OpenAI
-
-client = OpenAI(
-    api_key="YOUR_API_KEY",
-    base_url="YOUR_ENDPOINT"
-)
-
-response = client.chat.completions.create(
-    model="YOUR_MODEL_ID",
-    messages=[
-        {"role": "user", "content": "안녕하세요"}
-    ]
-)
-
-print(response.choices[0].message.content)
-```
-
-```javascript Node.js
-import OpenAI from "openai";
-
-const client = new OpenAI({
-  apiKey: "YOUR_API_KEY",
-  baseURL: "YOUR_ENDPOINT",
-});
-
-const response = await client.chat.completions.create({
-  model: "YOUR_MODEL_ID",
-  messages: [{ role: "user", content: "안녕하세요" }],
-});
-
-console.log(response.choices[0].message.content);
-```
-
-```bash cURL
-curl YOUR_ENDPOINT/chat/completions \
-  -H "Authorization: Bearer YOUR_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "model": "YOUR_MODEL_ID",
-    "messages": [
-      {"role": "user", "content": "안녕하세요"}
-    ]
-  }'
-```
-
-```bash Shell
-#!/bin/bash
-
-API_KEY="YOUR_API_KEY"
-
-response=$(curl -s -X POST YOUR_ENDPOINT/chat/completions \
-  -H "Authorization: Bearer $API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-  "model": "YOUR_MODEL_ID",
-  "messages": [{"role": "user", "content": "안녕하세요"}]
-}')
-
-echo "$response" | jq .
-```
-
-</CodeGroup>
+Chat 및 Embedding 코드 예시는 [OpenAI 호환 API](/docs/ko/air-api/openai-compatible-api) 페이지를 참고하세요. Air API는 OpenAI SDK의 audio 엔드포인트를 통한 TTS(Text-to-Speech) 호출도 지원하며, 예시는 아래와 같습니다.
 
 ### TTS 모델
 
@@ -202,70 +106,6 @@ curl -s -X POST YOUR_ENDPOINT/audio/speech \
   "voice": "aiden"
 }' \
   --output output.mp3
-```
-
-</CodeGroup>
-
-### Embedding 모델
-
-<CodeGroup>
-
-```python Python
-from openai import OpenAI
-
-client = OpenAI(
-    api_key="YOUR_API_KEY",
-    base_url="YOUR_ENDPOINT"
-)
-
-response = client.embeddings.create(
-    model="YOUR_MODEL_ID",
-    input="텍스트를 벡터로 변환합니다."
-)
-
-print(response.data[0].embedding)
-```
-
-```javascript Node.js
-import OpenAI from "openai";
-
-const client = new OpenAI({
-  apiKey: "YOUR_API_KEY",
-  baseURL: "YOUR_ENDPOINT",
-});
-
-const response = await client.embeddings.create({
-  model: "YOUR_MODEL_ID",
-  input: "텍스트를 벡터로 변환합니다.",
-});
-
-console.log(response.data[0].embedding);
-```
-
-```bash cURL
-curl -X POST YOUR_ENDPOINT/embeddings \
-  -H "Authorization: Bearer YOUR_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-  "model": "YOUR_MODEL_ID",
-  "input": "텍스트를 벡터로 변환합니다."
-}'
-```
-
-```bash Shell
-#!/bin/bash
-
-API_KEY="YOUR_API_KEY"
-
-response=$(curl -s -X POST YOUR_ENDPOINT/embeddings \
-  -H "Authorization: Bearer $API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-  "model": "YOUR_MODEL_ID",
-  "input": "텍스트를 벡터로 변환합니다."
-}')
-
-echo "$response" | jq .
 ```
 
 </CodeGroup>

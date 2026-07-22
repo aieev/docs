@@ -8,37 +8,7 @@ This guide explains how to call Air API from your application after generating a
 
 ## Migrate from OpenAI to AirCloud
 
-If your application already uses the OpenAI SDK, you only need to update two settings.
-
-<CodeGroup>
-
-```python Python
-# Before — OpenAI
-from openai import OpenAI
-client = OpenAI(api_key="sk-...")
-
-# After — AirCloud
-from openai import OpenAI
-client = OpenAI(
-    api_key="YOUR_AIRCLOUD_API_KEY",  # Replace with your AirCloud secret key
-    base_url="YOUR_ENDPOINT"          # Replace with your AirCloud endpoint
-)
-```
-
-```javascript Node.js
-// Before — OpenAI
-import OpenAI from "openai";
-const client = new OpenAI({ apiKey: "sk-..." });
-
-// After — AirCloud
-import OpenAI from "openai";
-const client = new OpenAI({
-  apiKey: "YOUR_AIRCLOUD_API_KEY",  // Replace with your AirCloud secret key
-  baseURL: "YOUR_ENDPOINT",         // Replace with your AirCloud endpoint
-});
-```
-
-</CodeGroup>
+If your application already uses the OpenAI SDK, you only need to replace two settings. See the [OpenAI Compatible API](/docs/air-api/openai-compatible-api) page for the full quick start and code samples.
 
 ### Migration Checklist
 
@@ -68,73 +38,7 @@ Authorization: Bearer YOUR_API_KEY
 
 ## Code Examples
 
-### Chat Models
-
-<CodeGroup>
-
-```python Python
-from openai import OpenAI
-
-client = OpenAI(
-    api_key="YOUR_API_KEY",
-    base_url="YOUR_ENDPOINT"
-)
-
-response = client.chat.completions.create(
-    model="YOUR_MODEL_ID",
-    messages=[
-        {"role": "user", "content": "Hello"}
-    ]
-)
-
-print(response.choices[0].message.content)
-```
-
-```javascript Node.js
-import OpenAI from "openai";
-
-const client = new OpenAI({
-  apiKey: "YOUR_API_KEY",
-  baseURL: "YOUR_ENDPOINT",
-});
-
-const response = await client.chat.completions.create({
-  model: "YOUR_MODEL_ID",
-  messages: [{ role: "user", content: "Hello" }],
-});
-
-console.log(response.choices[0].message.content);
-```
-
-```bash cURL
-curl YOUR_ENDPOINT/chat/completions \
-  -H "Authorization: Bearer YOUR_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "model": "YOUR_MODEL_ID",
-    "messages": [
-      {"role": "user", "content": "Hello"}
-    ]
-  }'
-```
-
-```bash Shell
-#!/bin/bash
-
-API_KEY="YOUR_API_KEY"
-
-response=$(curl -s -X POST YOUR_ENDPOINT/chat/completions \
-  -H "Authorization: Bearer $API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-  "model": "YOUR_MODEL_ID",
-  "messages": [{"role": "user", "content": "Hello"}]
-}')
-
-echo "$response" | jq .
-```
-
-</CodeGroup>
+For chat completion and embedding examples, see the [OpenAI Compatible API](/docs/air-api/openai-compatible-api) page. Air API also supports text-to-speech through the OpenAI SDK's audio endpoint, shown below.
 
 ### TTS Models
 
@@ -202,70 +106,6 @@ curl -s -X POST YOUR_ENDPOINT/audio/speech \
   "voice": "aiden"
 }' \
   --output output.mp3
-```
-
-</CodeGroup>
-
-### Embedding Models
-
-<CodeGroup>
-
-```python Python
-from openai import OpenAI
-
-client = OpenAI(
-    api_key="YOUR_API_KEY",
-    base_url="YOUR_ENDPOINT"
-)
-
-response = client.embeddings.create(
-    model="YOUR_MODEL_ID",
-    input="Convert this text into an embedding."
-)
-
-print(response.data[0].embedding)
-```
-
-```javascript Node.js
-import OpenAI from "openai";
-
-const client = new OpenAI({
-  apiKey: "YOUR_API_KEY",
-  baseURL: "YOUR_ENDPOINT",
-});
-
-const response = await client.embeddings.create({
-  model: "YOUR_MODEL_ID",
-  input: "Convert this text into an embedding.",
-});
-
-console.log(response.data[0].embedding);
-```
-
-```bash cURL
-curl -X POST YOUR_ENDPOINT/embeddings \
-  -H "Authorization: Bearer YOUR_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-  "model": "YOUR_MODEL_ID",
-  "input": "Convert this text into an embedding."
-}'
-```
-
-```bash Shell
-#!/bin/bash
-
-API_KEY="YOUR_API_KEY"
-
-response=$(curl -s -X POST YOUR_ENDPOINT/embeddings \
-  -H "Authorization: Bearer $API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-  "model": "YOUR_MODEL_ID",
-  "input": "Convert this text into an embedding."
-}')
-
-echo "$response" | jq .
 ```
 
 </CodeGroup>

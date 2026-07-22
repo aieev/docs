@@ -92,7 +92,7 @@ https://ap-1.aieev.cloud/endpoints/<model_id>
 
 | 모델 | 모델 ID | 타입 | Tool Calling | Streaming |
 | :-- | :-- | :-- | :-: | :-: |
-| Qwen3.6-35B-A3B | `qwen/qwen3.6-35b-a3b` | chat | ✅ | ✅ |
+| Qwen3.5-35B-A3B | `qwen/qwen3.5-35b-a3b` | chat | ✅ | ✅ |
 | Qwen3.5-9B | `qwen/qwen3.5-9b` | chat | ✅ | ✅ |
 | Qwen3-32B | *(Coming Soon)* | chat | ✅ | ✅ |
 | Llama3-70B | *(Coming Soon)* | chat | ✅ | ✅ |
@@ -119,12 +119,12 @@ for chunk in response:
 ```
 
 <Note>
-  현재 Streaming은 **Qwen3.6-35B-A3B**, **Qwen3.5-9B**, **Qwen3-32B** 모델에서 지원됩니다. **Llama3-70B**는 Coming Soon입니다.
+  현재 Streaming은 **Qwen3.5-35B-A3B**, **Qwen3.5-9B**, **Qwen3-32B** 모델에서 지원됩니다. **Llama3-70B**는 Coming Soon입니다.
 </Note>
 
 ## Tool Calling (Function Calling)
 
-AI가 외부 함수나 서비스를 호출할 수 있도록 하는 기능입니다. **Qwen3.6-35B-A3B**, **Qwen3.5-9B** 모델에서 지원됩니다. **Qwen3-32B**, **Llama3-70B**는 Coming Soon입니다.
+AI가 외부 함수나 서비스를 호출할 수 있도록 하는 기능입니다. **Qwen3.5-35B-A3B**, **Qwen3.5-9B** 모델에서 지원됩니다. **Qwen3-32B**, **Llama3-70B**는 Coming Soon입니다.
 
 ```python
 tools = [
