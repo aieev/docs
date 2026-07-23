@@ -88,10 +88,10 @@ Each model has its own endpoint URL. Replace `<endpoint_id>` with the **endpoint
 https://ap-1.aieev.cloud/endpoints/<endpoint_id>/v1
 ```
 
-For example, for Qwen3.5-35B-A3B:
+For example, for Qwen3.6-35B-A3B:
 
 ```text
-https://ap-1.aieev.cloud/endpoints/qwen3-5-35b-a3b/v1
+https://ap-1.aieev.cloud/endpoints/qwen3-6-35b-a3b/v1
 ```
 
 <Warning>
@@ -102,12 +102,12 @@ https://ap-1.aieev.cloud/endpoints/qwen3-5-35b-a3b/v1
 
 | Model | Endpoint ID | Model ID (`model`) | Context | Streaming | Tool Calling | Vision | Reasoning |
 | :-- | :-- | :-- | :-: | :-: | :-: | :-: | :-: |
-| Qwen3.5-35B-A3B | `qwen3-5-35b-a3b` | `qwen/qwen3.5-35b-a3b` | 256K | ✅ | ✅ | ✅ up to 4 | ✅ |
+| Qwen3.6-35B-A3B | `qwen3-6-35b-a3b` | `qwen/qwen3.6-35b-a3b` | 256K | ✅ | ✅ | ✅ up to 4 | ✅ |
 | Qwen3.5-9B | `qwen3-5-9b` | `qwen/qwen3.5-9b` | 256K | ✅ | ✅ | ✅ up to 1 | ✅ |
 | Llama3.3-70B | `llama3-3-70b` | `llama3.3-70b-instruct` | 128K | ✅ | ✅ | ❌ | ❌ |
 | Qwen3-32B | *(Coming Soon)* | - | - | - | - | ❌ | - |
 | Qwen3-Embedding-8B | `qwen3-embedding-8b` | `qwen/qwen3-embedding-8b` | 32K | - | - | - | - |
-| Qwen3-TTS | *(separate endpoint)* | `qwen/qwen3-tts-customvoice` | - | - | - | - | - |
+| Qwen3-TTS | `qwen3-tts` | `qwen/qwen3-tts-customvoice` | - | - | - | - | - |
 
 <sub>✅ supported · ❌ not supported · `-` not applicable or TBD</sub>
 
@@ -170,12 +170,12 @@ for chunk in response:
 - Send `stream_options={"include_usage": true}` to receive token usage (`usage`) in the final chunk.
 
 <Note>
-  Streaming is currently supported on **Qwen3.5-35B-A3B**, **Qwen3.5-9B**, and **Llama3.3-70B**.
+  Streaming is currently supported on **Qwen3.6-35B-A3B**, **Qwen3.5-9B**, and **Llama3.3-70B**.
 </Note>
 
 ## Tool Calling (Function Calling)
 
-Lets the model call external functions or services. Supported on **Qwen3.5-35B-A3B**, **Qwen3.5-9B**, and **Llama3.3-70B**.
+Lets the model call external functions or services. Supported on **Qwen3.6-35B-A3B**, **Qwen3.5-9B**, and **Llama3.3-70B**.
 
 Tool calling is a three-step flow: define functions and send the request, the model suggests a function call, then execute the function and send back the result. The model does not execute functions itself — it only generates which function to call and with what arguments.
 
@@ -290,7 +290,7 @@ With `stream: true`, tool call data arrives split across chunks. The first chunk
 
 ```python
 stream = client.chat.completions.create(
-    model="qwen/qwen3.5-35b-a3b",
+    model="qwen/qwen3.6-35b-a3b",
     messages=[{"role": "user", "content": "What's the weather in Seoul?"}],
     tools=tools,
     stream=True,
@@ -309,11 +309,11 @@ for chunk in stream:
 
 ## Vision (Image Input)
 
-Qwen3.5 chat models accept image input. Pass `messages[].content` as an array and include images with the `image_url` type. `image_url.url` accepts an externally reachable image URL or a base64-encoded data URI (`data:image/jpeg;base64,...`).
+Qwen3.6-35B-A3B and Qwen3.5-9B accept image input. Pass `messages[].content` as an array and include images with the `image_url` type. `image_url.url` accepts an externally reachable image URL or a base64-encoded data URI (`data:image/jpeg;base64,...`).
 
 ```python
 response = client.chat.completions.create(
-    model="qwen/qwen3.5-35b-a3b",
+    model="qwen/qwen3.6-35b-a3b",
     messages=[
         {
             "role": "user",
@@ -327,16 +327,16 @@ response = client.chat.completions.create(
 ```
 
 <Note>
-  The number of images per request is limited per model — **Qwen3.5-35B-A3B: up to 4**, **Qwen3.5-9B: up to 1**. Video input is not supported.
+  The number of images per request is limited per model — **Qwen3.6-35B-A3B: up to 4**, **Qwen3.5-9B: up to 1**. Video input is not supported.
 </Note>
 
 ## Reasoning
 
-Qwen3.5 chat models support reasoning (thinking). The reasoning trace is returned separately from the final answer (`content`) in the `reasoning` field.
+Qwen3.6-35B-A3B and Qwen3.5-9B support reasoning (thinking). The reasoning trace is returned separately from the final answer (`content`) in the `reasoning` field.
 
 ```python
 response = client.chat.completions.create(
-    model="qwen/qwen3.5-35b-a3b",
+    model="qwen/qwen3.6-35b-a3b",
     messages=[{"role": "user", "content": "Calculate 127 * 43 step by step"}],
     max_tokens=4096,
 )
@@ -355,7 +355,7 @@ To get an answer directly without reasoning, turn it off via `chat_template_kwar
 
 ```python
 response = client.chat.completions.create(
-    model="qwen/qwen3.5-35b-a3b",
+    model="qwen/qwen3.6-35b-a3b",
     messages=[{"role": "user", "content": "Hello!"}],
     extra_body={"chat_template_kwargs": {"enable_thinking": False}},
 )

@@ -88,10 +88,10 @@ echo "$response" | jq .
 https://ap-1.aieev.cloud/endpoints/<endpoint_id>/v1
 ```
 
-예를 들어 Qwen3.5-35B-A3B는 다음과 같습니다.
+예를 들어 Qwen3.6-35B-A3B는 다음과 같습니다.
 
 ```text
-https://ap-1.aieev.cloud/endpoints/qwen3-5-35b-a3b/v1
+https://ap-1.aieev.cloud/endpoints/qwen3-6-35b-a3b/v1
 ```
 
 <Warning>
@@ -102,12 +102,12 @@ https://ap-1.aieev.cloud/endpoints/qwen3-5-35b-a3b/v1
 
 | 모델 | 엔드포인트 ID | 모델 ID (`model`) | Context | Streaming | Tool Calling | Vision | Reasoning |
 | :-- | :-- | :-- | :-: | :-: | :-: | :-: | :-: |
-| Qwen3.5-35B-A3B | `qwen3-5-35b-a3b` | `qwen/qwen3.5-35b-a3b` | 256K | ✅ | ✅ | ✅ 최대 4장 | ✅ |
+| Qwen3.6-35B-A3B | `qwen3-6-35b-a3b` | `qwen/qwen3.6-35b-a3b` | 256K | ✅ | ✅ | ✅ 최대 4장 | ✅ |
 | Qwen3.5-9B | `qwen3-5-9b` | `qwen/qwen3.5-9b` | 256K | ✅ | ✅ | ✅ 최대 1장 | ✅ |
 | Llama3.3-70B | `llama3-3-70b` | `llama3.3-70b-instruct` | 128K | ✅ | ✅ | ❌ | ❌ |
 | Qwen3-32B | *(Coming Soon)* | - | - | - | - | ❌ | - |
 | Qwen3-Embedding-8B | `qwen3-embedding-8b` | `qwen/qwen3-embedding-8b` | 32K | - | - | - | - |
-| Qwen3-TTS | *(별도 엔드포인트)* | `qwen/qwen3-tts-customvoice` | - | - | - | - | - |
+| Qwen3-TTS | `qwen3-tts` | `qwen/qwen3-tts-customvoice` | - | - | - | - | - |
 
 <sub>✅ 지원 · ❌ 미지원 · `-` 해당 없음 또는 미정</sub>
 
@@ -170,12 +170,12 @@ for chunk in response:
 - `stream_options={"include_usage": true}`를 함께 보내면 마지막 청크에서 토큰 사용량(`usage`)을 확인할 수 있습니다.
 
 <Note>
-  현재 Streaming은 **Qwen3.5-35B-A3B**, **Qwen3.5-9B**, **Llama3.3-70B** 모델에서 지원됩니다.
+  현재 Streaming은 **Qwen3.6-35B-A3B**, **Qwen3.5-9B**, **Llama3.3-70B** 모델에서 지원됩니다.
 </Note>
 
 ## Tool Calling (Function Calling)
 
-AI가 외부 함수나 서비스를 호출하게 해 주는 기능입니다. **Qwen3.5-35B-A3B**, **Qwen3.5-9B**, **Llama3.3-70B** 모델에서 지원됩니다.
+AI가 외부 함수나 서비스를 호출하게 해 주는 기능입니다. **Qwen3.6-35B-A3B**, **Qwen3.5-9B**, **Llama3.3-70B** 모델에서 지원됩니다.
 
 Tool Calling은 함수 정의와 요청, 모델의 함수 호출 제안, 함수 실행과 결과 전달의 세 단계로 진행됩니다. 모델은 함수를 직접 실행하지 않고, 호출할 함수와 인자만 생성합니다.
 
@@ -290,7 +290,7 @@ if message.tool_calls:
 
 ```python
 stream = client.chat.completions.create(
-    model="qwen/qwen3.5-35b-a3b",
+    model="qwen/qwen3.6-35b-a3b",
     messages=[{"role": "user", "content": "서울 날씨 알려줘"}],
     tools=tools,
     stream=True,
@@ -309,11 +309,11 @@ for chunk in stream:
 
 ## Vision (이미지 입력)
 
-Qwen3.5 Chat 모델은 이미지 입력을 지원합니다. `messages[].content`를 배열로 구성하고, 이미지를 `image_url` 타입으로 전달하세요. `image_url.url`에는 외부에서 접근 가능한 이미지 URL이나 base64로 인코딩한 데이터 URI(`data:image/jpeg;base64,...`)를 사용할 수 있습니다.
+Qwen3.6-35B-A3B와 Qwen3.5-9B 모델은 이미지 입력을 지원합니다. `messages[].content`를 배열로 구성하고, 이미지를 `image_url` 타입으로 전달하세요. `image_url.url`에는 외부에서 접근 가능한 이미지 URL이나 base64로 인코딩한 데이터 URI(`data:image/jpeg;base64,...`)를 사용할 수 있습니다.
 
 ```python
 response = client.chat.completions.create(
-    model="qwen/qwen3.5-35b-a3b",
+    model="qwen/qwen3.6-35b-a3b",
     messages=[
         {
             "role": "user",
@@ -327,16 +327,16 @@ response = client.chat.completions.create(
 ```
 
 <Note>
-  요청당 이미지 수는 모델별로 제한됩니다 — **Qwen3.5-35B-A3B: 최대 4장**, **Qwen3.5-9B: 최대 1장**. 동영상 입력은 지원되지 않습니다.
+  요청당 이미지 수는 모델별로 제한됩니다 — **Qwen3.6-35B-A3B: 최대 4장**, **Qwen3.5-9B: 최대 1장**. 동영상 입력은 지원되지 않습니다.
 </Note>
 
 ## Reasoning (추론 출력)
 
-Qwen3.5 Chat 모델은 추론(thinking)을 지원합니다. 추론 과정은 최종 답변(`content`)과 분리되어 `reasoning` 필드로 반환됩니다.
+Qwen3.6-35B-A3B와 Qwen3.5-9B 모델은 추론(thinking)을 지원합니다. 추론 과정은 최종 답변(`content`)과 분리되어 `reasoning` 필드로 반환됩니다.
 
 ```python
 response = client.chat.completions.create(
-    model="qwen/qwen3.5-35b-a3b",
+    model="qwen/qwen3.6-35b-a3b",
     messages=[{"role": "user", "content": "127 * 43을 단계별로 계산해줘"}],
     max_tokens=4096,
 )
@@ -355,7 +355,7 @@ print(message.content)    # 최종 답변
 
 ```python
 response = client.chat.completions.create(
-    model="qwen/qwen3.5-35b-a3b",
+    model="qwen/qwen3.6-35b-a3b",
     messages=[{"role": "user", "content": "안녕하세요!"}],
     extra_body={"chat_template_kwargs": {"enable_thinking": False}},
 )
