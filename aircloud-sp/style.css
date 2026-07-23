@@ -1,0 +1,11 @@
+/* 본문 컬럼 폭 확장 — 기본 36rem → 42rem, 2xl 화면 42rem → 48rem.
+   폭을 조절하려면 아래 두 max-width 값만 바꾸면 됨. */
+.max-w-xl {
+  max-width: 42rem !important;
+}
+
+@media (min-width: 1536px) {
+  [class~="2xl:max-w-2xl"] {
+    max-width: 48rem !important;
+  }
+}
