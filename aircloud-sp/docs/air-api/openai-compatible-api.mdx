@@ -175,7 +175,7 @@ for chunk in response:
 
 Lets the model call external functions or services. Supported on **Qwen3.5-35B-A3B**, **Qwen3.5-9B**, and **Llama3.3-70B**.
 
-Tool calling is a three-step flow. The model does not execute functions itself — it **suggests which function to call and with what arguments**; your application executes it and sends the result back.
+Tool calling is a three-step flow: define functions and send the request, the model suggests a function call, then execute the function and send back the result. The model does not execute functions itself — it only generates which function to call and with what arguments.
 
 ### 1. Define your functions and send the request
 
@@ -284,7 +284,7 @@ The model can return multiple function calls in a single response via the `tool_
 
 ### Streaming tool calls
 
-With `stream: true`, tool calls arrive split across chunks: the first chunk carries `id` and `function.name`, and later chunks carry `function.arguments` fragments. Accumulate the fragments by `index`; the stream ends with `finish_reason: "tool_calls"`.
+With `stream: true`, tool call data arrives split across chunks. The first chunk of each tool call carries `id` and `function.name`, and subsequent chunks deliver `function.arguments` in sequence. Group tool calls by `index`, then concatenate `function.arguments` in arrival order. The stream ends with a chunk carrying `finish_reason: "tool_calls"`.
 
 ```python
 stream = client.chat.completions.create(
@@ -307,7 +307,7 @@ for chunk in stream:
 
 ## Vision (Image Input)
 
-Qwen3.5 chat models accept image input. Pass `content` as an array and include images with the `image_url` type. Both public URLs and base64 data URIs (`data:image/jpeg;base64,...`) are supported.
+Qwen3.5 chat models accept image input. Pass `messages[].content` as an array and include images with the `image_url` type. `image_url.url` accepts an externally reachable image URL or a base64-encoded data URI (`data:image/jpeg;base64,...`).
 
 ```python
 response = client.chat.completions.create(
