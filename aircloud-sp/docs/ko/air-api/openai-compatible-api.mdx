@@ -307,11 +307,9 @@ for chunk in stream:
 
 ## Vision (이미지 입력)
 
-Qwen3.5 chat 모델은 이미지 입력을 지원합니다. `content`를 배열로 구성하고 `image_url` 타입으로 이미지를 전달하세요. 공개 URL과 base64 인코딩 모두 사용할 수 있습니다.
+Qwen3.5 chat 모델은 이미지 입력을 지원합니다. `content`를 배열로 구성하고 `image_url` 타입으로 이미지를 전달하세요. 공개 URL과 base64 데이터 URI(`data:image/jpeg;base64,...`) 모두 사용할 수 있습니다.
 
-<CodeGroup>
-
-```python 이미지 URL
+```python
 response = client.chat.completions.create(
     model="qwen/qwen3.5-35b-a3b",
     messages=[
@@ -319,47 +317,15 @@ response = client.chat.completions.create(
             "role": "user",
             "content": [
                 {"type": "text", "text": "이 이미지에 무엇이 보이나요?"},
-                {
-                    "type": "image_url",
-                    "image_url": {"url": "https://example.com/photo.jpg"},
-                },
+                {"type": "image_url", "image_url": {"url": "https://example.com/photo.jpg"}},
             ],
         }
     ],
 )
-
-print(response.choices[0].message.content)
 ```
-
-```python Base64
-import base64
-
-with open("photo.jpg", "rb") as f:
-    image_b64 = base64.b64encode(f.read()).decode()
-
-response = client.chat.completions.create(
-    model="qwen/qwen3.5-35b-a3b",
-    messages=[
-        {
-            "role": "user",
-            "content": [
-                {"type": "text", "text": "이 이미지에 무엇이 보이나요?"},
-                {
-                    "type": "image_url",
-                    "image_url": {"url": f"data:image/jpeg;base64,{image_b64}"},
-                },
-            ],
-        }
-    ],
-)
-
-print(response.choices[0].message.content)
-```
-
-</CodeGroup>
 
 <Note>
-  요청당 이미지 수는 모델별로 제한됩니다 — **Qwen3.5-35B-A3B: 최대 4장**, **Qwen3.5-9B: 최대 1장**. 한도를 초과하면 400 에러가 반환됩니다. 동영상 입력은 지원되지 않습니다.
+  요청당 이미지 수는 모델별로 제한됩니다 — **Qwen3.5-35B-A3B: 최대 4장**, **Qwen3.5-9B: 최대 1장**. 동영상 입력은 지원되지 않습니다.
 </Note>
 
 ## Reasoning (추론 출력)
@@ -378,9 +344,8 @@ print(message.reasoning)  # 추론 과정
 print(message.content)    # 최종 답변
 ```
 
-- 추론 텍스트도 `max_tokens`를 함께 소모합니다. 값이 너무 작으면 추론만 하다가 답변이 잘릴 수 있으므로(`finish_reason: "length"`, `content`가 비어 있음) 넉넉하게 지정하세요.
-- 스트리밍에서는 `delta.reasoning`으로 추론 조각이 먼저 전달된 뒤 `delta.content`로 최종 답변이 이어집니다.
-- 사용자에게는 일반적으로 `content`만 보여주고, `reasoning`은 디버깅·로깅 용도로 활용하세요. 이후 요청의 대화 이력(`messages`)에 포함할 필요도 없습니다.
+- 추론 텍스트도 `max_tokens`를 소모합니다. 값이 너무 작으면 답변이 잘릴 수 있으니 넉넉하게 지정하세요.
+- 스트리밍에서는 추론 조각이 `delta.reasoning`으로 먼저 전달된 뒤 `delta.content`가 이어집니다.
 
 ### 추론 비활성화
 
@@ -413,30 +378,21 @@ print(response.choices[0].message.content)
 ```
 
 <Tip>
-  JSON 모드를 사용할 때는 프롬프트에도 "JSON으로 응답하라"는 지시와 원하는 필드 구성을 함께 명시하면 더 안정적인 결과를 얻을 수 있습니다. Qwen3.5 모델에서는 추론이 토큰을 소모해 JSON이 잘릴 수 있으니, [추론 비활성화](#추론-비활성화)와 함께 사용하거나 `max_tokens`를 넉넉히 지정하세요.
+  프롬프트에도 "JSON으로 응답하라"는 지시를 함께 명시하면 더 안정적입니다. 추론이 토큰을 소모해 JSON이 잘릴 수 있으니 [추론 비활성화](#추론-비활성화)와 함께 사용하는 것을 권장합니다.
 </Tip>
 
 ## Embedding
 
-텍스트를 벡터로 변환하는 기능입니다. 시맨틱 검색, 추천 시스템, RAG 등에 활용할 수 있습니다. `input`에 문자열 배열을 전달하면 여러 텍스트를 한 번에 임베딩할 수 있습니다.
+텍스트를 벡터로 변환하는 기능입니다. 시맨틱 검색, 추천 시스템, RAG 등에 활용할 수 있습니다. `input`에 문자열 배열을 전달하면 여러 텍스트를 한 번에 임베딩할 수도 있습니다.
 
 ```python
 response = client.embeddings.create(
     model="qwen/qwen3-embedding-8b",
-    input=[
-        "임베딩할 첫 번째 문장입니다.",
-        "임베딩할 두 번째 문장입니다.",
-    ],
+    input="임베딩할 텍스트를 입력하세요.",
 )
 
-for item in response.data:
-    print(item.index, len(item.embedding))  # 0 4096 / 1 4096
+print(response.data[0].embedding)  # 4,096차원 벡터
 ```
-
-| 항목 | 값 |
-| :-- | :-- |
-| 벡터 차원 | 4,096 |
-| 최대 입력 길이 | 32,768 토큰 |
 
 ## 지원 파라미터
 

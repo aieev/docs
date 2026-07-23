@@ -307,11 +307,9 @@ for chunk in stream:
 
 ## Vision (Image Input)
 
-Qwen3.5 chat models accept image input. Pass `content` as an array and include images with the `image_url` type. Both public URLs and base64 encoding are supported.
+Qwen3.5 chat models accept image input. Pass `content` as an array and include images with the `image_url` type. Both public URLs and base64 data URIs (`data:image/jpeg;base64,...`) are supported.
 
-<CodeGroup>
-
-```python Image URL
+```python
 response = client.chat.completions.create(
     model="qwen/qwen3.5-35b-a3b",
     messages=[
@@ -319,47 +317,15 @@ response = client.chat.completions.create(
             "role": "user",
             "content": [
                 {"type": "text", "text": "What do you see in this image?"},
-                {
-                    "type": "image_url",
-                    "image_url": {"url": "https://example.com/photo.jpg"},
-                },
+                {"type": "image_url", "image_url": {"url": "https://example.com/photo.jpg"}},
             ],
         }
     ],
 )
-
-print(response.choices[0].message.content)
 ```
-
-```python Base64
-import base64
-
-with open("photo.jpg", "rb") as f:
-    image_b64 = base64.b64encode(f.read()).decode()
-
-response = client.chat.completions.create(
-    model="qwen/qwen3.5-35b-a3b",
-    messages=[
-        {
-            "role": "user",
-            "content": [
-                {"type": "text", "text": "What do you see in this image?"},
-                {
-                    "type": "image_url",
-                    "image_url": {"url": f"data:image/jpeg;base64,{image_b64}"},
-                },
-            ],
-        }
-    ],
-)
-
-print(response.choices[0].message.content)
-```
-
-</CodeGroup>
 
 <Note>
-  The number of images per request is limited per model — **Qwen3.5-35B-A3B: up to 4**, **Qwen3.5-9B: up to 1**. Exceeding the limit returns a 400 error. Video input is not supported.
+  The number of images per request is limited per model — **Qwen3.5-35B-A3B: up to 4**, **Qwen3.5-9B: up to 1**. Video input is not supported.
 </Note>
 
 ## Reasoning
@@ -378,9 +344,8 @@ print(message.reasoning)  # reasoning trace
 print(message.content)    # final answer
 ```
 
-- Reasoning text also consumes `max_tokens`. If the value is too small, the model may spend the entire budget on reasoning and the answer gets cut off (`finish_reason: "length"` with an empty `content`) — set it generously.
-- When streaming, reasoning fragments arrive first via `delta.reasoning`, followed by the final answer via `delta.content`.
-- Show only `content` to end users; use `reasoning` for debugging and logging. You also don't need to include it in the conversation history (`messages`) of subsequent requests.
+- Reasoning text also consumes `max_tokens`. Set it generously — if the value is too small, the answer may get cut off.
+- When streaming, reasoning fragments arrive first via `delta.reasoning`, followed by `delta.content`.
 
 ### Disabling reasoning
 
@@ -413,30 +378,21 @@ print(response.choices[0].message.content)
 ```
 
 <Tip>
-  When using JSON mode, also instruct the model to respond in JSON in your prompt — including the fields you expect — for more reliable results. On Qwen3.5 models, reasoning consumes tokens and can truncate the JSON — combine JSON mode with [disabled reasoning](#disabling-reasoning) or set `max_tokens` generously.
+  Also instruct the model to respond in JSON in your prompt for more reliable results. Reasoning consumes tokens and can truncate the JSON, so combining JSON mode with [disabled reasoning](#disabling-reasoning) is recommended.
 </Tip>
 
 ## Embedding
 
-Converts text into vectors, useful for semantic search, recommendation systems, and RAG. Pass an array of strings as `input` to embed multiple texts in a single request.
+Converts text into vectors, useful for semantic search, recommendation systems, and RAG. You can also pass an array of strings as `input` to embed multiple texts in a single request.
 
 ```python
 response = client.embeddings.create(
     model="qwen/qwen3-embedding-8b",
-    input=[
-        "First sentence to embed.",
-        "Second sentence to embed.",
-    ],
+    input="Text to embed.",
 )
 
-for item in response.data:
-    print(item.index, len(item.embedding))  # 0 4096 / 1 4096
+print(response.data[0].embedding)  # 4,096-dimensional vector
 ```
-
-| Property | Value |
-| :-- | :-- |
-| Embedding dimensions | 4,096 |
-| Max input length | 32,768 tokens |
 
 ## Supported Parameters
 
