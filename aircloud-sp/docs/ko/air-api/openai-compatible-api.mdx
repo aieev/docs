@@ -280,33 +280,13 @@ if message.tool_calls:
 
 ### 복수 함수 호출 (parallel_tool_calls)
 
-모델은 한 응답에서 여러 함수 호출을 `tool_calls` 배열로 반환할 수 있습니다. 예를 들어 "서울과 부산의 날씨를 각각 알려줘"라고 요청하면 `get_weather` 호출 2개가 함께 반환됩니다. `parallel_tool_calls` 파라미터(기본값 `true`)로 이를 제어할 수 있습니다.
-
-```python
-response = client.chat.completions.create(
-    model="qwen/qwen3.5-35b-a3b",
-    messages=[{"role": "user", "content": "서울과 부산의 날씨를 각각 알려줘"}],
-    tools=tools,
-    parallel_tool_calls=False,  # 함수 호출을 한 번에 1개로 제한
-)
-```
-
-<Warning>
-  **Llama3.3-70B에서는 `parallel_tool_calls: false`를 사용하지 마세요.** `tool_calls`가 빈 배열로 반환되고 함수 호출 내용이 본문 텍스트로 출력되는 문제가 확인되었습니다.
-</Warning>
+모델은 한 응답에서 여러 함수 호출을 `tool_calls` 배열로 반환할 수 있습니다. `parallel_tool_calls`를 `false`로 지정하면(기본값 `true`) 함수 호출을 한 번에 1개로 제한할 수 있습니다.
 
 ### Streaming으로 Tool Call 받기
 
-`stream: true`에서는 tool call이 여러 청크에 나뉘어 전달됩니다.
-
-- 각 tool call은 `id`·`type`·`function.name`이 담긴 첫 청크로 시작하고, 이후 청크에는 `function.arguments` 조각만 담겨 옵니다(`id`·`name`은 null).
-- 조각을 `tool_calls[].index` 기준으로 이어 붙여야 완전한 JSON 인자가 됩니다.
-- 복수 함수 호출은 index별로 순차 전달되며(교차 없음), 스트림은 `finish_reason: "tool_calls"`로 끝납니다.
-- Qwen3.5 모델은 추론 청크(`delta.reasoning`)가 먼저 전달된 뒤 tool call 청크가 이어집니다.
+`stream: true`에서는 tool call이 여러 청크에 나뉘어 전달됩니다. 첫 청크에 `id`와 `function.name`이 담기고, 이후 청크에는 `function.arguments` 조각이 이어집니다. 조각을 `index` 기준으로 이어 붙이면 되고, 스트림은 `finish_reason: "tool_calls"`로 끝납니다.
 
 ```python
-import json
-
 stream = client.chat.completions.create(
     model="qwen/qwen3.5-35b-a3b",
     messages=[{"role": "user", "content": "서울 날씨 알려줘"}],
@@ -320,16 +300,9 @@ for chunk in stream:
         continue
     for tc in chunk.choices[0].delta.tool_calls or []:
         entry = tool_calls.setdefault(tc.index, {"id": "", "name": "", "arguments": ""})
-        if tc.id:
-            entry["id"] = tc.id
-        if tc.function.name:
-            entry["name"] = tc.function.name
-        if tc.function.arguments:
-            entry["arguments"] += tc.function.arguments
-
-for call in tool_calls.values():
-    print(call["name"], json.loads(call["arguments"]))
-# get_weather {'location': 'Seoul'}
+        entry["id"] = tc.id or entry["id"]
+        entry["name"] = tc.function.name or entry["name"]
+        entry["arguments"] += tc.function.arguments or ""
 ```
 
 ## Vision (이미지 입력)

@@ -280,33 +280,13 @@ if message.tool_calls:
 
 ### Parallel tool calls
 
-The model can return multiple function calls in a single response via the `tool_calls` array. For example, asking "What's the weather in Seoul and Busan?" returns two `get_weather` calls together. Control this with the `parallel_tool_calls` parameter (default `true`).
-
-```python
-response = client.chat.completions.create(
-    model="qwen/qwen3.5-35b-a3b",
-    messages=[{"role": "user", "content": "What's the weather in Seoul and Busan?"}],
-    tools=tools,
-    parallel_tool_calls=False,  # limit to one function call at a time
-)
-```
-
-<Warning>
-  **Do not use `parallel_tool_calls: false` with Llama3.3-70B.** It returns an empty `tool_calls` array and dumps the function calls as plain text in the response body.
-</Warning>
+The model can return multiple function calls in a single response via the `tool_calls` array. Set `parallel_tool_calls` to `false` (default `true`) to limit the model to one function call at a time.
 
 ### Streaming tool calls
 
-With `stream: true`, a tool call is delivered across multiple chunks.
-
-- Each tool call starts with a lead chunk carrying `id`, `type`, and `function.name`; subsequent chunks carry only `function.arguments` fragments (`id` and `name` are null).
-- Concatenate the fragments by `tool_calls[].index` to reconstruct the complete JSON arguments.
-- Multiple tool calls stream sequentially by index (no interleaving), and the stream ends with `finish_reason: "tool_calls"`.
-- On Qwen3.5 models, reasoning chunks (`delta.reasoning`) stream first, followed by the tool call chunks.
+With `stream: true`, tool calls arrive split across chunks: the first chunk carries `id` and `function.name`, and later chunks carry `function.arguments` fragments. Accumulate the fragments by `index`; the stream ends with `finish_reason: "tool_calls"`.
 
 ```python
-import json
-
 stream = client.chat.completions.create(
     model="qwen/qwen3.5-35b-a3b",
     messages=[{"role": "user", "content": "What's the weather in Seoul?"}],
@@ -320,16 +300,9 @@ for chunk in stream:
         continue
     for tc in chunk.choices[0].delta.tool_calls or []:
         entry = tool_calls.setdefault(tc.index, {"id": "", "name": "", "arguments": ""})
-        if tc.id:
-            entry["id"] = tc.id
-        if tc.function.name:
-            entry["name"] = tc.function.name
-        if tc.function.arguments:
-            entry["arguments"] += tc.function.arguments
-
-for call in tool_calls.values():
-    print(call["name"], json.loads(call["arguments"]))
-# get_weather {'location': 'Seoul'}
+        entry["id"] = tc.id or entry["id"]
+        entry["name"] = tc.function.name or entry["name"]
+        entry["arguments"] += tc.function.arguments or ""
 ```
 
 ## Vision (Image Input)
