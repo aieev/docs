@@ -173,7 +173,7 @@ for chunk in response:
 
 ## Tool Calling (Function Calling)
 
-AI가 외부 함수나 서비스를 호출할 수 있도록 하는 기능입니다. **Qwen3.5-35B-A3B**, **Qwen3.5-9B**, **Llama3.3-70B** 모델에서 지원됩니다.
+AI가 외부 함수나 서비스를 호출하게 해 주는 기능입니다. **Qwen3.5-35B-A3B**, **Qwen3.5-9B**, **Llama3.3-70B** 모델에서 지원됩니다.
 
 Tool Calling은 세 단계로 진행됩니다. 모델이 함수를 직접 실행하는 것이 아니라, **어떤 함수를 어떤 인자로 호출할지 제안**하면 애플리케이션이 실행하고 그 결과를 다시 전달합니다.
 
@@ -280,11 +280,11 @@ if message.tool_calls:
 
 ### 복수 함수 호출 (parallel_tool_calls)
 
-모델은 한 응답에서 여러 함수 호출을 `tool_calls` 배열로 반환할 수 있습니다. `parallel_tool_calls`를 `false`로 지정하면(기본값 `true`) 함수 호출을 한 번에 1개로 제한할 수 있습니다.
+모델은 한 응답에서 여러 함수 호출을 `tool_calls` 배열로 반환할 수 있습니다. `parallel_tool_calls`를 `false`로 지정하면(기본값 `true`) 함수 호출이 한 번에 1개로 제한됩니다.
 
 ### Streaming으로 Tool Call 받기
 
-`stream: true`에서는 tool call이 여러 청크에 나뉘어 전달됩니다. 첫 청크에 `id`와 `function.name`이 담기고, 이후 청크에는 `function.arguments` 조각이 이어집니다. 조각을 `index` 기준으로 이어 붙이면 되고, 스트림은 `finish_reason: "tool_calls"`로 끝납니다.
+`stream: true`에서는 tool call이 여러 청크에 나뉘어 전달됩니다. 첫 청크에 `id`와 `function.name`이 담기고, 이후 청크에는 `function.arguments` 조각이 이어집니다. 조각을 `index` 기준으로 이어 붙이면 되고 스트림은 `finish_reason: "tool_calls"`로 끝납니다.
 
 ```python
 stream = client.chat.completions.create(
