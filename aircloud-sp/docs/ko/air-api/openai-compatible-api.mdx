@@ -164,7 +164,7 @@ for chunk in response:
         print(chunk.choices[0].delta.content, end="", flush=True)
 ```
 
-- 각 청크는 `choices[0].delta.content`에 텍스트 조각을 담아 전달되며, 스트림이 끝나면 `data: [DONE]` 이벤트가 전송됩니다.
+- 응답 텍스트는 각 청크의 `choices[0].delta.content`에 나뉘어 전달되며, 스트림이 끝나면 `data: [DONE]` 이벤트가 전송됩니다.
 - `stream_options={"include_usage": true}`를 함께 보내면 마지막 청크에서 토큰 사용량(`usage`)을 확인할 수 있습니다.
 
 <Note>
@@ -284,7 +284,7 @@ if message.tool_calls:
 
 ### Streaming으로 Tool Call 받기
 
-`stream: true`에서는 tool call이 여러 청크에 나뉘어 전달됩니다. 첫 청크에 `id`와 `function.name`이 담기고, 이후 청크에는 `function.arguments` 조각이 이어집니다. 조각을 `index` 기준으로 이어 붙이면 되고 스트림은 `finish_reason: "tool_calls"`로 끝납니다.
+`stream: true`에서는 tool call이 여러 청크에 나뉘어 전달됩니다. 첫 청크에 `id`와 `function.name`이 담기고, 이후 청크에는 `function.arguments` 단편이 이어집니다. 단편을 `index` 기준으로 이어 붙이면 되고 스트림은 `finish_reason: "tool_calls"`로 끝납니다.
 
 ```python
 stream = client.chat.completions.create(
@@ -345,7 +345,7 @@ print(message.content)    # 최종 답변
 ```
 
 - 추론 텍스트도 `max_tokens`를 소모합니다. 값이 너무 작으면 답변이 잘릴 수 있으니 넉넉하게 지정하세요.
-- 스트리밍에서는 추론 조각이 `delta.reasoning`으로 먼저 전달된 뒤 `delta.content`가 이어집니다.
+- 스트리밍에서는 추론 내용이 `delta.reasoning`으로 먼저 전달된 뒤 `delta.content`가 이어집니다.
 
 ### 추론 비활성화
 
