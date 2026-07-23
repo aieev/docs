@@ -17,7 +17,7 @@ from openai import OpenAI
 
 client = OpenAI(
     api_key="YOUR_AIEEV_API_KEY",                            # Replace: Air API key
-    base_url="https://ap-1.aieev.cloud/endpoints/<model_id>"  # Replace: Air API base URL
+    base_url="https://ap-1.aieev.cloud/endpoints/<endpoint_id>/v1"  # Replace: Air API base URL
 )
 
 response = client.chat.completions.create(
@@ -35,7 +35,7 @@ import OpenAI from "openai";
 
 const client = new OpenAI({
   apiKey: "YOUR_AIEEV_API_KEY",                            // Replace: Air API key
-  baseURL: "https://ap-1.aieev.cloud/endpoints/<model_id>", // Replace: Air API base URL
+  baseURL: "https://ap-1.aieev.cloud/endpoints/<endpoint_id>/v1", // Replace: Air API base URL
 });
 
 const response = await client.chat.completions.create({
@@ -47,7 +47,7 @@ console.log(response.choices[0].message.content);
 ```
 
 ```bash cURL
-curl https://ap-1.aieev.cloud/endpoints/<model_id>/v1/chat/completions \
+curl https://ap-1.aieev.cloud/endpoints/<endpoint_id>/v1/chat/completions \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_AIEEV_API_KEY" \
   -d '{
@@ -63,7 +63,7 @@ curl https://ap-1.aieev.cloud/endpoints/<model_id>/v1/chat/completions \
 
 API_KEY="YOUR_AIEEV_API_KEY"
 
-response=$(curl -s -X POST https://ap-1.aieev.cloud/endpoints/<model_id>/v1/chat/completions \
+response=$(curl -s -X POST https://ap-1.aieev.cloud/endpoints/<endpoint_id>/v1/chat/completions \
   -H "Authorization: Bearer $API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -82,49 +82,102 @@ echo "$response" | jq .
 
 ## Base URL
 
-Each model has its own endpoint URL. Replace `<model_id>` with the model ID from the table below.
+Each model has its own endpoint URL. Replace `<endpoint_id>` with the **endpoint ID** from the table below.
 
 ```text
-https://ap-1.aieev.cloud/endpoints/<model_id>
+https://ap-1.aieev.cloud/endpoints/<endpoint_id>/v1
 ```
+
+For example, for Qwen3.5-35B-A3B:
+
+```text
+https://ap-1.aieev.cloud/endpoints/qwen3-5-35b-a3b/v1
+```
+
+<Warning>
+  The **endpoint ID** in the URL and the **model ID** passed as the `model` parameter use different notation. If the `model` value does not exactly match the model ID in the table below, the API returns a 404 error (`The model ... does not exist.`).
+</Warning>
 
 ## Supported Models and Features
 
-| Model | Model ID | Type | Tool Calling | Streaming |
-| :-- | :-- | :-- | :-: | :-: |
-| Qwen3.6-35B-A3B | `qwen/qwen3.6-35b-a3b` | chat | ✅ | ✅ |
-| Qwen3.5-9B | `qwen/qwen3.5-9b` | chat | ✅ | ✅ |
-| Qwen3-32B | *(Coming Soon)* | chat | ✅ | ✅ |
-| Llama3-70B | *(Coming Soon)* | chat | ✅ | ✅ |
-| Qwen3-Embedding-8B | `qwen/qwen3-embedding-8b` | embedding | ❌ | - |
-| Qwen3-TTS | `qwen/qwen3-tts-customvoice` | tts | ❌ | - |
+| Model | Endpoint ID | Model ID (`model`) | Context | Streaming | Tool Calling | Vision | Reasoning |
+| :-- | :-- | :-- | :-: | :-: | :-: | :-: | :-: |
+| Qwen3.5-35B-A3B | `qwen3-5-35b-a3b` | `qwen/qwen3.5-35b-a3b` | 256K | ✅ | ✅ | ✅ up to 4 | ✅ |
+| Qwen3.5-9B | `qwen3-5-9b` | `qwen/qwen3.5-9b` | 256K | ✅ | ✅ | ✅ up to 1 | ✅ |
+| Llama3.3-70B | `llama3-3-70b` | `llama3.3-70b-instruct` | 128K | ✅ | ✅ | ❌ | ❌ |
+| Qwen3-32B | *(Coming Soon)* | - | - | ✅ | ✅ | ❌ | ✅ |
+| Qwen3-Embedding-8B | `qwen3-embedding-8b` | `qwen/qwen3-embedding-8b` | 32K | - | ❌ | ❌ | ❌ |
+| Qwen3-TTS | *(separate endpoint)* | `qwen/qwen3-tts-customvoice` | - | - | ❌ | ❌ | ❌ |
 
-<Note>
-  Qwen3-TTS uses a separate endpoint. Find its endpoint URL in the Qwen3-TTS model README in the Air API Console.
-</Note>
+## Response Format
+
+Chat Completions responses use the same structure as the OpenAI API.
+
+```json
+{
+  "id": "chatcmpl-8f3a1b2c...",
+  "object": "chat.completion",
+  "created": 1753250000,
+  "model": "qwen/qwen3.5-9b",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "Hello! How can I help you today?",
+        "reasoning": null,
+        "tool_calls": []
+      },
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 10,
+    "completion_tokens": 12,
+    "total_tokens": 22
+  }
+}
+```
+
+| Field | Description |
+| :-- | :-- |
+| `choices[].message.content` | The model's response text |
+| `choices[].message.reasoning` | The model's reasoning trace (see [Reasoning](#reasoning)) |
+| `choices[].message.tool_calls` | Function calls requested by the model (see [Tool Calling](#tool-calling-function-calling)) |
+| `choices[].finish_reason` | Why generation stopped — `stop` (natural end), `length` (`max_tokens` reached), `tool_calls` (function call requested) |
+| `usage` | Input, output, and total token counts |
 
 ## Streaming
 
-Set the `stream` option to `true` to receive the response in real time. (Default: `false`)
+Set the `stream` option to `true` to receive the response in real time as SSE (Server-Sent Events). (Default: `false`)
 
 ```python
 response = client.chat.completions.create(
     model="qwen/qwen3.5-9b",
     messages=[{"role": "user", "content": "Hello!"}],
-    stream=True
+    stream=True,
+    stream_options={"include_usage": True}  # optional: usage in the final chunk
 )
 
 for chunk in response:
-    print(chunk.choices[0].delta.content, end="")
+    if chunk.choices and chunk.choices[0].delta.content:
+        print(chunk.choices[0].delta.content, end="", flush=True)
 ```
 
+- Each chunk delivers a text fragment in `choices[0].delta.content`, and the stream ends with a `data: [DONE]` event.
+- Send `stream_options={"include_usage": true}` to receive token usage (`usage`) in the final chunk.
+
 <Note>
-  Streaming is currently supported on **Qwen3.6-35B-A3B**, **Qwen3.5-9B**, and **Qwen3-32B**. **Llama3-70B** support is coming soon.
+  Streaming is currently supported on **Qwen3.5-35B-A3B**, **Qwen3.5-9B**, and **Llama3.3-70B**.
 </Note>
 
 ## Tool Calling (Function Calling)
 
-Lets the model call external functions or services. Supported on **Qwen3.6-35B-A3B** and **Qwen3.5-9B**. **Qwen3-32B** and **Llama3-70B** support is coming soon.
+Lets the model call external functions or services. Supported on **Qwen3.5-35B-A3B**, **Qwen3.5-9B**, and **Llama3.3-70B**.
+
+Tool calling is a three-step flow. The model does not execute functions itself — it **suggests which function to call and with what arguments**; your application executes it and sends the result back.
+
+### 1. Define your functions and send the request
 
 ```python
 tools = [
@@ -147,26 +200,270 @@ tools = [
     }
 ]
 
+messages = [{"role": "user", "content": "What's the weather in Seoul?"}]
+
 response = client.chat.completions.create(
     model="qwen/qwen3.5-9b",
-    messages=[{"role": "user", "content": "What's the weather in Seoul?"}],
+    messages=messages,
     tools=tools,
     tool_choice="auto"
 )
 ```
 
+### 2. The model suggests a function call
+
+When the model decides a function call is needed, it returns a `tool_calls` array with `finish_reason: "tool_calls"`.
+
+```json
+{
+  "role": "assistant",
+  "content": null,
+  "tool_calls": [
+    {
+      "id": "call_abc123",
+      "type": "function",
+      "function": {
+        "name": "get_weather",
+        "arguments": "{\"location\": \"Seoul\"}"
+      }
+    }
+  ]
+}
+```
+
+<Warning>
+  `function.arguments` is returned as a JSON **string** — parse it with `json.loads()` (or equivalent) before use. The model may return multiple function calls at once, so iterate over the entire `tool_calls` array.
+</Warning>
+
+### 3. Execute the function and return the result
+
+Append the result as a `role: "tool"` message and send the request again — the model generates the final answer based on the result.
+
+```python
+import json
+
+message = response.choices[0].message
+
+if message.tool_calls:
+    messages.append(message)  # add the model's tool_calls response to the conversation
+
+    for tool_call in message.tool_calls:
+        args = json.loads(tool_call.function.arguments)
+        result = get_weather(**args)  # execute the actual function
+
+        messages.append({
+            "role": "tool",
+            "tool_call_id": tool_call.id,
+            "content": json.dumps(result),
+        })
+
+    final = client.chat.completions.create(
+        model="qwen/qwen3.5-9b",
+        messages=messages,
+        tools=tools,
+    )
+    print(final.choices[0].message.content)
+    # e.g. "It's currently sunny in Seoul at 28°C."
+```
+
+### tool_choice options
+
+| Value | Behavior |
+| :-- | :-- |
+| `"auto"` (default) | The model decides whether to call a function |
+| `"none"` | No function calls are returned via `tool_calls` |
+| `{"type": "function", "function": {"name": "get_weather"}}` | Forces a call to the specified function |
+
+<Note>
+  Even with `tool_choice: "none"`, the model may still emit function-call-shaped text in the response body if `tools` definitions remain in the request. When you don't need function calls, the most reliable approach is to omit the `tools` parameter entirely.
+</Note>
+
+### Parallel tool calls
+
+The model can return multiple function calls in a single response via the `tool_calls` array. For example, asking "What's the weather in Seoul and Busan?" returns two `get_weather` calls together. Control this with the `parallel_tool_calls` parameter (default `true`).
+
+```python
+response = client.chat.completions.create(
+    model="qwen/qwen3.5-35b-a3b",
+    messages=[{"role": "user", "content": "What's the weather in Seoul and Busan?"}],
+    tools=tools,
+    parallel_tool_calls=False,  # limit to one function call at a time
+)
+```
+
+<Warning>
+  **Do not use `parallel_tool_calls: false` with Llama3.3-70B.** It returns an empty `tool_calls` array and dumps the function calls as plain text in the response body.
+</Warning>
+
+### Streaming tool calls
+
+With `stream: true`, a tool call is delivered across multiple chunks.
+
+- Each tool call starts with a lead chunk carrying `id`, `type`, and `function.name`; subsequent chunks carry only `function.arguments` fragments (`id` and `name` are null).
+- Concatenate the fragments by `tool_calls[].index` to reconstruct the complete JSON arguments.
+- Multiple tool calls stream sequentially by index (no interleaving), and the stream ends with `finish_reason: "tool_calls"`.
+- On Qwen3.5 models, reasoning chunks (`delta.reasoning`) stream first, followed by the tool call chunks.
+
+```python
+import json
+
+stream = client.chat.completions.create(
+    model="qwen/qwen3.5-35b-a3b",
+    messages=[{"role": "user", "content": "What's the weather in Seoul?"}],
+    tools=tools,
+    stream=True,
+)
+
+tool_calls = {}
+for chunk in stream:
+    if not chunk.choices:
+        continue
+    for tc in chunk.choices[0].delta.tool_calls or []:
+        entry = tool_calls.setdefault(tc.index, {"id": "", "name": "", "arguments": ""})
+        if tc.id:
+            entry["id"] = tc.id
+        if tc.function.name:
+            entry["name"] = tc.function.name
+        if tc.function.arguments:
+            entry["arguments"] += tc.function.arguments
+
+for call in tool_calls.values():
+    print(call["name"], json.loads(call["arguments"]))
+# get_weather {'location': 'Seoul'}
+```
+
+## Vision (Image Input)
+
+Qwen3.5 chat models accept image input. Pass `content` as an array and include images with the `image_url` type. Both public URLs and base64 encoding are supported.
+
+<CodeGroup>
+
+```python Image URL
+response = client.chat.completions.create(
+    model="qwen/qwen3.5-35b-a3b",
+    messages=[
+        {
+            "role": "user",
+            "content": [
+                {"type": "text", "text": "What do you see in this image?"},
+                {
+                    "type": "image_url",
+                    "image_url": {"url": "https://example.com/photo.jpg"},
+                },
+            ],
+        }
+    ],
+)
+
+print(response.choices[0].message.content)
+```
+
+```python Base64
+import base64
+
+with open("photo.jpg", "rb") as f:
+    image_b64 = base64.b64encode(f.read()).decode()
+
+response = client.chat.completions.create(
+    model="qwen/qwen3.5-35b-a3b",
+    messages=[
+        {
+            "role": "user",
+            "content": [
+                {"type": "text", "text": "What do you see in this image?"},
+                {
+                    "type": "image_url",
+                    "image_url": {"url": f"data:image/jpeg;base64,{image_b64}"},
+                },
+            ],
+        }
+    ],
+)
+
+print(response.choices[0].message.content)
+```
+
+</CodeGroup>
+
+<Note>
+  The number of images per request is limited per model — **Qwen3.5-35B-A3B: up to 4**, **Qwen3.5-9B: up to 1**. Exceeding the limit returns a 400 error. Video input is not supported.
+</Note>
+
+## Reasoning
+
+Qwen3.5 chat models support reasoning (thinking). The reasoning trace is returned separately from the final answer (`content`) in the `reasoning` field.
+
+```python
+response = client.chat.completions.create(
+    model="qwen/qwen3.5-35b-a3b",
+    messages=[{"role": "user", "content": "Calculate 127 * 43 step by step"}],
+    max_tokens=4096,
+)
+
+message = response.choices[0].message
+print(message.reasoning)  # reasoning trace
+print(message.content)    # final answer
+```
+
+- Reasoning text also consumes `max_tokens`. If the value is too small, the model may spend the entire budget on reasoning and the answer gets cut off (`finish_reason: "length"` with an empty `content`) — set it generously.
+- When streaming, reasoning fragments arrive first via `delta.reasoning`, followed by the final answer via `delta.content`.
+- Show only `content` to end users; use `reasoning` for debugging and logging. You also don't need to include it in the conversation history (`messages`) of subsequent requests.
+
+### Disabling reasoning
+
+To get an answer directly without reasoning, turn it off via `chat_template_kwargs`.
+
+```python
+response = client.chat.completions.create(
+    model="qwen/qwen3.5-35b-a3b",
+    messages=[{"role": "user", "content": "Hello!"}],
+    extra_body={"chat_template_kwargs": {"enable_thinking": False}},
+)
+```
+
+## JSON Mode (Structured Outputs)
+
+Set `response_format` to always receive valid JSON.
+
+```python
+response = client.chat.completions.create(
+    model="qwen/qwen3.5-9b",
+    messages=[
+        {"role": "system", "content": "Extract user info as a JSON object."},
+        {"role": "user", "content": "Chulsoo Kim is a 32-year-old backend developer."},
+    ],
+    response_format={"type": "json_object"},
+)
+
+print(response.choices[0].message.content)
+# {"name": "Chulsoo Kim", "age": 32, "job": "backend developer"}
+```
+
+<Tip>
+  When using JSON mode, also instruct the model to respond in JSON in your prompt — including the fields you expect — for more reliable results. On Qwen3.5 models, reasoning consumes tokens and can truncate the JSON — combine JSON mode with [disabled reasoning](#disabling-reasoning) or set `max_tokens` generously.
+</Tip>
+
 ## Embedding
 
-Converts text into vectors, useful for semantic search and recommendation systems.
+Converts text into vectors, useful for semantic search, recommendation systems, and RAG. Pass an array of strings as `input` to embed multiple texts in a single request.
 
 ```python
 response = client.embeddings.create(
     model="qwen/qwen3-embedding-8b",
-    input="Text to embed."
+    input=[
+        "First sentence to embed.",
+        "Second sentence to embed.",
+    ],
 )
 
-print(response.data[0].embedding)
+for item in response.data:
+    print(item.index, len(item.embedding))  # 0 4096 / 1 4096
 ```
+
+| Property | Value |
+| :-- | :-- |
+| Embedding dimensions | 4,096 |
+| Max input length | 32,768 tokens |
 
 ## Supported Parameters
 
@@ -177,12 +474,32 @@ Air API supports the core OpenAI parameters based on the official vLLM spec.
 | `model` | The model ID to use |
 | `messages` | Array of conversation messages |
 | `stream` | Whether to stream the response (default: false) |
+| `stream_options` | Streaming options (`{"include_usage": true}` to receive usage) |
 | `temperature` | Controls response randomness (0.0 – 2.0) |
 | `max_tokens` | Maximum number of tokens to generate |
 | `top_p` | Nucleus sampling probability |
+| `frequency_penalty` | Penalizes repetition based on token frequency (-2.0 – 2.0) |
+| `presence_penalty` | Penalizes repetition based on token presence (-2.0 – 2.0) |
 | `stop` | String(s) that stop generation |
+| `seed` | Fixed seed for reproducible outputs |
+| `n` | Number of response candidates to generate |
+| `logprobs` / `top_logprobs` | Return per-token log probabilities |
+| `response_format` | Response format (`{"type": "json_object"}`) |
 | `tools` | Tool calling function definitions |
 | `tool_choice` | How tools are invoked (`auto`, `none`, or a specific function) |
+| `parallel_tool_calls` | Whether multiple function calls may be returned in one response (default: true) |
+
+<Note>
+  vLLM extension sampling parameters such as `top_k`, `min_p`, and `repetition_penalty` are also available. With the OpenAI SDK, pass them via `extra_body`.
+
+  ```python
+  response = client.chat.completions.create(
+      model="qwen/qwen3.5-9b",
+      messages=[{"role": "user", "content": "Hello!"}],
+      extra_body={"top_k": 20, "repetition_penalty": 1.05},
+  )
+  ```
+</Note>
 
 ## Related Documentation
 
