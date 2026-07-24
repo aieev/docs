@@ -103,6 +103,7 @@
                   "models/index",
                   "models/qwen3-6-35b-a3b",
                   "models/qwen3-5-9b",
+                  "models/qwen3-32b",
                   "models/llama3-3-70b",
                   "models/qwen3-embedding-8b",
                   "models/qwen3-tts"
@@ -248,6 +249,7 @@
                   "models/ko/index",
                   "models/ko/qwen3-6-35b-a3b",
                   "models/ko/qwen3-5-9b",
+                  "models/ko/qwen3-32b",
                   "models/ko/llama3-3-70b",
                   "models/ko/qwen3-embedding-8b",
                   "models/ko/qwen3-tts"
