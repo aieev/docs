@@ -1,22 +1,22 @@
 ---
-title: "Qwen3.5-9B"
-description: "Compact and efficient 9B language model with multimodal support."
+title: "Llama3.3-70B"
+description: "Meta's multilingual 70B instruct model for general-purpose chat and text tasks."
 ---
 
 <Info>
-  **Model ID:** `qwen/qwen3.5-9b` | **Endpoint ID:** `qwen3-5-9b` | **Parameters:** 9B | **Released:** 2026-03-10
+  **Model ID:** `llama3.3-70b-instruct` | **Endpoint ID:** `llama3-3-70b` | **Parameters:** 70B | **Released:** 2024-12-06
 </Info>
 
-| Input Price | Output Price | Context | Modality | Quantization |
-| :-: | :-: | :-: | :-: | :-: |
-| $0.100 / 1M | $0.150 / 1M | 262,144 | text + image → text | FP8 |
+| Input Price | Output Price | Context | Modality |
+| :-: | :-: | :-: | :-: |
+| $0.510 / 1M | $0.740 / 1M | 131,072 | text → text |
 
 ## Overview
 
-Qwen 3.5 9B is a compact yet capable open-source language model designed to balance performance and efficiency. It supports multilingual understanding and generation, long-context inference up to 262,144 tokens, and multimodal input with text and image support while producing text outputs. Compared with larger models, it offers lower serving cost and faster inference, making it well suited for chat assistants, coding help, document summarization, visual understanding, and other real-time AI applications.
+Meta Llama 3.3 70B Instruct is a dense 70B-parameter model fine-tuned for instruction following and conversational use. It delivers strong multilingual instruction following across a wide range of languages and supports a 131,072-token context window for long conversations and documents. Built on the proven open-source Llama family, it is well suited for general-purpose chat, summarization, and coding assistance. The model focuses on reliable text generation rather than reasoning traces or multimodal input.
 
 <CardGroup cols={3}>
-  <Card title="Air API Playground" icon="play" href="https://ap-1.aieev.cloud:3007/models/qwen%2Fqwen3.5-9b">
+  <Card title="Air API Playground" icon="play" href="https://ap-1.aieev.cloud:3007/models/llama3.3-70b-instruct">
     Try the model in the playground.
   </Card>
   <Card title="Deploy with Container" icon="container-storage" href="/docs/air-container/deploy-a-container">
@@ -31,8 +31,8 @@ Qwen 3.5 9B is a compact yet capable open-source language model designed to bala
 
 | Currency | Input (1M tokens) | Output (1M tokens) |
 | :-- | --: | --: |
-| USD | $0.100 | $0.150 |
-| KRW | ₩150 | ₩225 |
+| USD | $0.510 | $0.740 |
+| KRW | ₩765 | ₩1,110 |
 
 ## Supported Features
 
@@ -41,24 +41,23 @@ All features are available through the [OpenAI Compatible API](/docs/air-api/ope
 | Feature | Supported | Notes |
 | :-- | :-: | :-- |
 | [Streaming](/docs/air-api/openai-compatible-api#streaming) | ✅ | SSE, `include_usage` supported |
-| [Tool Calling](/docs/air-api/openai-compatible-api#tool-calling-function-calling) | ✅ | Parallel and streaming tool calls supported |
-| [Vision](/docs/air-api/openai-compatible-api#vision-image-input) | ✅ | Up to 1 image per request |
-| [Reasoning](/docs/air-api/openai-compatible-api#reasoning) | ✅ | Returned separately in the `reasoning` field, can be disabled |
+| [Tool Calling](/docs/air-api/openai-compatible-api#tool-calling-function-calling) | ✅ | Streaming tool calls supported |
+| [Vision](/docs/air-api/openai-compatible-api#vision-image-input) | ❌ | Not supported |
+| [Reasoning](/docs/air-api/openai-compatible-api#reasoning) | ❌ | Not supported |
 | [JSON Mode](/docs/air-api/openai-compatible-api#json-mode-structured-outputs) | ✅ | `response_format: json_object` |
-| logprobs | ✅ | `logprobs` / `top_logprobs` |
 
 ## Key Features
 
-- Efficient 9B model well suited for cost- and latency-sensitive deployments
-- Strong multilingual understanding and generation
-- Efficient serving through FP8 quantization
-- Compatible with optimized inference runtimes such as vLLM
+- Strong multilingual instruction following across a wide range of languages
+- 128K-token context window for long conversations and documents
+- Tool calling and JSON mode support for structured, agentic workflows
+- Built on the proven open-source Llama family
 
 ## Use Cases
 
-### General Q&A
+### General Q&A & Conversation
 
-Handle general-purpose Q&A with efficient reasoning and context understanding.
+Handle general-purpose Q&A and multi-turn conversation with reliable instruction following.
 
 <CodeGroup>
 ```text Input
@@ -76,7 +75,7 @@ else to understand the full context before responding.
 
 ### Code Generation & Assistance
 
-Generate and explain code efficiently for practical development tasks.
+Generate and explain code for practical development tasks.
 
 <CodeGroup>
 ```text Input
@@ -99,17 +98,17 @@ def is_prime(n):
 
 ### Summarization & Analysis
 
-Perform efficient summarization and lightweight analysis of long documents.
+Summarize long documents and analyze text content across multiple languages.
 
-### Visual Understanding
+### Multilingual Conversation
 
-Understand image inputs and generate text-based explanations or insights.
+Carry on natural conversations and follow instructions across many languages with consistent quality.
 
 ## Parameters
 
 | Parameter | Type | Required | Default | Description |
 |-----------|------|----------|---------|-------------|
-| `messages` | array | Required | - | List of input messages for chat-based generation. Supports text and image content. |
+| `messages` | array | Required | - | List of input messages for chat-based generation. |
 | `max_tokens` | integer | Optional | - | Maximum output tokens to generate |
 | `temperature` | number | Optional | 1 | Sampling temperature (0.0-2.0) |
 | `top_p` | number | Optional | 1 | Nucleus sampling threshold |
@@ -124,18 +123,16 @@ Understand image inputs and generate text-based explanations or insights.
 | `tools` | array | Optional | - | Tool calling function definitions |
 | `tool_choice` | string \| object | Optional | auto | How tools are invoked (`auto`, `none`, or a specific function) |
 | `response_format` | object | Optional | - | JSON mode (`{"type": "json_object"}`) |
-| `logprobs` | boolean | Optional | false | Return per-token log probabilities |
 
 ## Model Details
 
 | Property | Value |
 |----------|-------|
-| Context Length | 262,144 |
-| Max Output Length | 262,144 |
-| Quantization | fp8 |
-| Input Modalities | text, image (max 1 image per request) |
+| Context Length | 131,072 |
+| Max Output Length | 131,072 |
+| Input Modalities | text |
 | Output Modalities | text |
-| Supported Features | tools, reasoning, streaming, vision, json_mode, logprobs |
+| Supported Features | tools, streaming, json_mode |
 
 ## Quick Start
 
@@ -154,11 +151,11 @@ from openai import OpenAI
 
 client = OpenAI(
     api_key="YOUR_API_KEY",
-    base_url="https://ap-1.aieev.cloud/endpoints/qwen3-5-9b/v1"
+    base_url="https://ap-1.aieev.cloud/endpoints/llama3-3-70b/v1"
 )
 
 response = client.chat.completions.create(
-    model="qwen/qwen3.5-9b",
+    model="llama3.3-70b-instruct",
     messages=[{"role": "user", "content": "Hello!"}]
 )
 
@@ -166,11 +163,11 @@ print(response.choices[0].message.content)
 ```
 
 ```bash cURL
-curl https://ap-1.aieev.cloud/endpoints/qwen3-5-9b/v1/chat/completions \
+curl https://ap-1.aieev.cloud/endpoints/llama3-3-70b/v1/chat/completions \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "qwen/qwen3.5-9b",
+    "model": "llama3.3-70b-instruct",
     "messages": [{"role": "user", "content": "Hello!"}]
   }'
 ```
@@ -180,11 +177,11 @@ import OpenAI from "openai";
 
 const client = new OpenAI({
   apiKey: "YOUR_API_KEY",
-  baseURL: "https://ap-1.aieev.cloud/endpoints/qwen3-5-9b/v1",
+  baseURL: "https://ap-1.aieev.cloud/endpoints/llama3-3-70b/v1",
 });
 
 const response = await client.chat.completions.create({
-  model: "qwen/qwen3.5-9b",
+  model: "llama3.3-70b-instruct",
   messages: [{ role: "user", content: "Hello!" }],
 });
 
@@ -194,4 +191,4 @@ console.log(response.choices[0].message.content);
 
 ## Tags
 
-`open-source` `conversational` `9B` `reasoning` `multilingual` `efficient` `vision`
+`open-source` `conversational` `70B` `multilingual`

@@ -1,0 +1,139 @@
+---
+title: "Qwen3-Embedding-8B"
+description: "Multilingual embedding model with 4,096-dimensional vectors and 32K input."
+---
+
+<Info>
+  **Model ID:** `qwen/qwen3-embedding-8b` | **Endpoint ID:** `qwen3-embedding-8b` | **Parameters:** 8B | **Released:** 2025-06-05
+</Info>
+
+| Input Price | Output Price | Max Input | Dimensions |
+| :-: | :-: | :-: | :-: |
+| $0.010 / 1M | $0.000 | 32,768 tokens | 4,096 |
+
+## Overview
+
+Qwen3-Embedding-8B is a multilingual text embedding model that converts input text into dense vector representations. It accepts up to 32,768 tokens of input and outputs 4,096-dimensional embedding vectors. The model is well suited for semantic search, retrieval-augmented generation (RAG), recommendation systems, and classification or clustering tasks.
+
+<CardGroup cols={3}>
+  <Card title="Air API Playground" icon="play" href="https://ap-1.aieev.cloud:3007/models/qwen%2Fqwen3-embedding-8b">
+    Try the model in the playground.
+  </Card>
+  <Card title="Deploy with Container" icon="container-storage" href="/docs/air-container/deploy-a-container">
+    Deploy with AIR Container.
+  </Card>
+  <Card title="OpenAI Compatible API" icon="arrow-left-right" href="/docs/air-api/openai-compatible-api#embedding">
+    Connect with the OpenAI SDK as-is.
+  </Card>
+</CardGroup>
+
+## Pricing
+
+| Currency | Input (1M tokens) | Output (1M tokens) |
+| :-- | --: | --: |
+| USD | $0.010 | $0.000 |
+| KRW | ₩15 | ₩0 |
+
+## Key Features
+
+- Multilingual embeddings across a wide range of languages
+- Long input support up to 32,768 tokens
+- High-quality 4,096-dimensional vector output
+- Batch embedding for high-throughput processing
+
+## Use Cases
+
+### Semantic Search
+
+Embed queries and documents into the same vector space to find results by meaning rather than exact keyword match.
+
+### RAG (Retrieval-Augmented Generation)
+
+Generate embeddings for a knowledge base and retrieve the most relevant passages to ground LLM responses in your own data.
+
+### Recommendation Systems
+
+Represent items and user preferences as vectors to power similarity-based recommendations.
+
+### Classification & Clustering
+
+Use embedding vectors as features for downstream classification or to group similar texts through clustering.
+
+## Parameters
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| `model` | string | Required | - | Model ID to use for embedding generation |
+| `input` | string \| array | Required | - | Text to embed. Accepts a single string or an array of strings for batch embedding |
+
+## Model Details
+
+| Property | Value |
+|----------|-------|
+| Dimensions | 4,096 |
+| Max Input Length | 32,768 tokens |
+| Input Modalities | text |
+| Output | embedding |
+| Batch Input | Supported (array of strings in `input`) |
+
+## Quick Start
+
+<Steps>
+  <Step title="Get your API key">
+    Generate an API key from your [AirCloud account](https://aieev.com).
+  </Step>
+  <Step title="Run the code">
+    Replace `YOUR_API_KEY` with your actual key and choose your preferred language (Python, cURL, Node.js).
+  </Step>
+</Steps>
+
+<CodeGroup>
+```python Python
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="YOUR_API_KEY",
+    base_url="https://ap-1.aieev.cloud/endpoints/qwen3-embedding-8b/v1"
+)
+
+response = client.embeddings.create(
+    model="qwen/qwen3-embedding-8b",
+    input=["Hello, world!", "AirCloud makes deploying models easy."]
+)
+
+for item in response.data:
+    print(item.index, len(item.embedding))  # 4096 dims per vector
+```
+
+```bash cURL
+curl https://ap-1.aieev.cloud/endpoints/qwen3-embedding-8b/v1/embeddings \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "qwen/qwen3-embedding-8b",
+    "input": ["Hello, world!", "AirCloud makes deploying models easy."]
+  }'
+```
+
+```javascript Node.js
+import OpenAI from "openai";
+
+const client = new OpenAI({
+  apiKey: "YOUR_API_KEY",
+  baseURL: "https://ap-1.aieev.cloud/endpoints/qwen3-embedding-8b/v1",
+});
+
+const response = await client.embeddings.create({
+  model: "qwen/qwen3-embedding-8b",
+  input: ["Hello, world!", "AirCloud makes deploying models easy."],
+});
+
+response.data.forEach((item) => {
+  console.log(item.index, item.embedding.length); // 4096 dims per vector
+});
+```
+</CodeGroup>
+
+## Tags
+
+`embedding` `8B` `multilingual` `semantic-search` `open-source`

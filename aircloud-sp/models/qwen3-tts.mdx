@@ -4,8 +4,12 @@ description: "Multilingual text-to-speech model with custom voice cloning suppor
 ---
 
 <Info>
-  **Model ID:** `qwen/qwen3-tts-customvoice` | **Parameters:** 1.7B | **Released:** 2026-01-22
+  **Model ID:** `qwen/qwen3-tts-customvoice` | **Endpoint ID:** `qwen3-tts` | **Parameters:** 1.7B | **Released:** 2026-01-22
 </Info>
+
+| Input Price | Output Price | Languages | Voices |
+| :-: | :-: | :-: | :-: |
+| $0.080 / 1M | $0.000 | EN · ZH · JA · KO | 9 presets + custom |
 
 ## Overview
 
@@ -25,9 +29,10 @@ Qwen3-TTS-12Hz-1.7B-CustomVoice is a multilingual text-to-speech model from the 
 
 ## Pricing
 
-| Input | Output |
-|-------|--------|
-| \$0 / 1M tokens | \$0 / 1M tokens |
+| Currency | Input (1M tokens) | Output (1M tokens) |
+| :-- | --: | --: |
+| USD | $0.080 | $0.000 |
+| KRW | ₩120 | ₩0 |
 
 ## Key Features
 
@@ -85,7 +90,7 @@ Generate natural voice responses for chatbots and virtual assistants.
 import requests
 
 response = requests.post(
-    "https://external.aieev.cloud:5007/ai/api/v1/audio/speech",
+    "https://ap-1.aieev.cloud/endpoints/qwen3-tts/v1/audio/speech",
     headers={
         "Authorization": "Bearer YOUR_API_KEY",
         "Content-Type": "application/json"
@@ -104,7 +109,7 @@ with open("output.mp3", "wb") as f:
 
 ```bash cURL
 curl --request POST \
-  --url https://external.aieev.cloud:5007/ai/api/v1/audio/speech \
+  --url https://ap-1.aieev.cloud/endpoints/qwen3-tts/v1/audio/speech \
   --header 'Authorization: Bearer YOUR_API_KEY' \
   --header 'Content-Type: application/json' \
   --data '{
@@ -118,7 +123,7 @@ curl --request POST \
 
 ```javascript Node.js
 const response = await fetch(
-  "https://external.aieev.cloud:5007/ai/api/v1/audio/speech",
+  "https://ap-1.aieev.cloud/endpoints/qwen3-tts/v1/audio/speech",
   {
     method: "POST",
     headers: {

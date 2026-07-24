@@ -1,22 +1,22 @@
 ---
-title: "Qwen3.5-9B"
-description: "멀티모달을 지원하는 컴팩트하고 효율적인 9B 언어 모델."
+title: "Qwen3.6-35B-A3B"
+description: "멀티모달을 지원하는 고성능 Mixture-of-Experts 모델."
 ---
 
 <Info>
-  **모델 ID:** `qwen/qwen3.5-9b` | **엔드포인트 ID:** `qwen3-5-9b` | **파라미터:** 9B | **출시일:** 2026-03-10
+  **모델 ID:** `qwen/qwen3.6-35b-a3b` | **엔드포인트 ID:** `qwen3-6-35b-a3b` | **파라미터:** 35B (A3B MoE) | **출시일:** 2026-04-27
 </Info>
 
 | 입력 가격 | 출력 가격 | 컨텍스트 | 모달리티 | 양자화 |
 | :-: | :-: | :-: | :-: | :-: |
-| $0.100 / 1M | $0.150 / 1M | 262,144 | 텍스트 + 이미지 → 텍스트 | FP8 |
+| $0.140 / 1M | $1.000 / 1M | 262,144 | 텍스트 + 이미지 → 텍스트 | FP8 |
 
 ## 개요
 
-Qwen 3.5 9B는 성능과 효율성의 균형을 위해 설계된 컴팩트하면서도 뛰어난 오픈소스 언어 모델입니다. 다국어 이해 및 생성, 최대 262,144 토큰의 긴 컨텍스트 추론, 텍스트와 이미지를 지원하는 멀티모달 입력을 제공합니다. 대규모 모델 대비 낮은 서빙 비용과 빠른 추론 속도를 제공하여 채팅 어시스턴트, 코딩 지원, 문서 요약, 시각적 이해 등 실시간 AI 애플리케이션에 적합합니다.
+Qwen 3.6 35B (A3B)는 강력한 성능과 효율적인 추론을 목표로 설계된 Mixture-of-Experts (MoE) 대규모 언어 모델입니다. 토큰마다 전체 파라미터 중 일부만 활성화하는 희소 활성화 방식을 사용해 성능과 서빙 비용 사이의 균형을 잡았습니다. 9B급 모델과 비교하면 추론, 코딩, 분석 성능이 한층 향상되어 더 복잡한 워크로드에도 대응할 수 있습니다. 최대 262,144 토큰의 긴 컨텍스트 추론과 텍스트·이미지 멀티모달 입력을 지원해 고급 어시스턴트, 백엔드 자동화, 멀티모달 이해, 대규모 추론 시스템 등에 활용할 수 있습니다.
 
 <CardGroup cols={3}>
-  <Card title="Air API Playground" icon="play" href="https://ap-1.aieev.cloud:3007/ko/models/qwen%2Fqwen3.5-9b">
+  <Card title="Air API Playground" icon="play" href="https://ap-1.aieev.cloud:3007/ko/models/qwen%2Fqwen3.6-35b-a3b">
     플레이그라운드에서 모델을 체험하세요.
   </Card>
   <Card title="AIR Container로 배포" icon="container-storage" href="/docs/ko/air-container/deploy-a-container">
@@ -31,8 +31,8 @@ Qwen 3.5 9B는 성능과 효율성의 균형을 위해 설계된 컴팩트하면
 
 | 구분 | 입력 (1M 토큰) | 출력 (1M 토큰) |
 | :-- | --: | --: |
-| USD | $0.100 | $0.150 |
-| KRW | 150원 | 225원 |
+| USD | $0.140 | $1.000 |
+| KRW | 210원 | 1,500원 |
 
 ## 지원 기능
 
@@ -42,68 +42,75 @@ Qwen 3.5 9B는 성능과 효율성의 균형을 위해 설계된 컴팩트하면
 | :-- | :-: | :-- |
 | [Streaming](/docs/ko/air-api/openai-compatible-api#streaming) | ✅ | SSE, `include_usage` 지원 |
 | [Tool Calling](/docs/ko/air-api/openai-compatible-api#tool-calling-function-calling) | ✅ | 복수 호출·스트리밍 tool call 지원 |
-| [Vision](/docs/ko/air-api/openai-compatible-api#vision-이미지-입력) | ✅ | 요청당 이미지 최대 1장 |
+| [Vision](/docs/ko/air-api/openai-compatible-api#vision-이미지-입력) | ✅ | 요청당 이미지 최대 4장 |
 | [Reasoning](/docs/ko/air-api/openai-compatible-api#reasoning-추론-출력) | ✅ | `reasoning` 필드로 분리 반환, 비활성화 가능 |
 | [JSON 모드](/docs/ko/air-api/openai-compatible-api#json-모드-structured-outputs) | ✅ | `response_format: json_object` |
 | logprobs | ✅ | `logprobs` / `top_logprobs` |
 
 ## 주요 기능
 
-- 비용 및 지연 시간에 민감한 배포에 적합한 효율적인 9B 모델
+- Mixture-of-Experts (MoE, A3B) 아키텍처로 희소 활성화를 통한 효율적 스케일링
+- 9B급 모델 대비 강화된 추론 및 코딩 성능
+- 최대 262,144 토큰의 긴 컨텍스트 추론 지원
+- 텍스트 및 이미지 입력을 지원하는 멀티모달 능력 (요청당 최대 4장, 초과 시 400 에러)
 - 강력한 다국어 이해 및 생성
-- FP8 양자화로 효율적인 서빙
-- vLLM 등 최적화된 추론 런타임과 호환
+- 희소 전문가 활성화를 통한 효율적 추론
+- vLLM 등 고처리량 서빙 엔진과 호환
+- 효율적인 배포를 위한 FP8 포맷 제공
 
 ## 활용 사례
 
-### 일반 Q&A
+### 복잡한 Q&A
 
-효율적인 추론과 맥락 이해를 통한 범용 Q&A를 처리합니다.
+복잡한 다단계 추론과 분석이 필요한 질의를 처리합니다.
 
 <CodeGroup>
 ```text 입력
-Explain how transformers work in simple terms and give a real-world analogy.
+Compare transformer-based models and mixture-of-experts models
+in terms of scalability and efficiency.
 ```
 
 ```text 출력
-Transformers process text by modeling relationships between tokens in parallel
-rather than strictly one by one...
+Transformer models scale by increasing parameter count and compute,
+while MoE models improve efficiency by activating only a subset of
+parameters per token...
 
-A simple analogy is a group discussion where each person listens to everyone
-else to understand the full context before responding.
+MoE advantages:
+1. Higher parameter capacity with lower compute cost
+2. Better scalability across distributed systems
+3. Improved efficiency for large-scale inference workloads
 ```
 </CodeGroup>
 
-### 코드 생성 및 지원
+### 고급 코드 생성
 
-실용적인 개발 작업을 위해 효율적으로 코드를 생성하고 설명합니다.
+프로덕션 수준의 코드와 시스템 설계 설명을 생성합니다.
 
 <CodeGroup>
 ```text 입력
-Write a Python function to check if a number is prime and explain the logic.
+Design a scalable distributed task queue system using Python
+and explain key components.
 ```
 
-```python 출력
-def is_prime(n):
-    if n <= 1:
-        return False
-    for i in range(2, int(n ** 0.5) + 1):
-        if n % i == 0:
-            return False
-    return True
+```text 출력
+A scalable distributed task queue system can be built using components
+such as a message broker (Redis/Kafka), worker nodes, and a task scheduler...
 
-# This function checks divisibility only up to the square root of n,
-# which improves efficiency.
+Key components:
+- Producer: submits tasks
+- Broker: queues tasks
+- Worker: executes tasks
+- Result backend: stores results
 ```
 </CodeGroup>
 
-### 요약 및 분석
+### 심층 분석 및 요약
 
-긴 문서에 대한 효율적인 요약 및 경량 분석 작업을 수행합니다.
+문서를 깊이 있게 이해하고 인사이트를 추출합니다.
 
 ### 시각적 이해
 
-이미지 입력을 이해하고 텍스트 기반의 설명이나 인사이트를 생성합니다.
+멀티모달 추론으로 이미지를 분석하고 인사이트를 추출합니다.
 
 ## 파라미터
 
@@ -133,7 +140,7 @@ def is_prime(n):
 | 컨텍스트 길이 | 262,144 |
 | 최대 출력 길이 | 262,144 |
 | 양자화 | fp8 |
-| 입력 모달리티 | text, image (요청당 최대 1장) |
+| 입력 모달리티 | text, image (요청당 최대 4장) |
 | 출력 모달리티 | text |
 | 지원 기능 | tools, reasoning, streaming, vision, json_mode, logprobs |
 
@@ -154,11 +161,11 @@ from openai import OpenAI
 
 client = OpenAI(
     api_key="YOUR_API_KEY",
-    base_url="https://ap-1.aieev.cloud/endpoints/qwen3-5-9b/v1"
+    base_url="https://ap-1.aieev.cloud/endpoints/qwen3-6-35b-a3b/v1"
 )
 
 response = client.chat.completions.create(
-    model="qwen/qwen3.5-9b",
+    model="qwen/qwen3.6-35b-a3b",
     messages=[{"role": "user", "content": "안녕하세요!"}]
 )
 
@@ -166,11 +173,11 @@ print(response.choices[0].message.content)
 ```
 
 ```bash cURL
-curl https://ap-1.aieev.cloud/endpoints/qwen3-5-9b/v1/chat/completions \
+curl https://ap-1.aieev.cloud/endpoints/qwen3-6-35b-a3b/v1/chat/completions \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "qwen/qwen3.5-9b",
+    "model": "qwen/qwen3.6-35b-a3b",
     "messages": [{"role": "user", "content": "안녕하세요!"}]
   }'
 ```
@@ -180,11 +187,11 @@ import OpenAI from "openai";
 
 const client = new OpenAI({
   apiKey: "YOUR_API_KEY",
-  baseURL: "https://ap-1.aieev.cloud/endpoints/qwen3-5-9b/v1",
+  baseURL: "https://ap-1.aieev.cloud/endpoints/qwen3-6-35b-a3b/v1",
 });
 
 const response = await client.chat.completions.create({
-  model: "qwen/qwen3.5-9b",
+  model: "qwen/qwen3.6-35b-a3b",
   messages: [{ role: "user", content: "안녕하세요!" }],
 });
 
@@ -194,4 +201,4 @@ console.log(response.choices[0].message.content);
 
 ## 태그
 
-`open-source` `conversational` `9B` `reasoning` `multilingual` `efficient` `vision`
+`open-source` `conversational` `35B` `reasoning` `multilingual` `moe` `high-performance`

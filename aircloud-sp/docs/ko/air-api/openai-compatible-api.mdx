@@ -17,7 +17,7 @@ from openai import OpenAI
 
 client = OpenAI(
     api_key="YOUR_AIEEV_API_KEY",                            # 변경: Air API 키
-    base_url="https://ap-1.aieev.cloud/endpoints/<model_id>"  # 변경: Air API base URL
+    base_url="https://ap-1.aieev.cloud/endpoints/<endpoint_id>/v1"  # 변경: Air API base URL
 )
 
 response = client.chat.completions.create(
@@ -35,7 +35,7 @@ import OpenAI from "openai";
 
 const client = new OpenAI({
   apiKey: "YOUR_AIEEV_API_KEY",                            // 변경: Air API 키
-  baseURL: "https://ap-1.aieev.cloud/endpoints/<model_id>", // 변경: Air API base URL
+  baseURL: "https://ap-1.aieev.cloud/endpoints/<endpoint_id>/v1", // 변경: Air API base URL
 });
 
 const response = await client.chat.completions.create({
@@ -47,7 +47,7 @@ console.log(response.choices[0].message.content);
 ```
 
 ```bash cURL
-curl https://ap-1.aieev.cloud/endpoints/<model_id>/v1/chat/completions \
+curl https://ap-1.aieev.cloud/endpoints/<endpoint_id>/v1/chat/completions \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_AIEEV_API_KEY" \
   -d '{
@@ -63,7 +63,7 @@ curl https://ap-1.aieev.cloud/endpoints/<model_id>/v1/chat/completions \
 
 API_KEY="YOUR_AIEEV_API_KEY"
 
-response=$(curl -s -X POST https://ap-1.aieev.cloud/endpoints/<model_id>/v1/chat/completions \
+response=$(curl -s -X POST https://ap-1.aieev.cloud/endpoints/<endpoint_id>/v1/chat/completions \
   -H "Authorization: Bearer $API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -82,49 +82,104 @@ echo "$response" | jq .
 
 ## Base URL
 
-모델마다 엔드포인트 URL이 다릅니다. `<model_id>` 자리에 아래 표의 모델 ID를 입력하세요.
+모델마다 엔드포인트 URL이 다릅니다. `<endpoint_id>` 자리에 아래 표의 **엔드포인트 ID**를 입력하세요.
 
 ```text
-https://ap-1.aieev.cloud/endpoints/<model_id>
+https://ap-1.aieev.cloud/endpoints/<endpoint_id>/v1
 ```
+
+예를 들어 Qwen3.6-35B-A3B는 다음과 같습니다.
+
+```text
+https://ap-1.aieev.cloud/endpoints/qwen3-6-35b-a3b/v1
+```
+
+<Warning>
+  URL에 들어가는 **엔드포인트 ID**와 요청 본문의 `model` 파라미터에 넣는 **모델 ID**는 표기가 다릅니다. `model` 값이 아래 표의 모델 ID와 정확히 일치하지 않으면 404 오류(`The model ... does not exist.`)가 반환됩니다.
+</Warning>
 
 ## 모델별 지원 기능
 
-| 모델 | 모델 ID | 타입 | Tool Calling | Streaming |
-| :-- | :-- | :-- | :-: | :-: |
-| Qwen3.6-35B-A3B | `qwen/qwen3.6-35b-a3b` | chat | ✅ | ✅ |
-| Qwen3.5-9B | `qwen/qwen3.5-9b` | chat | ✅ | ✅ |
-| Qwen3-32B | *(Coming Soon)* | chat | ✅ | ✅ |
-| Llama3-70B | *(Coming Soon)* | chat | ✅ | ✅ |
-| Qwen3-Embedding-8B | `qwen/qwen3-embedding-8b` | embedding | ❌ | - |
-| Qwen3-TTS | `qwen/qwen3-tts-customvoice` | tts | ❌ | - |
+| 모델 | 엔드포인트 ID | 모델 ID (`model`) | Context | Streaming | Tool Calling | Vision | Reasoning |
+| :-- | :-- | :-- | :-: | :-: | :-: | :-: | :-: |
+| Qwen3.6-35B-A3B | `qwen3-6-35b-a3b` | `qwen/qwen3.6-35b-a3b` | 256K | ✅ | ✅ | ✅ 최대 4장 | ✅ |
+| Qwen3.5-9B | `qwen3-5-9b` | `qwen/qwen3.5-9b` | 256K | ✅ | ✅ | ✅ 최대 1장 | ✅ |
+| Llama3.3-70B | `llama3-3-70b` | `llama3.3-70b-instruct` | 128K | ✅ | ✅ | ❌ | ❌ |
+| Qwen3-32B | *(Coming Soon)* | - | - | - | - | ❌ | - |
+| Qwen3-Embedding-8B | `qwen3-embedding-8b` | `qwen/qwen3-embedding-8b` | 32K | - | - | - | - |
+| Qwen3-TTS | `qwen3-tts` | `qwen/qwen3-tts-customvoice` | - | - | - | - | - |
 
-<Note>
-  Qwen3-TTS는 별도 엔드포인트를 사용합니다. 엔드포인트 URL은 Air API 콘솔 내 Qwen3-TTS 모델 README에서 확인하세요.
-</Note>
+<sub>✅ 지원 · ❌ 미지원 · `-` 해당 없음 또는 미정</sub>
+
+## 응답 형식
+
+Chat Completions 응답은 OpenAI와 동일한 구조로 반환됩니다.
+
+```json
+{
+  "id": "chatcmpl-8f3a1b2c...",
+  "object": "chat.completion",
+  "created": 1753250000,
+  "model": "qwen/qwen3.5-9b",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "안녕하세요! 무엇을 도와드릴까요?",
+        "reasoning": null,
+        "tool_calls": []
+      },
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 10,
+    "completion_tokens": 12,
+    "total_tokens": 22
+  }
+}
+```
+
+| 필드 | 설명 |
+| :-- | :-- |
+| `choices[].message.content` | 모델의 응답 텍스트 |
+| `choices[].message.reasoning` | 추론 과정 텍스트 ([Reasoning](#reasoning-추론-출력) 참고) |
+| `choices[].message.tool_calls` | 모델이 요청한 함수 호출 목록 ([Tool Calling](#tool-calling-function-calling) 참고) |
+| `choices[].finish_reason` | 생성 종료 사유 — `stop`(정상 완료), `length`(`max_tokens` 도달), `tool_calls`(함수 호출 요청) |
+| `usage` | 입력·출력·전체 토큰 사용량 |
 
 ## Streaming
 
-`stream` 옵션을 `true`로 설정하면 실시간으로 응답을 받을 수 있습니다. (기본값: `false`)
+`stream` 옵션을 `true`로 설정하면 SSE(Server-Sent Events) 형식으로 응답을 실시간으로 받을 수 있습니다. (기본값: `false`)
 
 ```python
 response = client.chat.completions.create(
     model="qwen/qwen3.5-9b",
     messages=[{"role": "user", "content": "안녕하세요!"}],
-    stream=True
+    stream=True,
+    stream_options={"include_usage": True}  # 마지막 청크에 usage 포함 (선택)
 )
 
 for chunk in response:
-    print(chunk.choices[0].delta.content, end="")
+    if chunk.choices and chunk.choices[0].delta.content:
+        print(chunk.choices[0].delta.content, end="", flush=True)
 ```
 
+- 응답 텍스트는 각 청크의 `choices[0].delta.content`에 나뉘어 전달되며, 스트림이 끝나면 `data: [DONE]` 이벤트가 전송됩니다.
+- `stream_options={"include_usage": true}`를 함께 보내면 마지막 청크에서 토큰 사용량(`usage`)을 확인할 수 있습니다.
+
 <Note>
-  현재 Streaming은 **Qwen3.6-35B-A3B**, **Qwen3.5-9B**, **Qwen3-32B** 모델에서 지원됩니다. **Llama3-70B**는 Coming Soon입니다.
+  현재 Streaming은 **Qwen3.6-35B-A3B**, **Qwen3.5-9B**, **Llama3.3-70B** 모델에서 지원됩니다.
 </Note>
 
 ## Tool Calling (Function Calling)
 
-AI가 외부 함수나 서비스를 호출할 수 있도록 하는 기능입니다. **Qwen3.6-35B-A3B**, **Qwen3.5-9B** 모델에서 지원됩니다. **Qwen3-32B**, **Llama3-70B**는 Coming Soon입니다.
+AI가 외부 함수나 서비스를 호출하게 해 주는 기능입니다. **Qwen3.6-35B-A3B**, **Qwen3.5-9B**, **Llama3.3-70B** 모델에서 지원됩니다.
+
+Tool Calling은 함수 정의와 요청, 모델의 함수 호출 제안, 함수 실행과 결과 전달의 세 단계로 진행됩니다. 모델은 함수를 직접 실행하지 않고, 호출할 함수와 인자만 생성합니다.
+
+### 1. 함수를 정의하고 요청
 
 ```python
 tools = [
@@ -147,25 +202,198 @@ tools = [
     }
 ]
 
+messages = [{"role": "user", "content": "서울 날씨 알려줘"}]
+
 response = client.chat.completions.create(
     model="qwen/qwen3.5-9b",
-    messages=[{"role": "user", "content": "서울 날씨 알려줘"}],
+    messages=messages,
     tools=tools,
     tool_choice="auto"
 )
 ```
 
+### 2. 모델이 함수 호출을 제안
+
+함수 호출이 필요하다고 판단하면 모델은 `finish_reason: "tool_calls"`와 함께 `tool_calls` 배열을 반환합니다.
+
+```json
+{
+  "role": "assistant",
+  "content": null,
+  "tool_calls": [
+    {
+      "id": "call_abc123",
+      "type": "function",
+      "function": {
+        "name": "get_weather",
+        "arguments": "{\"location\": \"Seoul\"}"
+      }
+    }
+  ]
+}
+```
+
+<Warning>
+  `function.arguments`는 JSON **문자열**로 반환됩니다. 사용하기 전에 `json.loads()` 등으로 파싱하세요. 모델이 한 번에 여러 함수 호출을 반환할 수 있으므로 `tool_calls` 배열 전체를 순회해 처리해야 합니다.
+</Warning>
+
+### 3. 함수를 실행하고 결과를 전달
+
+실행 결과를 `role: "tool"` 메시지로 추가해 다시 요청하면, 모델이 결과를 바탕으로 최종 응답을 생성합니다.
+
+```python
+import json
+
+message = response.choices[0].message
+
+if message.tool_calls:
+    messages.append(message)  # 모델의 tool_calls 응답을 대화에 추가
+
+    for tool_call in message.tool_calls:
+        args = json.loads(tool_call.function.arguments)
+        result = get_weather(**args)  # 실제 함수 실행
+
+        messages.append({
+            "role": "tool",
+            "tool_call_id": tool_call.id,
+            "content": json.dumps(result, ensure_ascii=False),
+        })
+
+    final = client.chat.completions.create(
+        model="qwen/qwen3.5-9b",
+        messages=messages,
+        tools=tools,
+    )
+    print(final.choices[0].message.content)
+    # 예: "현재 서울은 맑고 기온은 28도입니다."
+```
+
+### tool_choice 옵션
+
+| 값 | 동작 |
+| :-- | :-- |
+| `"auto"` (기본값) | 함수 호출 여부를 모델이 판단 |
+| `"none"` | `tool_calls`로 함수 호출을 반환하지 않음 |
+| `{"type": "function", "function": {"name": "get_weather"}}` | 지정한 함수를 반드시 호출 |
+
+<Note>
+  `tool_choice: "none"`을 지정해도 요청에 `tools` 정의가 남아 있으면 응답 본문에 함수 호출 형식의 텍스트가 섞여 나올 수 있습니다. 함수 호출이 필요 없는 요청은 `tools` 파라미터를 빼고 보내는 것이 확실합니다.
+</Note>
+
+### 복수 함수 호출 (parallel_tool_calls)
+
+모델은 한 응답에서 여러 함수 호출을 `tool_calls` 배열로 반환할 수 있습니다. `parallel_tool_calls`를 `false`로 지정하면(기본값 `true`) 함수 호출이 한 번에 1개로 제한됩니다.
+
+### Streaming으로 Tool Call 받기
+
+`stream: true`로 요청하면 tool call 정보가 여러 청크로 나뉘어 전달됩니다. 각 tool call의 첫 청크에는 `id`와 `function.name`이 포함되며, 이후 청크에는 분할된 `function.arguments`가 순차적으로 전달됩니다. 각 tool call을 `index` 기준으로 구분한 뒤, `function.arguments`를 수신 순서대로 이어 붙이면 됩니다. 스트림은 `finish_reason: "tool_calls"`가 포함된 청크와 함께 종료됩니다.
+
+```python
+stream = client.chat.completions.create(
+    model="qwen/qwen3.6-35b-a3b",
+    messages=[{"role": "user", "content": "서울 날씨 알려줘"}],
+    tools=tools,
+    stream=True,
+)
+
+tool_calls = {}
+for chunk in stream:
+    if not chunk.choices:
+        continue
+    for tc in chunk.choices[0].delta.tool_calls or []:
+        entry = tool_calls.setdefault(tc.index, {"id": "", "name": "", "arguments": ""})
+        entry["id"] = tc.id or entry["id"]
+        entry["name"] = tc.function.name or entry["name"]
+        entry["arguments"] += tc.function.arguments or ""
+```
+
+## Vision (이미지 입력)
+
+Qwen3.6-35B-A3B와 Qwen3.5-9B 모델은 이미지 입력을 지원합니다. `messages[].content`를 배열로 구성하고, 이미지를 `image_url` 타입으로 전달하세요. `image_url.url`에는 외부에서 접근 가능한 이미지 URL이나 base64로 인코딩한 데이터 URI(`data:image/jpeg;base64,...`)를 사용할 수 있습니다.
+
+```python
+response = client.chat.completions.create(
+    model="qwen/qwen3.6-35b-a3b",
+    messages=[
+        {
+            "role": "user",
+            "content": [
+                {"type": "text", "text": "이 이미지에 무엇이 보이나요?"},
+                {"type": "image_url", "image_url": {"url": "https://example.com/photo.jpg"}},
+            ],
+        }
+    ],
+)
+```
+
+<Note>
+  요청당 이미지 수는 모델별로 제한됩니다 — **Qwen3.6-35B-A3B: 최대 4장**, **Qwen3.5-9B: 최대 1장**. 동영상 입력은 지원되지 않습니다.
+</Note>
+
+## Reasoning (추론 출력)
+
+Qwen3.6-35B-A3B와 Qwen3.5-9B 모델은 추론(thinking)을 지원합니다. 추론 과정은 최종 답변(`content`)과 분리되어 `reasoning` 필드로 반환됩니다.
+
+```python
+response = client.chat.completions.create(
+    model="qwen/qwen3.6-35b-a3b",
+    messages=[{"role": "user", "content": "127 * 43을 단계별로 계산해줘"}],
+    max_tokens=4096,
+)
+
+message = response.choices[0].message
+print(message.reasoning)  # 추론 과정
+print(message.content)    # 최종 답변
+```
+
+- 추론 텍스트도 `max_tokens`를 소모합니다. 값이 너무 작으면 답변이 잘릴 수 있으니 넉넉하게 지정하세요.
+- 스트리밍에서는 추론 내용이 `delta.reasoning`으로 먼저 전달된 뒤 `delta.content`가 이어집니다.
+
+### 추론 비활성화
+
+추론 없이 바로 답변을 받으려면 `chat_template_kwargs`로 추론을 끌 수 있습니다.
+
+```python
+response = client.chat.completions.create(
+    model="qwen/qwen3.6-35b-a3b",
+    messages=[{"role": "user", "content": "안녕하세요!"}],
+    extra_body={"chat_template_kwargs": {"enable_thinking": False}},
+)
+```
+
+## JSON 모드 (Structured Outputs)
+
+`response_format`을 지정하면 응답을 항상 유효한 JSON으로 받을 수 있습니다.
+
+```python
+response = client.chat.completions.create(
+    model="qwen/qwen3.5-9b",
+    messages=[
+        {"role": "system", "content": "사용자 정보를 JSON 객체로 추출하세요."},
+        {"role": "user", "content": "김철수는 32세 백엔드 개발자입니다."},
+    ],
+    response_format={"type": "json_object"},
+)
+
+print(response.choices[0].message.content)
+# {"name": "김철수", "age": 32, "job": "백엔드 개발자"}
+```
+
+<Tip>
+  프롬프트에도 "JSON으로 응답하라"는 지시를 함께 명시하면 더 안정적입니다. 추론이 토큰을 소모해 JSON이 잘릴 수 있으니 [추론 비활성화](#추론-비활성화)와 함께 사용하는 것을 권장합니다.
+</Tip>
+
 ## Embedding
 
-텍스트를 벡터로 변환하는 기능입니다. 시맨틱 검색, 추천 시스템 등에 활용할 수 있습니다.
+텍스트를 벡터로 변환하는 기능입니다. 시맨틱 검색, 추천 시스템, RAG 등에 활용할 수 있습니다. `input`에 문자열 배열을 전달하면 여러 텍스트를 한 번에 임베딩할 수도 있습니다.
 
 ```python
 response = client.embeddings.create(
     model="qwen/qwen3-embedding-8b",
-    input="임베딩할 텍스트를 입력하세요."
+    input="임베딩할 텍스트를 입력하세요.",
 )
 
-print(response.data[0].embedding)
+print(response.data[0].embedding)  # 4,096차원 벡터
 ```
 
 ## 지원 파라미터
@@ -177,12 +405,32 @@ vLLM 공식 스펙 기반으로 주요 OpenAI 파라미터를 지원합니다.
 | `model` | 사용할 모델 ID |
 | `messages` | 대화 메시지 배열 |
 | `stream` | 스트리밍 응답 여부 (기본값: false) |
+| `stream_options` | 스트리밍 옵션 (`{"include_usage": true}`로 usage 수신) |
 | `temperature` | 응답 다양성 조절 (0.0 ~ 2.0) |
 | `max_tokens` | 최대 응답 토큰 수 |
 | `top_p` | 누클리어스 샘플링 확률 |
+| `frequency_penalty` | 토큰 등장 빈도에 따른 반복 억제 (-2.0 ~ 2.0) |
+| `presence_penalty` | 토큰 등장 여부에 따른 반복 억제 (-2.0 ~ 2.0) |
 | `stop` | 응답 종료 문자열 |
+| `seed` | 시드 고정으로 재현 가능한 결과 생성 |
+| `n` | 생성할 응답 후보 수 |
+| `logprobs` / `top_logprobs` | 토큰별 로그 확률 반환 |
+| `response_format` | 응답 형식 지정 (`{"type": "json_object"}`) |
 | `tools` | Tool calling 함수 정의 |
 | `tool_choice` | Tool 호출 방식 (`auto`, `none`, 특정 함수) |
+| `parallel_tool_calls` | 한 응답에서 복수 함수 호출 허용 여부 (기본값: true) |
+
+<Note>
+  `top_k`, `min_p`, `repetition_penalty` 같은 vLLM 확장 샘플링 파라미터도 사용할 수 있습니다. OpenAI SDK에서는 `extra_body`로 전달하세요.
+
+  ```python
+  response = client.chat.completions.create(
+      model="qwen/qwen3.5-9b",
+      messages=[{"role": "user", "content": "안녕하세요!"}],
+      extra_body={"top_k": 20, "repetition_penalty": 1.05},
+  )
+  ```
+</Note>
 
 ## 관련 문서
 

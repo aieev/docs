@@ -1,0 +1,139 @@
+---
+title: "Qwen3-Embedding-8B"
+description: "4,096차원 벡터와 32K 입력을 지원하는 다국어 임베딩 모델."
+---
+
+<Info>
+  **모델 ID:** `qwen/qwen3-embedding-8b` | **엔드포인트 ID:** `qwen3-embedding-8b` | **파라미터:** 8B | **출시일:** 2025-06-05
+</Info>
+
+| 입력 가격 | 출력 가격 | 최대 입력 | 벡터 차원 |
+| :-: | :-: | :-: | :-: |
+| $0.010 / 1M | $0.000 | 32,768 토큰 | 4,096 |
+
+## 개요
+
+Qwen3-Embedding-8B는 입력 텍스트를 밀집 벡터로 변환하는 다국어 텍스트 임베딩 모델입니다. 최대 32,768 토큰까지 입력받아 4,096차원의 임베딩 벡터를 출력합니다. 시맨틱 검색, RAG(검색 증강 생성), 추천 시스템, 분류·클러스터링 등의 작업에 적합합니다.
+
+<CardGroup cols={3}>
+  <Card title="Air API Playground" icon="play" href="https://ap-1.aieev.cloud:3007/ko/models/qwen%2Fqwen3-embedding-8b">
+    플레이그라운드에서 모델을 체험하세요.
+  </Card>
+  <Card title="AIR Container로 배포" icon="container-storage" href="/docs/ko/air-container/deploy-a-container">
+    AIR Container로 배포하세요.
+  </Card>
+  <Card title="OpenAI 호환 API" icon="arrow-left-right" href="/docs/ko/air-api/openai-compatible-api#embedding">
+    OpenAI SDK 그대로 연동하세요.
+  </Card>
+</CardGroup>
+
+## 가격
+
+| 구분 | 입력 (1M 토큰) | 출력 (1M 토큰) |
+| :-- | --: | --: |
+| USD | $0.010 | $0.000 |
+| KRW | 15원 | 0원 |
+
+## 주요 기능
+
+- 다양한 언어를 아우르는 다국어 임베딩
+- 최대 32,768 토큰의 긴 입력 지원
+- 4,096차원의 고품질 벡터 출력
+- 배치 임베딩으로 대량 텍스트 처리
+
+## 활용 사례
+
+### 시맨틱 검색
+
+쿼리와 문서를 동일한 벡터 공간에 임베딩하여 키워드 일치가 아닌 의미 기반으로 결과를 찾을 수 있습니다.
+
+### RAG(검색 증강 생성)
+
+지식 베이스를 임베딩하고 가장 관련 있는 문단을 검색해 LLM 응답을 실제 데이터에 근거하도록 만들 수 있습니다.
+
+### 추천 시스템
+
+아이템과 사용자 선호도를 벡터로 표현하여 유사도 기반 추천에 활용할 수 있습니다.
+
+### 분류·클러스터링
+
+임베딩 벡터를 분류 모델의 특징으로 사용하거나, 유사한 텍스트끼리 묶는 클러스터링에 활용할 수 있습니다.
+
+## 파라미터
+
+| 파라미터 | 타입 | 필수 | 기본값 | 설명 |
+|----------|------|------|--------|------|
+| `model` | string | 필수 | - | 임베딩 생성에 사용할 모델 ID |
+| `input` | string \| array | 필수 | - | 임베딩할 텍스트. 단일 문자열 또는 문자열 배열로 배치 임베딩을 지원합니다 |
+
+## 모델 세부정보
+
+| 속성 | 값 |
+|------|-----|
+| 벡터 차원 | 4,096 |
+| 최대 입력 길이 | 32,768 토큰 |
+| 입력 모달리티 | text |
+| 출력 | embedding |
+| 배치 입력 | 지원 (`input`에 문자열 배열) |
+
+## 시작하기
+
+<Steps>
+  <Step title="API 키 발급하기">
+    [AirCloud 계정](https://aieev.com)에서 API 키를 발급받습니다.
+  </Step>
+  <Step title="코드 실행하기">
+    아래 코드에서 `YOUR_API_KEY` 자리에 실제 발급받은 키를 넣어 실행하세요. 언어별(Python, cURL, Node.js) 코드 예시를 선택할 수 있습니다.
+  </Step>
+</Steps>
+
+<CodeGroup>
+```python Python
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="YOUR_API_KEY",
+    base_url="https://ap-1.aieev.cloud/endpoints/qwen3-embedding-8b/v1"
+)
+
+response = client.embeddings.create(
+    model="qwen/qwen3-embedding-8b",
+    input=["안녕하세요!", "AirCloud로 모델을 쉽게 배포할 수 있습니다."]
+)
+
+for item in response.data:
+    print(item.index, len(item.embedding))  # 벡터당 4096차원
+```
+
+```bash cURL
+curl https://ap-1.aieev.cloud/endpoints/qwen3-embedding-8b/v1/embeddings \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "qwen/qwen3-embedding-8b",
+    "input": ["안녕하세요!", "AirCloud로 모델을 쉽게 배포할 수 있습니다."]
+  }'
+```
+
+```javascript Node.js
+import OpenAI from "openai";
+
+const client = new OpenAI({
+  apiKey: "YOUR_API_KEY",
+  baseURL: "https://ap-1.aieev.cloud/endpoints/qwen3-embedding-8b/v1",
+});
+
+const response = await client.embeddings.create({
+  model: "qwen/qwen3-embedding-8b",
+  input: ["안녕하세요!", "AirCloud로 모델을 쉽게 배포할 수 있습니다."],
+});
+
+response.data.forEach((item) => {
+  console.log(item.index, item.embedding.length); // 벡터당 4096차원
+});
+```
+</CodeGroup>
+
+## 태그
+
+`embedding` `8B` `multilingual` `semantic-search` `open-source`
