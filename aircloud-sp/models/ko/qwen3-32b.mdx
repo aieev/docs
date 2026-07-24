@@ -1,22 +1,22 @@
 ---
-title: "Llama3.3-70B"
-description: "범용 대화와 텍스트 작업을 위한 Meta의 다국어 70B instruct 모델."
+title: "Qwen3-32B"
+description: "하이브리드 추론을 지원하는 범용 32B dense 모델."
 ---
 
 <Info>
-  **모델 ID:** `meta-llama/Meta-Llama-3.3-70B-Instruct` | **엔드포인트 ID:** `llama3-3-70b` | **파라미터:** 70B | **출시일:** 2024-12-06
+  **모델 ID:** `qwen/qwen3-32b` | **엔드포인트 ID:** `qwen3-32b` | **파라미터:** 32B | **출시일:** 2025-04-29
 </Info>
 
 | 입력 가격 | 출력 가격 | 컨텍스트 | 모달리티 |
 | :-: | :-: | :-: | :-: |
-| $0.100 / 1M | $0.320 / 1M | 131,072 | 텍스트 → 텍스트 |
+| $0.080 / 1M | $0.280 / 1M | 40,960 | 텍스트 → 텍스트 |
 
 ## 개요
 
-Meta Llama 3.3 70B Instruct는 instruction following에 맞춰 파인튜닝된 70B 파라미터의 dense 모델입니다. 다양한 언어에서 뛰어난 다국어 instruction following 능력을 보이며, 최대 131,072 토큰의 컨텍스트를 지원해 긴 대화나 문서도 처리할 수 있습니다. 검증된 오픈소스 Llama 계열을 기반으로 하여 범용 대화, 문서 요약, 코딩 지원 등에 적합합니다. reasoning 과정이나 이미지 입력보다는 안정적인 텍스트 생성에 집중된 모델입니다.
+Qwen3-32B는 Qwen3 세대의 32B 파라미터 dense 모델입니다. 하이브리드 추론(thinking) 모드를 지원해 복잡한 문제는 단계별로 추론한 뒤 답하고, 일상적인 대화는 빠르게 응답합니다. 다국어 이해와 생성에 강점이 있으며, 코딩과 수학 문제 해결 능력도 뛰어납니다. 최대 40,960 토큰의 컨텍스트를 지원합니다.
 
 <CardGroup cols={3}>
-  <Card title="Air API Playground" icon="play" href="https://ap-1.aieev.cloud:3007/ko/models/meta-llama%2FMeta-Llama-3.3-70B-Instruct">
+  <Card title="Air API Playground" icon="play" href="https://ap-1.aieev.cloud:3007/ko/models/qwen%2Fqwen3-32b">
     플레이그라운드에서 모델을 체험하세요.
   </Card>
   <Card title="AIR Container로 배포" icon="container-storage" href="/docs/ko/air-container/deploy-a-container">
@@ -31,8 +31,8 @@ Meta Llama 3.3 70B Instruct는 instruction following에 맞춰 파인튜닝된 7
 
 | 구분 | 입력 (1M 토큰) | 출력 (1M 토큰) |
 | :-- | --: | --: |
-| USD | $0.100 | $0.320 |
-| KRW | 150원 | 480원 |
+| USD | $0.080 | $0.280 |
+| KRW | 120원 | 420원 |
 
 ## 지원 기능
 
@@ -41,35 +41,38 @@ Meta Llama 3.3 70B Instruct는 instruction following에 맞춰 파인튜닝된 7
 | 기능 | 지원 | 비고 |
 | :-- | :-: | :-- |
 | [Streaming](/docs/ko/air-api/openai-compatible-api#streaming) | ✅ | SSE, `include_usage` 지원 |
-| [Tool Calling](/docs/ko/air-api/openai-compatible-api#tool-calling-function-calling) | ✅ | 스트리밍 tool call 지원 |
+| [Tool Calling](/docs/ko/air-api/openai-compatible-api#tool-calling-function-calling) | ✅ | 복수 호출·스트리밍 tool call 지원 |
 | [Vision](/docs/ko/air-api/openai-compatible-api#vision-이미지-입력) | ❌ | 지원하지 않음 |
-| [Reasoning](/docs/ko/air-api/openai-compatible-api#reasoning-추론-출력) | ❌ | 지원하지 않음 |
+| [Reasoning](/docs/ko/air-api/openai-compatible-api#reasoning-추론-출력) | ✅ | 추론이 `reasoning` 필드가 아니라 `content` 안에 `<think>` 태그로 포함되어 반환됩니다. `enable_thinking: false`로 비활성화할 수 있습니다. |
 | [JSON 모드](/docs/ko/air-api/openai-compatible-api#json-모드-structured-outputs) | ✅ | `response_format: json_object` |
+| logprobs | ✅ | `logprobs` / `top_logprobs` |
 
 ## 주요 기능
 
-- 다양한 언어에서 뛰어난 다국어 instruction following 능력
-- 긴 대화와 문서 처리를 위한 128K 컨텍스트
-- Tool calling과 JSON 모드를 지원하는 구조화된 워크플로우
-- 검증된 오픈소스 Llama 계열 모델
+- 32B dense 아키텍처의 안정적인 품질
+- 켜고 끌 수 있는 하이브리드 추론(thinking) 모드
+- 강력한 다국어·코딩·수학 성능
+- 구조화된 워크플로우를 위한 tool calling과 JSON 모드 지원
 
 ## 활용 사례
 
-### 일반 Q&A 및 대화
+### 복잡한 Q&A 및 추론
 
-안정적인 instruction following으로 범용 Q&A와 멀티턴 대화를 처리합니다.
+여러 단계를 거쳐야 하는 문제를 추론 과정을 거친 뒤 답변합니다.
 
 <CodeGroup>
 ```text 입력
-Explain how transformers work in simple terms and give a real-world analogy.
+A train leaves station A at 60 km/h. Two hours later, a second train leaves the same station at 90 km/h in the same direction. How long does it take the second train to catch up?
 ```
 
 ```text 출력
-Transformers process text by modeling relationships between tokens in parallel
-rather than strictly one by one...
+<think>
+The first train has a 2-hour head start, covering 120 km before the second
+train departs. The second train closes the gap at 90 - 60 = 30 km/h, so it
+needs 120 / 30 = 4 hours to catch up.
+</think>
 
-A simple analogy is a group discussion where each person listens to everyone
-else to understand the full context before responding.
+It takes the second train 4 hours to catch up.
 ```
 </CodeGroup>
 
@@ -96,13 +99,9 @@ def is_prime(n):
 ```
 </CodeGroup>
 
-### 요약 및 분석
+### 문서 요약
 
-여러 언어에 걸쳐 긴 문서를 요약하고 텍스트를 분석합니다.
-
-### 다국어 대화
-
-다양한 언어로 일관된 품질의 자연스러운 대화와 instruction following을 수행합니다.
+여러 언어에 걸쳐 긴 문서를 요약하고 핵심 내용을 추출합니다.
 
 ## 파라미터
 
@@ -123,16 +122,17 @@ def is_prime(n):
 | `tools` | array | 선택 | - | Tool calling 함수 정의 |
 | `tool_choice` | string \| object | 선택 | auto | Tool 호출 방식 (`auto`, `none`, 특정 함수) |
 | `response_format` | object | 선택 | - | JSON 모드 (`{"type": "json_object"}`) |
+| `logprobs` | boolean | 선택 | false | 토큰별 로그 확률 반환 |
 
 ## 모델 세부정보
 
 | 속성 | 값 |
 |------|-----|
-| 컨텍스트 길이 | 131,072 |
-| 최대 출력 길이 | 131,072 |
+| 컨텍스트 길이 | 40,960 |
+| 최대 출력 길이 | 40,960 |
 | 입력 모달리티 | text |
 | 출력 모달리티 | text |
-| 지원 기능 | tools, streaming, json_mode |
+| 지원 기능 | tools, reasoning, streaming, json_mode, logprobs |
 
 ## 시작하기
 
@@ -151,11 +151,11 @@ from openai import OpenAI
 
 client = OpenAI(
     api_key="YOUR_API_KEY",
-    base_url="https://ap-1.aieev.cloud/endpoints/llama3-3-70b/v1"
+    base_url="https://ap-1.aieev.cloud/endpoints/qwen3-32b/v1"
 )
 
 response = client.chat.completions.create(
-    model="meta-llama/Meta-Llama-3.3-70B-Instruct",
+    model="qwen/qwen3-32b",
     messages=[{"role": "user", "content": "안녕하세요!"}]
 )
 
@@ -163,11 +163,11 @@ print(response.choices[0].message.content)
 ```
 
 ```bash cURL
-curl https://ap-1.aieev.cloud/endpoints/llama3-3-70b/v1/chat/completions \
+curl https://ap-1.aieev.cloud/endpoints/qwen3-32b/v1/chat/completions \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "meta-llama/Meta-Llama-3.3-70B-Instruct",
+    "model": "qwen/qwen3-32b",
     "messages": [{"role": "user", "content": "안녕하세요!"}]
   }'
 ```
@@ -177,11 +177,11 @@ import OpenAI from "openai";
 
 const client = new OpenAI({
   apiKey: "YOUR_API_KEY",
-  baseURL: "https://ap-1.aieev.cloud/endpoints/llama3-3-70b/v1",
+  baseURL: "https://ap-1.aieev.cloud/endpoints/qwen3-32b/v1",
 });
 
 const response = await client.chat.completions.create({
-  model: "meta-llama/Meta-Llama-3.3-70B-Instruct",
+  model: "qwen/qwen3-32b",
   messages: [{ role: "user", content: "안녕하세요!" }],
 });
 
@@ -191,4 +191,4 @@ console.log(response.choices[0].message.content);
 
 ## 태그
 
-`open-source` `conversational` `70B` `multilingual`
+`open-source` `conversational` `32B` `reasoning` `multilingual`
