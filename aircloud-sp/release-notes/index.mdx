@@ -5,6 +5,60 @@ description: "New features, fixes, and improvements for the AirCloud platform."
 mode: "wide"
 ---
 
+<Update label="July 2026">
+
+## GPU availability, create from existing container, revamped usage & billing, and expanded notifications
+
+**GPU availability and resource requests**
+
+Check GPU stock before you deploy, and request more resources right from the console when you hit a limit.
+
+- **Availability at a glance**: The GPU list in the container create flow now shows an availability level per instance type, so you know what can be deployed before you try.
+- **Waitlist**: For GPUs that aren't currently available, join a waitlist and get notified when they become available again.
+- **Quota increase requests**: Request a quota increase directly in the console — no external inquiry needed. Requests can be made from the replica settings and the limits page at any time.
+- **Better GPU list**: The GPU list is sorted by hourly price, with a refresh button to pull the latest stock.
+
+**Create from an existing container**
+
+Spin up a container with the same configuration without setting everything up again.
+
+- **Reuse a configuration**: Create a new container from an existing one's settings — instance, image, scaling, and more. Only the configuration is carried over; no data is copied.
+- **Edit before creating**: Change the name, endpoint URL, and environment variables before the new container is created.
+
+**Revamped usage & billing experience**
+
+It's now much clearer what you were charged and why.
+
+- **Redesigned billing pages**: Charging, payment methods, and payment history are organized into tabs, and payment history can be exported as CSV.
+- **Redesigned usage & settlement views**: The organization usage pages have been rebuilt with filters, summary cards, aggregate charts, and a transaction timeline.
+- **Charge breakdown**: Settlement details now show how each amount was computed (unit price × hours × instance count).
+- **Reserved usage, separated**: Reserved (prepaid) usage appears in charts and tables distinctly from on-demand usage, with its relationship to total spend explained.
+- **Actual prices everywhere**: Lists and the create flow show the price you'll actually be charged, and the create dialog includes a 10-minute billing estimate.
+- **Unified credit unit**: Balance and pricing displays now use a single credit (C) unit.
+
+**Expanded notifications**
+
+Stay on top of your containers and billing with more granular notifications.
+
+- **Deployment complete**: Get notified when a container deployment finishes.
+- **Reserved device lifecycle**: Receive notifications for key reserved-device moments such as start and upcoming expiry — start and expiry are also delivered by email.
+- **Billing alerts**: Get notified about low balance, auto top-up failures, and overdue invoices so you can act before service is interrupted.
+- **Notification guide**: See which notifications arrive in the console, on your desktop, or by email from the guide on the notifications page.
+- **Mark as read individually**: Mark notifications as read one by one, with the read state reflected instantly.
+
+**Other improvements**
+
+- **Organization switcher**: If you belong to multiple organizations, switch between them directly from the console header.
+- **Model pages, unified**: Public model pages now share the console's new design, and you can try models in the Playground without signing in. Model descriptions are available in Korean.
+- **Per-replica logs**: The log sidebar is now organized by replica, showing running/stopped status, with per-replica viewing and bulk download.
+- **Volume resize**: Increase the size of a persistent volume that's already in use.
+- **Shared memory size**: Set the shared memory (shm) size when creating a container.
+- **Inline API key issuance**: Issue an API key without leaving the Air API page, with the endpoint address and pricing pinned on screen.
+- **Better dashboard charts**: Container dashboard charts are easier to read, with new "since deployment" and "since creation" date range presets.
+- **Refined container create flow**: The persistent volume choice now comes before GPU selection, and the data-loss warning was moved somewhere more visible.
+
+</Update>
+
 <Update label="June 2026">
 
 ## Redesigned console, real-time notifications, and Persistent Volume
