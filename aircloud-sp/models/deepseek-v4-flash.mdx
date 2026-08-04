@@ -1,22 +1,22 @@
 ---
-title: "Llama3.3-70B"
-description: "Meta's multilingual 70B instruct model for general-purpose chat and text tasks."
+title: "DeepSeek V4 Flash"
+description: "Efficiency-optimized MoE model for fast, low-cost inference."
 ---
 
 <Info>
-  **Model ID:** `meta-llama/meta-llama-3.3-70b-instruct` | **Endpoint ID:** `llama3-3-70b-instruct` | **Parameters:** 70B | **Released:** 2024-12-06
+  **Model ID:** `deepseek/deepseek-v4-flash` | **Endpoint ID:** `deepseek-v4-flash` | **Parameters:** 284B (MoE, 13B active) | **Released:** 2026-04-24
 </Info>
 
 | Input Price | Output Price | Context | Modality |
 | :-: | :-: | :-: | :-: |
-| $0.100 / 1M | $0.320 / 1M | 131,072 | text → text |
+| $0.098 / 1M | $0.196 / 1M | 131,072 | text → text |
 
 ## Overview
 
-Meta Llama 3.3 70B Instruct is a dense 70B-parameter model fine-tuned for instruction following and conversational use. It delivers strong multilingual instruction following across a wide range of languages and supports a 131,072-token context window for long conversations and documents. Built on the proven open-source Llama family, it is well suited for general-purpose chat, summarization, and coding assistance. The model focuses on reliable text generation rather than reasoning traces or multimodal input.
+DeepSeek V4 Flash is DeepSeek's efficiency-optimized Mixture-of-Experts model. Out of 284B total parameters, only 13B are activated per token, delivering fast responses at low cost. It's well suited for workloads where speed and cost matter, such as coding assistants, chatbots, and agentic workflows. The model supports a context window of up to 131,072 tokens.
 
 <CardGroup cols={3}>
-  <Card title="Air API Playground" icon="play" href="https://ap-1.aieev.cloud:3007/models/meta-llama%2Fmeta-llama-3.3-70b-instruct">
+  <Card title="Air API Playground" icon="play" href="https://ap-1.aieev.cloud:3007/models/deepseek%2Fdeepseek-v4-flash">
     Try the model in the playground.
   </Card>
   <Card title="Deploy with Container" icon="container-storage" href="/docs/air-container/deploy-a-container">
@@ -31,8 +31,8 @@ Meta Llama 3.3 70B Instruct is a dense 70B-parameter model fine-tuned for instru
 
 | Currency | Input (1M tokens) | Output (1M tokens) |
 | :-- | --: | --: |
-| USD | $0.100 | $0.320 |
-| KRW | ₩150 | ₩480 |
+| USD | $0.098 | $0.196 |
+| KRW | ₩147 | ₩294 |
 
 ## Supported Features
 
@@ -41,39 +41,22 @@ All features are available through the [OpenAI Compatible API](/docs/air-api/ope
 | Feature | Supported | Notes |
 | :-- | :-: | :-- |
 | [Streaming](/docs/air-api/openai-compatible-api#streaming) | ✅ | SSE, `include_usage` supported |
-| [Tool Calling](/docs/air-api/openai-compatible-api#tool-calling-function-calling) | ✅ | Streaming tool calls supported |
+| [Tool Calling](/docs/air-api/openai-compatible-api#tool-calling-function-calling) | ✅ | Multiple calls supported, controllable via `parallel_tool_calls` |
 | [Vision](/docs/air-api/openai-compatible-api#vision-image-input) | ❌ | Not supported |
-| [Reasoning](/docs/air-api/openai-compatible-api#reasoning) | ❌ | Not supported |
+| [Reasoning](/docs/air-api/openai-compatible-api#reasoning) | ✅ | The reasoning trace is returned separately in the `reasoning` field. Disable via `enable_thinking: false`. |
 | [JSON Mode](/docs/air-api/openai-compatible-api#json-mode-structured-outputs) | ✅ | `response_format: json_object` |
+| logprobs | ✅ | `logprobs` / `top_logprobs` |
 
 ## Key Features
 
-- Strong multilingual instruction following across a wide range of languages
-- 128K-token context window for long conversations and documents
-- Tool calling and JSON mode support for structured, agentic workflows
-- Built on the proven open-source Llama family
+- Sparse MoE activation (13B of 284B) for fast, low-cost inference
+- Reasoning (thinking) support that can be disabled when not needed
+- Tool calling and JSON mode support
+- Optimized for coding and agentic workloads
 
 ## Use Cases
 
-### General Q&A & Conversation
-
-Handle general-purpose Q&A and multi-turn conversation with reliable instruction following.
-
-<CodeGroup>
-```text Input
-Explain how transformers work in simple terms and give a real-world analogy.
-```
-
-```text Output
-Transformers process text by modeling relationships between tokens in parallel
-rather than strictly one by one...
-
-A simple analogy is a group discussion where each person listens to everyone
-else to understand the full context before responding.
-```
-</CodeGroup>
-
-### Code Generation & Assistance
+### Coding Assistant
 
 Generate and explain code for practical development tasks.
 
@@ -96,13 +79,25 @@ def is_prime(n):
 ```
 </CodeGroup>
 
-### Summarization & Analysis
+### Agentic Workflows
 
-Summarize long documents and analyze text content across multiple languages.
+<CodeGroup>
+```text Input
+Given a list of files in a directory, write a plan to find and delete all files older than 30 days.
+```
 
-### Multilingual Conversation
+```text Output
+1. List all files with their last-modified timestamps.
+2. Compute the cutoff date (today - 30 days).
+3. Filter files whose modified time is before the cutoff.
+4. Confirm the filtered list, then delete each file.
+5. Log the deleted file names for auditing.
+```
+</CodeGroup>
 
-Carry on natural conversations and follow instructions across many languages with consistent quality.
+### General Chat
+
+Handle everyday conversation and general-purpose Q&A quickly and at low cost.
 
 ## Parameters
 
@@ -123,6 +118,7 @@ Carry on natural conversations and follow instructions across many languages wit
 | `tools` | array | Optional | - | Tool calling function definitions |
 | `tool_choice` | string \| object | Optional | auto | How tools are invoked (`auto`, `none`, or a specific function) |
 | `response_format` | object | Optional | - | JSON mode (`{"type": "json_object"}`) |
+| `logprobs` | boolean | Optional | false | Return per-token log probabilities |
 
 ## Model Details
 
@@ -132,7 +128,7 @@ Carry on natural conversations and follow instructions across many languages wit
 | Max Output Length | 131,072 |
 | Input Modalities | text |
 | Output Modalities | text |
-| Supported Features | tools, streaming, json_mode |
+| Supported Features | tools, reasoning, streaming, json_mode, logprobs |
 
 ## Quick Start
 
@@ -151,11 +147,11 @@ from openai import OpenAI
 
 client = OpenAI(
     api_key="YOUR_API_KEY",
-    base_url="https://ap-1.aieev.cloud/endpoints/llama3-3-70b-instruct/v1"
+    base_url="https://ap-1.aieev.cloud/endpoints/deepseek-v4-flash/v1"
 )
 
 response = client.chat.completions.create(
-    model="meta-llama/meta-llama-3.3-70b-instruct",
+    model="deepseek/deepseek-v4-flash",
     messages=[{"role": "user", "content": "Hello!"}]
 )
 
@@ -163,11 +159,11 @@ print(response.choices[0].message.content)
 ```
 
 ```bash cURL
-curl https://ap-1.aieev.cloud/endpoints/llama3-3-70b-instruct/v1/chat/completions \
+curl https://ap-1.aieev.cloud/endpoints/deepseek-v4-flash/v1/chat/completions \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "meta-llama/meta-llama-3.3-70b-instruct",
+    "model": "deepseek/deepseek-v4-flash",
     "messages": [{"role": "user", "content": "Hello!"}]
   }'
 ```
@@ -177,11 +173,11 @@ import OpenAI from "openai";
 
 const client = new OpenAI({
   apiKey: "YOUR_API_KEY",
-  baseURL: "https://ap-1.aieev.cloud/endpoints/llama3-3-70b-instruct/v1",
+  baseURL: "https://ap-1.aieev.cloud/endpoints/deepseek-v4-flash/v1",
 });
 
 const response = await client.chat.completions.create({
-  model: "meta-llama/meta-llama-3.3-70b-instruct",
+  model: "deepseek/deepseek-v4-flash",
   messages: [{ role: "user", content: "Hello!" }],
 });
 
@@ -191,4 +187,4 @@ console.log(response.choices[0].message.content);
 
 ## Tags
 
-`open-source` `conversational` `70B` `multilingual`
+`open-source` `conversational` `moe` `reasoning` `efficient`
