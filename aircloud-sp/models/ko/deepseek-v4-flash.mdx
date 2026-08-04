@@ -1,22 +1,22 @@
 ---
-title: "Llama3.3-70B"
-description: "범용 대화와 텍스트 작업을 위한 Meta의 다국어 70B instruct 모델."
+title: "DeepSeek V4 Flash"
+description: "빠르고 저렴한 추론에 최적화된 MoE 모델."
 ---
 
 <Info>
-  **모델 ID:** `meta-llama/meta-llama-3.3-70b-instruct` | **엔드포인트 ID:** `llama3-3-70b-instruct` | **파라미터:** 70B | **출시일:** 2024-12-06
+  **모델 ID:** `deepseek/deepseek-v4-flash` | **엔드포인트 ID:** `deepseek-v4-flash` | **파라미터:** 284B (MoE, 활성 13B) | **출시일:** 2026-04-24
 </Info>
 
 | 입력 가격 | 출력 가격 | 컨텍스트 | 모달리티 |
 | :-: | :-: | :-: | :-: |
-| $0.100 / 1M | $0.320 / 1M | 131,072 | 텍스트 → 텍스트 |
+| $0.098 / 1M | $0.196 / 1M | 131,072 | 텍스트 → 텍스트 |
 
 ## 개요
 
-Meta Llama 3.3 70B Instruct는 instruction following에 맞춰 파인튜닝된 70B 파라미터의 dense 모델입니다. 다양한 언어에서 뛰어난 다국어 instruction following 능력을 보이며, 최대 131,072 토큰의 컨텍스트를 지원해 긴 대화나 문서도 처리할 수 있습니다. 검증된 오픈소스 Llama 계열을 기반으로 하여 범용 대화, 문서 요약, 코딩 지원 등에 적합합니다. reasoning 과정이나 이미지 입력보다는 안정적인 텍스트 생성에 집중된 모델입니다.
+DeepSeek V4 Flash는 DeepSeek의 효율 최적화 Mixture-of-Experts 모델입니다. 총 284B 파라미터 중 토큰당 13B만 활성화해 빠른 응답과 낮은 비용을 제공합니다. 코딩 어시스턴트, 챗봇, 에이전트 워크플로처럼 속도와 비용이 중요한 워크로드에 적합합니다. 최대 131,072 토큰의 컨텍스트를 지원합니다.
 
 <CardGroup cols={3}>
-  <Card title="Air API Playground" icon="play" href="https://ap-1.aieev.cloud:3007/ko/models/meta-llama%2Fmeta-llama-3.3-70b-instruct">
+  <Card title="Air API Playground" icon="play" href="https://ap-1.aieev.cloud:3007/ko/models/deepseek%2Fdeepseek-v4-flash">
     플레이그라운드에서 모델을 체험하세요.
   </Card>
   <Card title="AIR Container로 배포" icon="container-storage" href="/docs/ko/air-container/deploy-a-container">
@@ -31,8 +31,8 @@ Meta Llama 3.3 70B Instruct는 instruction following에 맞춰 파인튜닝된 7
 
 | 구분 | 입력 (1M 토큰) | 출력 (1M 토큰) |
 | :-- | --: | --: |
-| USD | $0.100 | $0.320 |
-| KRW | 150원 | 480원 |
+| USD | $0.098 | $0.196 |
+| KRW | 147원 | 294원 |
 
 ## 지원 기능
 
@@ -41,39 +41,22 @@ Meta Llama 3.3 70B Instruct는 instruction following에 맞춰 파인튜닝된 7
 | 기능 | 지원 | 비고 |
 | :-- | :-: | :-- |
 | [Streaming](/docs/ko/air-api/openai-compatible-api#streaming) | ✅ | SSE, `include_usage` 지원 |
-| [Tool Calling](/docs/ko/air-api/openai-compatible-api#tool-calling-function-calling) | ✅ | 스트리밍 tool call 지원 |
+| [Tool Calling](/docs/ko/air-api/openai-compatible-api#tool-calling-function-calling) | ✅ | 복수 호출 지원, `parallel_tool_calls`로 제어 |
 | [Vision](/docs/ko/air-api/openai-compatible-api#vision-이미지-입력) | ❌ | 지원하지 않음 |
-| [Reasoning](/docs/ko/air-api/openai-compatible-api#reasoning-추론-출력) | ❌ | 지원하지 않음 |
+| [Reasoning](/docs/ko/air-api/openai-compatible-api#reasoning-추론-출력) | ✅ | 추론 과정이 `reasoning` 필드로 분리 반환됩니다. `enable_thinking: false`로 비활성화할 수 있습니다. |
 | [JSON 모드](/docs/ko/air-api/openai-compatible-api#json-모드-structured-outputs) | ✅ | `response_format: json_object` |
+| logprobs | ✅ | `logprobs` / `top_logprobs` |
 
 ## 주요 기능
 
-- 다양한 언어에서 뛰어난 다국어 instruction following 능력
-- 긴 대화와 문서 처리를 위한 128K 컨텍스트
-- Tool calling과 JSON 모드를 지원하는 구조화된 워크플로우
-- 검증된 오픈소스 Llama 계열 모델
+- MoE 희소 활성화(284B 중 13B)로 빠르고 저렴한 추론
+- 추론(thinking) 지원 — 필요 없을 때는 끌 수 있음
+- Tool calling과 JSON 모드 지원
+- 코딩·에이전트 워크로드에 최적화
 
 ## 활용 사례
 
-### 일반 Q&A 및 대화
-
-안정적인 instruction following으로 범용 Q&A와 멀티턴 대화를 처리합니다.
-
-<CodeGroup>
-```text 입력
-Explain how transformers work in simple terms and give a real-world analogy.
-```
-
-```text 출력
-Transformers process text by modeling relationships between tokens in parallel
-rather than strictly one by one...
-
-A simple analogy is a group discussion where each person listens to everyone
-else to understand the full context before responding.
-```
-</CodeGroup>
-
-### 코드 생성 및 지원
+### 코딩 어시스턴트
 
 실용적인 개발 작업을 위해 코드를 생성하고 설명합니다.
 
@@ -96,13 +79,25 @@ def is_prime(n):
 ```
 </CodeGroup>
 
-### 요약 및 분석
+### 에이전트 워크플로
 
-여러 언어에 걸쳐 긴 문서를 요약하고 텍스트를 분석합니다.
+<CodeGroup>
+```text 입력
+Given a list of files in a directory, write a plan to find and delete all files older than 30 days.
+```
 
-### 다국어 대화
+```text 출력
+1. List all files with their last-modified timestamps.
+2. Compute the cutoff date (today - 30 days).
+3. Filter files whose modified time is before the cutoff.
+4. Confirm the filtered list, then delete each file.
+5. Log the deleted file names for auditing.
+```
+</CodeGroup>
 
-다양한 언어로 일관된 품질의 자연스러운 대화와 instruction following을 수행합니다.
+### 일반 챗
+
+일상적인 대화와 범용 Q&A를 빠르고 낮은 비용으로 처리합니다.
 
 ## 파라미터
 
@@ -123,6 +118,7 @@ def is_prime(n):
 | `tools` | array | 선택 | - | Tool calling 함수 정의 |
 | `tool_choice` | string \| object | 선택 | auto | Tool 호출 방식 (`auto`, `none`, 특정 함수) |
 | `response_format` | object | 선택 | - | JSON 모드 (`{"type": "json_object"}`) |
+| `logprobs` | boolean | 선택 | false | 토큰별 로그 확률 반환 |
 
 ## 모델 세부정보
 
@@ -132,7 +128,7 @@ def is_prime(n):
 | 최대 출력 길이 | 131,072 |
 | 입력 모달리티 | text |
 | 출력 모달리티 | text |
-| 지원 기능 | tools, streaming, json_mode |
+| 지원 기능 | tools, reasoning, streaming, json_mode, logprobs |
 
 ## 시작하기
 
@@ -151,11 +147,11 @@ from openai import OpenAI
 
 client = OpenAI(
     api_key="YOUR_API_KEY",
-    base_url="https://ap-1.aieev.cloud/endpoints/llama3-3-70b-instruct/v1"
+    base_url="https://ap-1.aieev.cloud/endpoints/deepseek-v4-flash/v1"
 )
 
 response = client.chat.completions.create(
-    model="meta-llama/meta-llama-3.3-70b-instruct",
+    model="deepseek/deepseek-v4-flash",
     messages=[{"role": "user", "content": "안녕하세요!"}]
 )
 
@@ -163,11 +159,11 @@ print(response.choices[0].message.content)
 ```
 
 ```bash cURL
-curl https://ap-1.aieev.cloud/endpoints/llama3-3-70b-instruct/v1/chat/completions \
+curl https://ap-1.aieev.cloud/endpoints/deepseek-v4-flash/v1/chat/completions \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "meta-llama/meta-llama-3.3-70b-instruct",
+    "model": "deepseek/deepseek-v4-flash",
     "messages": [{"role": "user", "content": "안녕하세요!"}]
   }'
 ```
@@ -177,11 +173,11 @@ import OpenAI from "openai";
 
 const client = new OpenAI({
   apiKey: "YOUR_API_KEY",
-  baseURL: "https://ap-1.aieev.cloud/endpoints/llama3-3-70b-instruct/v1",
+  baseURL: "https://ap-1.aieev.cloud/endpoints/deepseek-v4-flash/v1",
 });
 
 const response = await client.chat.completions.create({
-  model: "meta-llama/meta-llama-3.3-70b-instruct",
+  model: "deepseek/deepseek-v4-flash",
   messages: [{ role: "user", content: "안녕하세요!" }],
 });
 
@@ -191,4 +187,4 @@ console.log(response.choices[0].message.content);
 
 ## 태그
 
-`open-source` `conversational` `70B` `multilingual`
+`open-source` `conversational` `moe` `reasoning` `efficient`

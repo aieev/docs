@@ -104,8 +104,9 @@ https://ap-1.aieev.cloud/endpoints/qwen3-6-35b-a3b/v1
 | :-- | :-- | :-- | :-: | :-: | :-: | :-: | :-: |
 | Qwen3.6-35B-A3B | `qwen3-6-35b-a3b` | `qwen/qwen3.6-35b-a3b` | 256K | ✅ | ✅ | ✅ up to 4 | ✅ |
 | Qwen3.5-9B | `qwen3-5-9b` | `qwen/qwen3.5-9b` | 256K | ✅ | ✅ | ✅ up to 1 | ✅ |
-| Llama3.3-70B | `llama3-3-70b` | `meta-llama/Meta-Llama-3.3-70B-Instruct` | 128K | ✅ | ✅ | ❌ | ❌ |
+| Llama3.3-70B | `llama3-3-70b-instruct` | `meta-llama/meta-llama-3.3-70b-instruct` | 128K | ✅ | ✅ | ❌ | ❌ |
 | Qwen3-32B | `qwen3-32b` | `qwen/qwen3-32b` | 40K | ✅ | ✅ | ❌ | ✅ |
+| DeepSeek V4 Flash | `deepseek-v4-flash` | `deepseek/deepseek-v4-flash` | 128K | ✅ | ✅ | ❌ | ✅ |
 | Qwen3-Embedding-8B | `qwen3-embedding-8b` | `qwen/qwen3-embedding-8b` | 32K | - | - | - | - |
 | Qwen3-TTS | `qwen3-tts` | `qwen/qwen3-tts-customvoice` | - | - | - | - | - |
 
@@ -170,12 +171,12 @@ for chunk in response:
 - Send `stream_options={"include_usage": true}` to receive token usage (`usage`) in the final chunk.
 
 <Note>
-  Streaming is currently supported on **Qwen3.6-35B-A3B**, **Qwen3.5-9B**, **Qwen3-32B**, and **Llama3.3-70B**.
+  Streaming is currently supported on **Qwen3.6-35B-A3B**, **Qwen3.5-9B**, **Qwen3-32B**, **Llama3.3-70B**, and **DeepSeek V4 Flash**.
 </Note>
 
 ## Tool Calling (Function Calling)
 
-Lets the model call external functions or services. Supported on **Qwen3.6-35B-A3B**, **Qwen3.5-9B**, **Qwen3-32B**, and **Llama3.3-70B**.
+Lets the model call external functions or services. Supported on **Qwen3.6-35B-A3B**, **Qwen3.5-9B**, **Qwen3-32B**, **Llama3.3-70B**, and **DeepSeek V4 Flash**.
 
 Tool calling is a three-step flow: define functions and send the request, the model suggests a function call, then execute the function and send back the result. The model does not execute functions itself — it only generates which function to call and with what arguments.
 
@@ -332,7 +333,7 @@ response = client.chat.completions.create(
 
 ## Reasoning
 
-Qwen3.6-35B-A3B and Qwen3.5-9B support reasoning (thinking). The reasoning trace is returned separately from the final answer (`content`) in the `reasoning` field.
+Qwen chat models and DeepSeek V4 Flash support reasoning (thinking). The reasoning trace is returned separately from the final answer (`content`) in the `reasoning` field.
 
 ```python
 response = client.chat.completions.create(
