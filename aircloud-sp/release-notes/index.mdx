@@ -294,11 +294,11 @@ Launched the AirCloud External API for programmatic endpoint management. Control
 
 ```bash
 # Check endpoint status
-curl -X GET https://external.aieev.cloud:5007/external/api/v1/endpoints/{id} \
+curl -X GET https://external.aieev.cloud:5000/external/api/v1/endpoints/{id} \
   -H "Authorization: Bearer YOUR_API_KEY"
 
 # Scale replicas
-curl -X POST https://external.aieev.cloud:5007/external/api/v1/endpoints/{id}/scale \
+curl -X POST https://external.aieev.cloud:5000/external/api/v1/endpoints/{id}/scale \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -d '{"replica_count": 3}'
 ```

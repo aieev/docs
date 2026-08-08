@@ -12,7 +12,7 @@
   },
   "servers": [
     {
-      "url": "https://external.aieev.cloud:5007/external/api/v1"
+      "url": "https://external.aieev.cloud:5000/external/api/v1"
     }
   ],
   "security": [
