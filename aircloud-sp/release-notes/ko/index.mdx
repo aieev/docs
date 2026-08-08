@@ -297,11 +297,11 @@ GPU 기반 Jupyter Notebook 환경을 템플릿 형태로 제공하여, 별도�
 
 ```bash
 # 엔드포인트 상태 조회
-curl -X GET https://external.aieev.cloud:5007/external/api/v1/endpoints/{id} \
+curl -X GET https://external.aieev.cloud:5000/external/api/v1/endpoints/{id} \
   -H "Authorization: Bearer YOUR_API_KEY"
 
 # 레플리카 스케일링
-curl -X POST https://external.aieev.cloud:5007/external/api/v1/endpoints/{id}/scale \
+curl -X POST https://external.aieev.cloud:5000/external/api/v1/endpoints/{id}/scale \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -d '{"replica_count": 3}'
 ```

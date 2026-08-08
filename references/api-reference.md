@@ -7,7 +7,7 @@
 
 ### 사용 가능 API 경로
 
-*Base URL: `https://external.aieev.cloud:5007/external/api/v1`
+*Base URL: `https://external.aieev.cloud:5000/external/api/v1`
 
 | API | Method | 경로 | 설명 | 추가일 |
 | --- | --- | --- | --- | --- |
@@ -62,7 +62,7 @@ GET /me
 ##### 요청 예시
 
 ```bash
-curl -X GET "https://external.aieev.cloud:5007/external/api/v1/me" \
+curl -X GET "https://external.aieev.cloud:5000/external/api/v1/me" \
   -H "Authorization: Bearer {api_key}"
 ```
 
@@ -126,7 +126,7 @@ GET /endpoints
 ##### 요청 예시
 
 ```bash
-curl -X GET "https://external.aieev.cloud:5007/external/api/v1/endpoints" \
+curl -X GET "https://external.aieev.cloud:5000/external/api/v1/endpoints" \
   -H "Authorization: Bearer {api_key}"
 ```
 
@@ -200,7 +200,7 @@ GET /endpoints/{endpoint_id}
 ##### 요청 예시
 
 ```bash
-curl -X GET "https://external.aieev.cloud:5007/external/api/v1/endpoints/{endpoint_id}" \
+curl -X GET "https://external.aieev.cloud:5000/external/api/v1/endpoints/{endpoint_id}" \
   -H "Authorization: Bearer {api_key}"
 ```
 
@@ -261,7 +261,7 @@ POST /endpoints/{endpoint_id}/start
 ##### 요청 예시
 
 ```bash
-curl -X POST "https://external.aieev.cloud:5007/external/api/v1/endpoints/{endpoint_id}/start" \
+curl -X POST "https://external.aieev.cloud:5000/external/api/v1/endpoints/{endpoint_id}/start" \
   -H "Authorization: Bearer {api_key}"
 ```
 
@@ -321,7 +321,7 @@ POST /endpoints/{endpoint_id}/stop
 ##### 요청 예시
 
 ```bash
-curl -X POST "https://external.aieev.cloud:5007/external/api/v1/endpoints/{endpoint_id}/stop" \
+curl -X POST "https://external.aieev.cloud:5000/external/api/v1/endpoints/{endpoint_id}/stop" \
   -H "Authorization: Bearer {api_key}"
 ```
 
@@ -390,7 +390,7 @@ POST /endpoints/{endpoint_id}/scale
 ##### 요청 예시
 
 ```bash
-curl -X POST "https://external.aieev.cloud:5007/external/api/v1/endpoints/{endpoint_id}/scale" \
+curl -X POST "https://external.aieev.cloud:5000/external/api/v1/endpoints/{endpoint_id}/scale" \
   -H "Authorization: Bearer {api_key}" \
   -H "Content-Type: application/json" \
   -d '{"num_replicas": 3}'
@@ -478,7 +478,7 @@ PATCH /endpoints/{endpoint_id}
 ##### 요청 예시
 
 ```bash
-curl -X PATCH "https://external.aieev.cloud:5007/external/api/v1/endpoints/{endpoint_id}" \
+curl -X PATCH "https://external.aieev.cloud:5000/external/api/v1/endpoints/{endpoint_id}" \
   -H "Authorization: Bearer {api_key}" \
   -H "Content-Type: application/json" \
   -d '{
@@ -545,7 +545,7 @@ GET /endpoints/{endpoint_id}/replicas
 ##### 요청 예시
 
 ```bash
-curl -X GET "https://external.aieev.cloud:5007/external/api/v1/endpoints/{endpoint_id}/replicas" \
+curl -X GET "https://external.aieev.cloud:5000/external/api/v1/endpoints/{endpoint_id}/replicas" \
   -H "Authorization: Bearer {api_key}"
 ```
 
@@ -612,7 +612,7 @@ GET /endpoints/{endpoint_id}/logs
 ##### 요청 예시
 
 ```bash
-curl -X GET "https://external.aieev.cloud:5007/external/api/v1/endpoints/{endpoint_id}/logs" \
+curl -X GET "https://external.aieev.cloud:5000/external/api/v1/endpoints/{endpoint_id}/logs" \
   -H "Authorization: Bearer {api_key}"
 ```
 
@@ -683,7 +683,7 @@ GET /endpoints/{endpoint_id}/logs/file
 ##### 요청 예시
 
 ```bash
-curl -G "https://external.aieev.cloud:5007/external/api/v1/endpoints/{endpoint_id}/logs/file" \
+curl -G "https://external.aieev.cloud:5000/external/api/v1/endpoints/{endpoint_id}/logs/file" \
   -H "Authorization: Bearer {api_key}" \
   --data-urlencode "node_id={node_id}" \
   --data-urlencode "filename={filename}" \

@@ -300,5 +300,5 @@ npx mintlify@latest dev --port 3000
 API 스펙의 원본 소스 코드:
 - 백엔드 repo: `nadongjun/aircloud-backend`
 - External API 라우트: `app/domains/endpoints/presentation/api/external_route.py`
-- Base URL: `https://external.aieev.cloud:5007/external/api/v1`
+- Base URL: `https://external.aieev.cloud:5000/external/api/v1`
 - 인증: API Key (Istio External Auth → x-org-id, x-project-id, x-key-id 헤더 주입)
