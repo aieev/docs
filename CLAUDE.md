@@ -225,8 +225,8 @@ openapi: "openapi-ko.json METHOD /path"
 
 ### 플랫폼 링크 규칙
 
-- **EN**: `https://ap-1.aieev.cloud:3007/models/qwen%2F{model-name}`
-- **KO**: `https://ap-1.aieev.cloud:3007/ko/models/qwen%2F{model-name}`
+- **EN**: `https://ap-1.aieev.cloud:3000/models/qwen%2F{model-name}`
+- **KO**: `https://ap-1.aieev.cloud:3000/ko/models/qwen%2F{model-name}`
 - EN 페이지는 EN docs 경로(`/docs/air-api/...`), KO 페이지는 KO docs 경로(`/docs/ko/air-api/...`)로 링크
 
 ### 신규 모델 추가 시
