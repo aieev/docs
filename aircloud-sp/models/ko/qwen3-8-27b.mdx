@@ -1,0 +1,193 @@
+---
+title: "Qwen3.8-27B"
+description: "에이전트 작업에 강한 소형 dense 비전-언어 모델."
+---
+
+<Info>
+  **모델 ID:** `qwen/qwen3.8-27b` | **엔드포인트 ID:** `qwen-3-8-27b` | **파라미터:** 27B (dense) | **출시일:** 2026-08-20
+</Info>
+
+| 입력 가격 | 출력 가격 | 컨텍스트 | 모달리티 | 양자화 |
+| :-: | :-: | :-: | :-: | :-: |
+| $0.400 / 1M | $3.000 / 1M | 262,144 | 텍스트 + 이미지 + 영상 → 텍스트 | BF16 |
+
+## 개요
+
+Qwen3.8은 Qwen3.5의 구조를 바탕으로 코딩, 실무 작업, 리서치, 그리고 여러 단계를 이어가는 에이전트 작업에서 성능을 크게 끌어올린 모델입니다. Qwen3.8-27B는 그 성능을 배포하기 쉬운 소형 dense 모델로 옮긴 버전으로, 이미지와 영상을 함께 이해하는 네이티브 비전-언어 모델입니다. 추론(thinking) 강도를 조절할 수 있어, 복잡한 다단계 작업을 중간에 끊기지 않고 끝까지 수행하는 데 적합합니다.
+
+<CardGroup cols={3}>
+  <Card title="Air API Playground" icon="play" href="https://ap-1.aieev.cloud:3007/ko/models/qwen%2Fqwen3.8-27b">
+    플레이그라운드에서 모델을 체험하세요.
+  </Card>
+  <Card title="AIR Container로 배포" icon="container-storage" href="/docs/ko/air-container/deploy-a-container">
+    AIR Container로 배포하세요.
+  </Card>
+  <Card title="OpenAI 호환 API" icon="arrow-left-right" href="/docs/ko/air-api/openai-compatible-api">
+    OpenAI SDK 그대로 연동하세요.
+  </Card>
+</CardGroup>
+
+## 가격
+
+| 구분 | 입력 (1M 토큰) | 출력 (1M 토큰) |
+| :-- | --: | --: |
+| USD | $0.400 | $3.000 |
+| KRW | 580원 | 4,350원 |
+
+## 지원 기능
+
+모든 기능은 [OpenAI 호환 API](/docs/ko/air-api/openai-compatible-api)로 사용할 수 있습니다.
+
+| 기능 | 지원 | 비고 |
+| :-- | :-: | :-- |
+| [Streaming](/docs/ko/air-api/openai-compatible-api#streaming) | ✅ | SSE, `include_usage` 지원 |
+| [Tool Calling](/docs/ko/air-api/openai-compatible-api#tool-calling-function-calling) | ✅ | 복수 호출·스트리밍 tool call 지원 |
+| [Vision](/docs/ko/air-api/openai-compatible-api#vision-이미지-입력) | ✅ | 이미지와 영상 모두 지원 (`image_url`, `video_url`) |
+| [Reasoning](/docs/ko/air-api/openai-compatible-api#reasoning-추론-출력) | ✅ | `reasoning_effort`로 추론 강도 조절 |
+| [JSON 모드](/docs/ko/air-api/openai-compatible-api#json-모드-structured-outputs) | ✅ | `json_object`, `json_schema` 지원 |
+| logprobs | ✅ | `logprobs` / `top_logprobs` |
+
+<Note>
+  이 모델은 스트리밍 시 추론 내용을 `reasoning`이 아니라 `reasoning_content` delta 필드로 전달합니다.
+</Note>
+
+## 주요 기능
+
+- 별도 어댑터 없이 이미지와 영상을 이해하는 네이티브 비전-언어 모델
+- 추론을 켜고 끌 수 있고, `reasoning_effort`로 깊이까지 조절
+- 이전 턴의 추론 내용을 유지해 다단계 작업에서 판단이 흔들리지 않음
+- 최대 262,144 토큰 컨텍스트, 최대 131,072 토큰 출력
+- 여러 단계를 오가는 에이전트 코딩과 도구 사용에 강함
+- 한국어·영어·중국어·일본어를 포함한 13개 언어 지원
+- BF16으로 서빙되어 원본 정밀도를 유지
+
+## 활용 사례
+
+### 에이전트 코딩
+
+한 번의 답변이 아니라, 저장소를 오가며 여러 단계로 문제를 풉니다.
+
+<CodeGroup>
+```text 입력
+동시 요청이 몰리면 이 Flask 엔드포인트가 500을 반환합니다.
+경쟁 조건을 찾아서 고쳐 주세요.
+```
+
+```text 출력
+카운터 증가가 원자적이지 않아, 두 요청이 같은 값을 읽은 뒤 각각 쓰는
+구간이 생깁니다. 갱신을 락으로 감싸거나 카운터를 원자적 저장소로 옮기면
+값이 유실되는 구간이 사라집니다. 아래 패치를 참고하세요.
+```
+</CodeGroup>
+
+### 문서·차트 이해
+
+이미지로 된 차트, 표, 스캔 문서, 기술 도면을 읽습니다.
+
+<CodeGroup>
+```text 입력
+[차트 이미지] 이 처리량 곡선은 무엇을 말해 주나요?
+```
+
+```text 출력
+처리량은 동시성 32에서 정점을 찍고 그 이후로 떨어집니다. 메모리 한계에
+닿기 전에 배치 스케줄러가 먼저 포화된다는 뜻입니다.
+```
+</CodeGroup>
+
+### 영상 이해
+
+긴 영상을 요약하고, 영상 속에서 무슨 일이 일어났는지 답합니다.
+
+## 파라미터
+
+| 파라미터 | 타입 | 필수 | 기본값 | 설명 |
+|-----------|------|----------|---------|-------------|
+| `messages` | array | 필수 | - | 대화 메시지. 내용은 문자열 또는 블록 배열(`text`, `image_url`, `video_url`)로 전달합니다. |
+| `max_tokens` | integer | 선택 | 32768 | 생성할 최대 토큰 수(추론 토큰 포함). |
+| `temperature` | number | 선택 | 1 | 샘플링 온도. thinking 모드 1.0, 비thinking 모드 0.7 권장. |
+| `top_p` | number | 선택 | 0.95 | Nucleus 샘플링. thinking 0.95, 비thinking 0.80 권장. |
+| `top_k` | integer | 선택 | 20 | Top-k 샘플링. `-1`이면 비활성화. |
+| `min_p` | number | 선택 | 0 | 최상위 토큰 대비 최소 확률 임계값. |
+| `presence_penalty` | number | 선택 | 0 | 반복이 끝나지 않을 때 2 쪽으로 올립니다. |
+| `frequency_penalty` | number | 선택 | 0 | 지원되지만 권장 파라미터 조합에는 포함되지 않습니다. |
+| `repetition_penalty` | number | 선택 | 1 | 추가 body 필드로 전달됩니다. |
+| `reasoning_effort` | string | 선택 | xhigh | 추론 강도 — `xhigh`, `medium`, `low`. |
+| `enable_thinking` | boolean | 선택 | true | 답변 전에 추론 블록을 생성합니다. |
+| `preserve_thinking` | boolean | 선택 | true | 이전 턴의 추론을 유지해 판단 일관성을 높입니다. |
+| `tools` | array | 선택 | - | OpenAI function calling 형식의 도구 정의. |
+| `tool_choice` | string \| object | 선택 | auto | 도구 선택 정책. |
+| `response_format` | object | 선택 | - | JSON 모드는 `json_object`, 구조화 출력은 `json_schema`. |
+| `stop` | array | 선택 | - | 생성을 멈출 문자열 최대 4개. 추론 블록 안에는 적용되지 않습니다. |
+| `seed` | integer | 선택 | - | 재현 가능한 샘플링을 위한 시드. |
+| `logprobs` | boolean | 선택 | false | 출력 토큰의 로그 확률을 반환합니다. |
+| `top_logprobs` | integer | 선택 | - | 위치별 대안 토큰 수. `logprobs`가 필요합니다. |
+| `stream` | boolean | 선택 | false | 스트리밍 활성화. |
+| `stream_options` | object | 선택 | - | `include_usage`를 켜면 마지막 청크에 토큰 사용량이 실립니다. |
+
+## 모델 세부정보
+
+| 항목 | 값 |
+|----------|-------|
+| 컨텍스트 길이 | 262,144 |
+| 최대 출력 길이 | 131,072 |
+| 양자화 | bf16 |
+| 입력 모달리티 | 텍스트, 이미지, 영상, 파일 |
+| 출력 모달리티 | 텍스트 |
+| 지원 기능 | tools, reasoning, streaming, vision, json_mode, structured_outputs, logprobs, web_search |
+| Hugging Face ID | `Qwen/Qwen3.8-27B` |
+
+## 시작하기
+
+<Steps>
+  <Step title="API 키 발급">
+    [AirCloud 계정](https://aieev.com)에서 API 키를 발급받으세요.
+  </Step>
+  <Step title="코드 실행">
+    `YOUR_API_KEY`를 발급받은 키로 바꾸고 원하는 언어(Python, cURL, Node.js)로 실행하세요.
+  </Step>
+</Steps>
+
+<CodeGroup>
+```python Python
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="YOUR_API_KEY",
+    base_url="https://ap-1.aieev.cloud/endpoints/qwen-3-8-27b/v1"
+)
+
+response = client.chat.completions.create(
+    model="qwen/qwen3.8-27b",
+    messages=[{"role": "user", "content": "안녕하세요!"}]
+)
+
+print(response.choices[0].message.content)
+```
+
+```bash cURL
+curl https://ap-1.aieev.cloud/endpoints/qwen-3-8-27b/v1/chat/completions \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "qwen/qwen3.8-27b",
+    "messages": [{"role": "user", "content": "안녕하세요!"}]
+  }'
+```
+
+```javascript Node.js
+import OpenAI from "openai";
+
+const client = new OpenAI({
+  apiKey: "YOUR_API_KEY",
+  baseURL: "https://ap-1.aieev.cloud/endpoints/qwen-3-8-27b/v1",
+});
+
+const response = await client.chat.completions.create({
+  model: "qwen/qwen3.8-27b",
+  messages: [{ role: "user", content: "안녕하세요!" }],
+});
+
+console.log(response.choices[0].message.content);
+```
+</CodeGroup>

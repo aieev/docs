@@ -102,6 +102,7 @@ https://ap-1.aieev.cloud/endpoints/qwen3-6-35b-a3b/v1
 
 | 모델 | 엔드포인트 ID | 모델 ID (`model`) | Context | Streaming | Tool Calling | Vision | Reasoning |
 | :-- | :-- | :-- | :-: | :-: | :-: | :-: | :-: |
+| Qwen3.8-27B | `qwen-3-8-27b` | `qwen/qwen3.8-27b` | 256K | ✅ | ✅ | ✅ 이미지 + 영상 | ✅ |
 | Qwen3.6-35B-A3B | `qwen3-6-35b-a3b` | `qwen/qwen3.6-35b-a3b` | 256K | ✅ | ✅ | ✅ 최대 4장 | ✅ |
 | Qwen3.5-9B | `qwen3-5-9b` | `qwen/qwen3.5-9b` | 256K | ✅ | ✅ | ✅ 최대 1장 | ✅ |
 | Llama3.3-70B | `llama3-3-70b-instruct` | `meta-llama/meta-llama-3.3-70b-instruct` | 128K | ✅ | ✅ | ❌ | ❌ |
@@ -171,12 +172,12 @@ for chunk in response:
 - `stream_options={"include_usage": true}`를 함께 보내면 마지막 청크에서 토큰 사용량(`usage`)을 확인할 수 있습니다.
 
 <Note>
-  현재 Streaming은 **Qwen3.6-35B-A3B**, **Qwen3.5-9B**, **Qwen3-32B**, **Llama3.3-70B**, **DeepSeek V4 Flash** 모델에서 지원됩니다.
+  Streaming은 모든 대화형 모델에서 지원됩니다 — **Qwen3.8-27B**, **Qwen3.6-35B-A3B**, **Qwen3.5-9B**, **Qwen3-32B**, **Llama3.3-70B**, **DeepSeek V4 Flash**.
 </Note>
 
 ## Tool Calling (Function Calling)
 
-AI가 외부 함수나 서비스를 호출하게 해 주는 기능입니다. **Qwen3.6-35B-A3B**, **Qwen3.5-9B**, **Qwen3-32B**, **Llama3.3-70B**, **DeepSeek V4 Flash** 모델에서 지원됩니다.
+AI가 외부 함수나 서비스를 호출하게 해 주는 기능입니다. **Qwen3.8-27B**, **Qwen3.6-35B-A3B**, **Qwen3.5-9B**, **Qwen3-32B**, **Llama3.3-70B**, **DeepSeek V4 Flash** 모델에서 지원됩니다.
 
 Tool Calling은 함수 정의와 요청, 모델의 함수 호출 제안, 함수 실행과 결과 전달의 세 단계로 진행됩니다. 모델은 함수를 직접 실행하지 않고, 호출할 함수와 인자만 생성합니다.
 
@@ -310,7 +311,7 @@ for chunk in stream:
 
 ## Vision (이미지 입력)
 
-Qwen3.6-35B-A3B와 Qwen3.5-9B 모델은 이미지 입력을 지원합니다. `messages[].content`를 배열로 구성하고, 이미지를 `image_url` 타입으로 전달하세요. `image_url.url`에는 외부에서 접근 가능한 이미지 URL이나 base64로 인코딩한 데이터 URI(`data:image/jpeg;base64,...`)를 사용할 수 있습니다.
+Qwen3.8-27B, Qwen3.6-35B-A3B, Qwen3.5-9B 모델은 이미지 입력을 지원합니다. Qwen3.8-27B는 `video_url` 블록으로 영상 입력도 받습니다. `messages[].content`를 배열로 구성하고, 이미지를 `image_url` 타입으로 전달하세요. `image_url.url`에는 외부에서 접근 가능한 이미지 URL이나 base64로 인코딩한 데이터 URI(`data:image/jpeg;base64,...`)를 사용할 수 있습니다.
 
 ```python
 response = client.chat.completions.create(
@@ -328,12 +329,12 @@ response = client.chat.completions.create(
 ```
 
 <Note>
-  요청당 이미지 수는 모델별로 제한됩니다 — **Qwen3.6-35B-A3B: 최대 4장**, **Qwen3.5-9B: 최대 1장**. 동영상 입력은 지원되지 않습니다.
+  요청당 이미지 수는 모델별로 제한됩니다 — **Qwen3.6-35B-A3B: 최대 4장**, **Qwen3.5-9B: 최대 1장**. 영상 입력은 **Qwen3.8-27B**에서만 지원됩니다.
 </Note>
 
 ## Reasoning (추론 출력)
 
-Qwen 계열 chat 모델과 DeepSeek V4 Flash는 추론(thinking)을 지원합니다. 추론 과정은 최종 답변(`content`)과 분리되어 `reasoning` 필드로 반환됩니다.
+Qwen 계열 chat 모델과 DeepSeek V4 Flash는 추론(thinking)을 지원합니다. 추론 과정은 최종 답변(`content`)과 분리되어 `reasoning` 필드로 반환됩니다. **Qwen3.8-27B**는 `reasoning_effort`(`xhigh` / `medium` / `low`)로 추론 강도를 조절할 수 있고, 스트리밍에서는 추론이 `reasoning`이 아니라 `reasoning_content`로 전달됩니다.
 
 ```python
 response = client.chat.completions.create(

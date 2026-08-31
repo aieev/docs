@@ -1,0 +1,59 @@
+---
+title: "Requests and Waitlist"
+icon: "inbox"
+description: "Ask for what isn't in the catalog, and track how it was handled"
+---
+
+When the GPU, template, or model you need is not available, you can ask for it from the console instead of opening a separate support ticket. Every request lands in **My requests**, where you can follow its status and read our team's reply.
+
+## What You Can Request
+
+| Request | Where you start it | What it does |
+| :-- | :-- | :-- |
+| **Join the waitlist** | GPU selection in the container create flow | For a GPU that is sold out. You are notified — in the console and by email — as soon as capacity frees up. |
+| **Replica limit increase** | Replica settings, or the limits page | Raises how many replicas your organization can run. Once approved, the new limit applies automatically. |
+| **Request a GPU** | GPU selection | For a GPU model AirCloud does not offer yet, such as H200 or B200. |
+| **Request a template** | Template picker | For a framework or image that is not in the template list. |
+| **Request a model** | Air API model list | For a model you would like to use on Air API. |
+| **Rental inquiry** | Long-term Rentals | For a [long-term rental](/docs/console/long-term-rentals) — a configuration that is not listed, or custom terms. |
+
+Waitlist and limit-increase requests carry the details we need to act on them — how many replicas you need, the volume size, and how long you expect to need it.
+
+<Note>
+  Requests are recorded per organization, so the same request is not submitted twice. If a teammate already asked for the same thing, you'll see that instead of a duplicate.
+</Note>
+
+## Track Your Requests
+
+Open **My requests** in the console. It has two tabs — **Requests** and **My feedback** — and you can filter by status, kind, and requester, or narrow it to your own requests only.
+
+| Status | Description |
+| :-- | :-- |
+| **Pending** | Received and under review. |
+| **Approved** | Approved. For a limit increase, the new limit is already in effect. |
+| **Fulfilled** | Delivered — the resource is available. |
+| **Rejected** | Declined. The reply explains why. |
+| **Cancelled** | You withdrew the request. |
+
+You can cancel a request while it is still open. Cancelling closes it for good, but you can always send the same request again later.
+
+## Getting Notified
+
+- **Request received** — confirms your request reached us.
+- **Request outcome** — tells you how it was handled, with our team's reply attached.
+- **Waitlisted GPU capacity available** — sent to you, not the organization owner, in the console and by email.
+- **Replica limit increase approved** — sent when the new limit takes effect.
+
+See [Notifications](/docs/console/notifications) to choose which channels you receive these on.
+
+## Related Documentation
+
+<Columns cols={2}>
+  <Card title="GPU Availability and Limits" icon="gauge" href="/docs/reference/gpu-availability-and-limits" cta="View Reference" arrow="true">
+    Understand availability, sold-out GPUs, and replica limits.
+  </Card>
+
+  <Card title="Long-term Rentals" icon="calendar-clock" href="/docs/console/long-term-rentals" cta="View Guide" arrow="true">
+    Secure GPUs for a fixed term at a lower hourly rate.
+  </Card>
+</Columns>

@@ -23,45 +23,42 @@ Before investigating further, verify the following:
 
 ## Check the Container Status
 
-### Pending
+### READY
 
-If the container is in the **Pending** state after deployment, it has been created but is not yet running.
+The container has been created but is not running. Click **Start Container** to run it. Containers in **READY** are not billed.
 
-<Note>
-  Containers in the **Pending** state do not incur charges. To start using the container, click **Start Container**.
-</Note>
+### DEPLOY FAILED
 
-### Deployment Failed
-
-If the container is in the **Deployment Failed** state, check the **Runtime Logs** to identify the root cause.
+Open the **Error Details** chip next to the status. It names the diagnosed cause and what to do about it — see [Deployment Error Codes](/docs/reference/error-codes) for the full list. The dialog also links straight to the container's runtime logs.
 
 Common causes include:
 
 - Invalid container image URL.
 - Registry authentication failure.
 - Invalid startup command.
+- Requested resources exceeding what the device can provide.
 
-<Note>
-  Containers in the **Deployment Failed** state are not billed.
-</Note>
+Containers in **DEPLOY FAILED** are not billed.
 
-### Unhealthy
+### UNHEALTHY
 
-If the container is in the **Unhealthy** state, verify that the configured health check endpoint is responding correctly.
+The container is running but failing its health checks. **Error Details** is available here too.
 
 Common causes include:
 
 - Application startup failures.
 - Incorrect port configuration.
-- Invalid health check configuration.
+- Invalid health check configuration — for a slow-loading model, raise the health check timeout.
 
-<Note>
-  Containers in the **Unhealthy** state are not billed.
-</Note>
+Containers in **UNHEALTHY** are not billed.
+
+## Container Won't Start
+
+If the container stays in **READY** or takes a long time to deploy, the GPU may have no free capacity. Check the availability badge on the GPU, and see [GPU Availability and Limits](/docs/reference/gpu-availability-and-limits) — you can join the waitlist or pick another GPU.
 
 ## Modify Container Settings
 
-Most container settings can be modified only after the container has been stopped. The container name is the only setting that can be changed while the container is running.
+Most container settings require the container to be stopped. Exceptions are the container name, the replica count, and the persistent volume size, which can be changed while it runs.
 
 Before applying configuration changes, we recommend checking the current deployment status and endpoint health.
 

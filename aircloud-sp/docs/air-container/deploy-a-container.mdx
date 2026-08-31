@@ -19,7 +19,7 @@ Regardless of the deployment method, you'll configure the following settings dur
 | **Registry Access** | Public images can be pulled without authentication. Private registries require a username and password (or access token). |
 | **GPU** | The GPU model assigned to the container. Available VRAM, system memory, vCPUs, and hourly pricing vary by GPU type. |
 | **Replicas** | The number of container replicas to run concurrently. When Autoscaling is enabled, <br />AirCloud automatically scales between the configured minimum and maximum values. |
-| **Persistent Storage** | Persistent storage that remains available even if the container is stopped or restarted. <br />Up to **30 GB** can be allocated. |
+| **Persistent Storage** | Persistent storage that remains available even if the container is stopped or restarted. <br />**1 GB to 1,000 GB**, default **30 GB**. |
 | **Tags** | Optional labels used to organize and filter containers. |
 
 ### 1. Select a Project
@@ -72,7 +72,7 @@ Expand the **Resources** section to select the infrastructure option and GPU mod
 
 #### Select a GPU
 
-Each GPU option displays its available VRAM, system memory, vCPUs, maximum number of replicas, and hourly cost (AU/hr).
+Each GPU option displays its available VRAM, system memory, vCPUs, maximum number of replicas, and hourly cost (C/hr).
 
 #### Configure Replicas
 
@@ -84,9 +84,12 @@ When Autoscaling is enabled, AirCloud automatically adjusts the number of replic
 
 For more information, see [Autoscaling and Scheduled Scaling](/docs/air-container/autoscaling-and-scheduling).
 
-<Card title="Replicas and Quotas" type="info">
-  - The number of Replicas is limited by your account quota. If you need additional quota, please contact your administrator.
-  - If sufficient quota is available but the selected GPU is temporarily unavailable, you can join the waitlist. Resources will be allocated automatically as GPUs become available.
+<Card title="Replicas, Availability, and Quotas" type="info">
+  - Each GPU in the list shows its current availability. A GPU with no free capacity is marked as sold out and cannot be selected — use **Refresh availability** to re-check, or join the waitlist to be notified when it frees up.
+  - The number of Replicas is limited by your organization's quota. The form shows how many you can start right now; you can request a quota increase directly from the console.
+  - Containers with a persistent volume run on a dedicated node pool, so availability for that pool is evaluated separately.
+
+  See [GPU Availability and Limits](/docs/reference/gpu-availability-and-limits) for details.
 </Card>
 
 ### 3. Additional Settings (Optional)
@@ -104,8 +107,8 @@ For more information, see [Persistent Storage](/docs/air-container/shared-storag
 | Item | Description |
 | --- | --- |
 | **Volume Source** | **Create New Volume** creates a dedicated volume for this container. **Attach Existing Volume** shares a volume with another container. |
-| **Mount Path** | The directory inside the container where the volume is mounted. Default: `/workspace`. |
-| **Capacity (GB)** | Maximum storage capacity. Default: **30 GB**. |
+| **Mount Path** | The directory inside the container where the volume is mounted. Default: `/workspace`. Separate several paths with commas to mount the volume at each of them. |
+| **Capacity (GB)** | Volume size, from **1 GB to 1,000 GB**. Default: **30 GB**. Can be increased later, but not reduced. |
 
 #### Advanced Settings
 
@@ -122,7 +125,8 @@ Advanced Settings provide fine-grained control over container behavior. All fiel
 | **Health Check Timeout (Seconds)** | Maximum time to wait for a health check response. Default: **300 seconds**. |
 | **Startup Timeout (Seconds)** | Maximum time allowed for the container to start successfully. Default: **600 seconds**. |
 | **Environment Variables** | Key-value pairs injected into the container at runtime. Click **\+ Add** to add more variables. |
-| **Container ID** | Automatically generated unique identifier for the container. |
+| **Shared Memory (`/dev/shm`)** | Size of `/dev/shm`, for workloads that use shared memory such as a PyTorch DataLoader. Off by default, in which case **half the instance memory** applies. When on, choose between 1 GB and the instance's memory size. |
+| **Container ID** | Identifier for the container. Generated automatically, but you can edit it to set a fixed slug (lowercase letters, numbers, and hyphens). It becomes part of the container's public URL, which is previewed underneath. |
 
 ### 4. Create the Container
 

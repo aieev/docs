@@ -1,36 +1,101 @@
 ---
 title: "Notifications"
 icon: "bell"
-description: "Stay informed about important events without refreshing the page"
+description: "Choose what you get notified about, and where"
 ---
 
-AirCloud delivers notifications in real time, so you can stay informed without refreshing the page. All notifications are available from a centralized notification center.
+AirCloud delivers notifications in real time, so you do not have to refresh the page to notice that a deployment finished or that your balance is running low.
 
-## Key Features
+Open **Notifications** in the console. It has two tabs:
 
-<CardGroup cols={1}>
-  <Card title="Real-Time Notifications" icon="zap">
-    Receive important events instantly, including deployment status changes and platform announcements.
-  </Card>
+- **History** — everything you have received, newest first, with unread items highlighted.
+- **Settings** — a matrix of events by channel, where you choose what reaches you and how.
 
-  <Card title="Notification Center" icon="inbox">
-    View your notification history in one place, browse older notifications, and manage them easily.
-  </Card>
-
-  <Card title="Credit and Usage Alerts" icon="circle-alert">
-    Receive alerts for low credits, GPU usage charges, and payment failures so you can take action before your services are interrupted.
-  </Card>
-</CardGroup>
-
-## Notification Channels
-
-AirCloud provides two ways to receive notifications.
+## Channels
 
 | Channel | Description |
 | --- | --- |
-| **Notification Center** | View current and past notifications by clicking the notification icon in the Console header. |
-| **Desktop Notifications** | Receive browser notifications even when you are not actively viewing the AirCloud Console. |
+| **Console** | The in-app notification list, opened from the bell in the console header. Notifications are kept for **30 days** and then disappear automatically. |
+| **Desktop** | Native OS notifications delivered by your browser. Requires browser permission and is stored per browser, per device. See [Desktop Notifications](/docs/console/desktop-notifications). |
+| **Email** | Sent to the Organization Owner by default. Waitlist and request emails go to the requester, and invitations go to the invitee. |
 
-<Card title="Desktop Notifications" icon="monitor" href="/docs/console/desktop-notifications" arrow="true">
-  Learn how to enable browser notifications.
-</Card>
+<Note>
+  Turning the Console channel off for an event also stops its Desktop notification — the desktop popup is driven by the same in-app notification.
+</Note>
+
+Turning a channel off applies to notifications that arrive afterward. Notifications you already received stay in the list.
+
+## What You Can Be Notified About
+
+### Container
+
+| Event | Console | Email | Notes |
+| :-- | :-: | :-: | :-- |
+| Container deployed | ✅ | — | Only for a first successful deploy, or a previously failed deploy succeeding. Restarts and self-recovery are not notified. |
+| Container deploy failed | ✅ | Owner | |
+| Container unhealthy | ✅ | Owner | |
+| Autoscaling applied | ✅ | — | Sent once replicas actually reach the target count. Repeated adjustments in a short window are collapsed into one — the window is configurable. |
+| Waitlisted GPU capacity available | ✅ | Requester | |
+| Replica limit increase approved | ✅ | Requester | |
+
+### Long-term Rentals
+
+| Event | Console | Email | Notes |
+| :-- | :-: | :-: | :-- |
+| Rental completed | ✅ | — | |
+| Rented resource started | ✅ | Owner | |
+| Rented resource expiring soon | ✅ | Owner | How many days ahead to notify is configurable. |
+| Rented resource expired | ✅ | Owner | |
+
+### Credit and Billing
+
+| Event | Console | Email | Notes |
+| :-- | :-: | :-: | :-- |
+| Credit topped up | ✅ | Owner | |
+| Auto top-up succeeded | ✅ | Owner | |
+| Recurring payment credited | ✅ | Owner | |
+| Auto top-up failed | ✅ | Owner | |
+| Payment failed | ✅ | — | |
+| Low balance warning | ✅ | Owner | Sent only when low balance alerts are enabled with a threshold in organization settings. |
+| Containers suspended (out of credit) | ✅ | Owner | |
+| Postpaid invoice issued | — | Owner | An email with the PDF statement is sent. No console notification is created. |
+| Invoice overdue | ✅ | — | |
+
+### Members
+
+| Event | Console | Email | Notes |
+| :-- | :-: | :-: | :-- |
+| Member joined | ✅ | — | |
+| Member left | ✅ | — | |
+| Organization invitation | — | Invitee | The invitation link is emailed to the invitee. No console notification is created. |
+
+### Announcements and Requests
+
+| Event | Console | Email | Notes |
+| :-- | :-: | :-: | :-- |
+| Service announcements | ✅ | — | Maintenance and incidents. |
+| Request received | ✅ | Requester | |
+| Request outcome | ✅ | Requester | |
+| Reply to my feedback | ✅ | Requester | |
+
+<Info>
+  Transactional email — invitations, receipts, and invoices — is always sent, regardless of these settings.
+</Info>
+
+## Organization-wide Mute
+
+An Organization Owner or Admin can turn off notifications for the whole organization. While it is off, no member receives in-app notifications, announcements, or notification email from that organization, and individual settings have no effect. Transactional email still goes out.
+
+Detailed per-event settings can only be changed by an Organization Owner or Admin.
+
+## Related Documentation
+
+<Columns cols={2}>
+  <Card title="Desktop Notifications" icon="monitor-dot" href="/docs/console/desktop-notifications" cta="Enable desktop alerts" arrow="true">
+    Turn on native OS notifications in your browser and operating system.
+  </Card>
+
+  <Card title="Billing" icon="credit-card" href="/docs/console/billing" cta="View Billing" arrow="true">
+    Configure low balance alerts and Auto Top-up.
+  </Card>
+</Columns>

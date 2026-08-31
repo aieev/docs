@@ -1,0 +1,58 @@
+---
+title: "Deleting an Organization"
+icon: "triangle-alert"
+description: "What must be settled first, and what is removed"
+---
+
+An Organization Owner can permanently delete the Organization from **Organization → Settings**. Deleting terminates every container, cleans up the Organization's resources, and removes all members' access.
+
+<Warning>
+  Deletion cannot be undone.
+</Warning>
+
+## Before You Can Delete
+
+The console checks a set of conditions first. While any of these apply, deletion is blocked and the screen tells you what to do.
+
+| Blocker | How to clear it |
+| :-- | :-- |
+| **Outstanding balance** | Settle the negative balance from the Billing page. |
+| **Unpaid invoices** | Pay the outstanding invoices. |
+| **Active or scheduled long-term rentals** | Wait for them to end, or cancel the ones that can still be cancelled. |
+| **Postpaid billing** | Postpaid organizations are deleted after settlement — send an inquiry. |
+| **Suspended organization** | A suspended organization can be deleted once the suspension is lifted — send an inquiry. |
+| **Dedicated cluster** | Deleted after the cluster is reclaimed — send an inquiry. |
+| **Deletion already in progress** | A previous deletion was interrupted. Resume it from the same screen. |
+
+If you cannot clear these yourself, or you need a refund or settlement, send an inquiry from the same dialog. It is recorded on the [Requests](/docs/console/requests) page, where you can track the reply.
+
+## What You Are Asked to Confirm
+
+Before deleting, you confirm each of the following that applies to your Organization:
+
+- Your **remaining credit balance is not refunded automatically**.
+- The members in the Organization **immediately lose access**.
+- Data on the Organization's **persistent volumes is irrecoverably deleted**.
+- Pending invitations are invalidated.
+- Running containers are terminated automatically.
+- Payments that have not settled yet will not grant credits if they complete after deletion.
+
+<Note>
+  Leftover credits are not refunded as part of deletion. If you want them settled, send an inquiry **before** you delete.
+</Note>
+
+## Account Withdrawal
+
+Withdrawing your account is a separate action, available in [Account Settings](/docs/console/account). If you are the **last Owner** of the Organization, withdrawing also deletes the Organization and goes through the same checks and confirmations. To keep the Organization, transfer ownership to another member first.
+
+## Related Documentation
+
+<Columns cols={2}>
+  <Card title="Account Settings" icon="user-cog" href="/docs/console/account" cta="View Settings" arrow="true">
+    Profile, password, email preferences, and account withdrawal.
+  </Card>
+
+  <Card title="Long-term Rentals" icon="calendar-clock" href="/docs/console/long-term-rentals" cta="View Rentals" arrow="true">
+    Check and cancel rentals before deleting.
+  </Card>
+</Columns>

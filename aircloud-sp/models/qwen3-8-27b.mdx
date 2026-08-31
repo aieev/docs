@@ -1,0 +1,194 @@
+---
+title: "Qwen3.8-27B"
+description: "Compact dense vision-language model for agentic and long-horizon work."
+---
+
+<Info>
+  **Model ID:** `qwen/qwen3.8-27b` | **Endpoint ID:** `qwen-3-8-27b` | **Parameters:** 27B (dense) | **Released:** 2026-08-20
+</Info>
+
+| Input Price | Output Price | Context | Modality | Quantization |
+| :-: | :-: | :-: | :-: | :-: |
+| $0.400 / 1M | $3.000 / 1M | 262,144 | text + image + video → text | BF16 |
+
+## Overview
+
+Built on the architectural foundation of Qwen3.5, Qwen3.8 delivers substantial gains across coding, professional work, research, and long-horizon agentic tasks. Qwen3.8-27B brings these advances to a compact, deployment-friendly dense model: a native vision-language model that understands images and videos, with flexible thinking control, designed to carry complex, multi-step tasks through to completion with greater reliability.
+
+<CardGroup cols={3}>
+  <Card title="Air API Playground" icon="play" href="https://ap-1.aieev.cloud:3007/models/qwen%2Fqwen3.8-27b">
+    Try the model in the playground.
+  </Card>
+  <Card title="Deploy with Container" icon="container-storage" href="/docs/air-container/deploy-a-container">
+    Deploy with AIR Container.
+  </Card>
+  <Card title="OpenAI Compatible API" icon="arrow-left-right" href="/docs/air-api/openai-compatible-api">
+    Connect with the OpenAI SDK as-is.
+  </Card>
+</CardGroup>
+
+## Pricing
+
+| Currency | Input (1M tokens) | Output (1M tokens) |
+| :-- | --: | --: |
+| USD | $0.400 | $3.000 |
+| KRW | ₩580 | ₩4,350 |
+
+## Supported Features
+
+All features are available through the [OpenAI Compatible API](/docs/air-api/openai-compatible-api).
+
+| Feature | Supported | Notes |
+| :-- | :-: | :-- |
+| [Streaming](/docs/air-api/openai-compatible-api#streaming) | ✅ | SSE, `include_usage` supported |
+| [Tool Calling](/docs/air-api/openai-compatible-api#tool-calling-function-calling) | ✅ | Parallel and streaming tool calls supported |
+| [Vision](/docs/air-api/openai-compatible-api#vision-image-input) | ✅ | Images and video (`image_url`, `video_url`) |
+| [Reasoning](/docs/air-api/openai-compatible-api#reasoning) | ✅ | Depth is tunable with `reasoning_effort` |
+| [JSON Mode](/docs/air-api/openai-compatible-api#json-mode-structured-outputs) | ✅ | `json_object` and `json_schema` |
+| logprobs | ✅ | `logprobs` / `top_logprobs` |
+
+<Note>
+  When streaming, this model returns reasoning in the `reasoning_content` delta field rather than `reasoning`.
+</Note>
+
+## Key Features
+
+- Native vision-language model — understands images and video without a separate adapter
+- Flexible thinking control: turn reasoning on or off, and tune its depth with `reasoning_effort`
+- Reasoning from previous turns can be preserved to keep multi-step decisions consistent
+- Long-context inference up to 262,144 tokens, with up to 131,072 output tokens
+- Strong agentic coding and tool use across multi-step tasks
+- Multilingual across 13 languages including Korean, English, Chinese, and Japanese
+- Served in BF16 for full-precision quality
+
+## Use Cases
+
+### Agentic Coding
+
+Work through a repository across multiple steps rather than answering a single question.
+
+<CodeGroup>
+```text Input
+This Flask endpoint returns 500 under concurrent load.
+Find the race condition and patch it.
+```
+
+```text Output
+The counter increment is not atomic, so two requests can read the same
+value before either writes back. Wrapping the update in a lock, or moving
+the counter to an atomic backend, closes the lost-update window.
+Patch follows.
+```
+</CodeGroup>
+
+### Document and Chart Understanding
+
+Read charts, tables, scanned documents, and technical diagrams from images.
+
+<CodeGroup>
+```text Input
+[chart image] What does this throughput curve tell us?
+```
+
+```text Output
+Throughput peaks at concurrency 32 and declines beyond it, which means
+the batch scheduler saturates before the memory bound is reached.
+```
+</CodeGroup>
+
+### Video Understanding
+
+Summarize long-form video and answer questions about what happens in it.
+
+## Parameters
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| `messages` | array | Required | - | Chat messages. Content may be a string or an array of blocks (`text`, `image_url`, `video_url`). |
+| `max_tokens` | integer | Optional | 32768 | Maximum output tokens, including reasoning tokens. |
+| `temperature` | number | Optional | 1 | Sampling temperature. 1.0 in thinking mode, 0.7 in non-thinking mode. |
+| `top_p` | number | Optional | 0.95 | Nucleus sampling. 0.95 thinking, 0.80 non-thinking. |
+| `top_k` | integer | Optional | 20 | Top-k sampling. Set `-1` to disable. |
+| `min_p` | number | Optional | 0 | Minimum probability threshold relative to the top token. |
+| `presence_penalty` | number | Optional | 0 | Raise toward 2 to reduce endless repetition. |
+| `frequency_penalty` | number | Optional | 0 | Supported but outside the recommended parameter set. |
+| `repetition_penalty` | number | Optional | 1 | Passed through as an extra body field. |
+| `reasoning_effort` | string | Optional | xhigh | Reasoning depth — `xhigh`, `medium`, or `low`. |
+| `enable_thinking` | boolean | Optional | true | Emit a reasoning block before the answer. |
+| `preserve_thinking` | boolean | Optional | true | Keep reasoning from previous turns for consistency. |
+| `tools` | array | Optional | - | Tool definitions in OpenAI function-calling format. |
+| `tool_choice` | string \| object | Optional | auto | Tool selection policy. |
+| `response_format` | object | Optional | - | `json_object` for JSON mode, `json_schema` for structured outputs. |
+| `stop` | array | Optional | - | Up to 4 strings that halt generation. Not applied inside the reasoning block. |
+| `seed` | integer | Optional | - | Seed for reproducible sampling. |
+| `logprobs` | boolean | Optional | false | Return log probabilities for output tokens. |
+| `top_logprobs` | integer | Optional | - | Alternatives per position. Requires `logprobs`. |
+| `stream` | boolean | Optional | false | Enable streaming. |
+| `stream_options` | object | Optional | - | Set `include_usage` to receive token counts in the final chunk. |
+
+## Model Details
+
+| Property | Value |
+|----------|-------|
+| Context Length | 262,144 |
+| Max Output Length | 131,072 |
+| Quantization | bf16 |
+| Input Modalities | text, image, video, file |
+| Output Modalities | text |
+| Supported Features | tools, reasoning, streaming, vision, json_mode, structured_outputs, logprobs, web_search |
+| Hugging Face ID | `Qwen/Qwen3.8-27B` |
+
+## Quick Start
+
+<Steps>
+  <Step title="Get your API key">
+    Generate an API key from your [AirCloud account](https://aieev.com).
+  </Step>
+  <Step title="Run the code">
+    Replace `YOUR_API_KEY` with your actual key and choose your preferred language (Python, cURL, Node.js).
+  </Step>
+</Steps>
+
+<CodeGroup>
+```python Python
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="YOUR_API_KEY",
+    base_url="https://ap-1.aieev.cloud/endpoints/qwen-3-8-27b/v1"
+)
+
+response = client.chat.completions.create(
+    model="qwen/qwen3.8-27b",
+    messages=[{"role": "user", "content": "Hello!"}]
+)
+
+print(response.choices[0].message.content)
+```
+
+```bash cURL
+curl https://ap-1.aieev.cloud/endpoints/qwen-3-8-27b/v1/chat/completions \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "qwen/qwen3.8-27b",
+    "messages": [{"role": "user", "content": "Hello!"}]
+  }'
+```
+
+```javascript Node.js
+import OpenAI from "openai";
+
+const client = new OpenAI({
+  apiKey: "YOUR_API_KEY",
+  baseURL: "https://ap-1.aieev.cloud/endpoints/qwen-3-8-27b/v1",
+});
+
+const response = await client.chat.completions.create({
+  model: "qwen/qwen3.8-27b",
+  messages: [{ role: "user", content: "Hello!" }],
+});
+
+console.log(response.choices[0].message.content);
+```
+</CodeGroup>

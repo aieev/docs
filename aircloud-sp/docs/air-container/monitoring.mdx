@@ -49,30 +49,30 @@ Use the metric selector in the upper-right corner to customize the dashboard and
 | **HTTP Errors per Second** | Number of HTTP error responses per second. |
 | **Request Count** | Number of requests over time. |
 | **Total Requests** | Cumulative request count. |
-| **Task Errors** | Number of processing errors. |
 
 ## Container Runtime Logs
 
-From the **Runtime Logs** page of a container, you can view logs for both running and terminated Replicas, organized by date.
+From the **Runtime Logs** page of a container, you can view logs for both running and terminated Replicas.
 
 ![Runtime Log Eng](/images/runtime-log-eng.png)
 
-Select a Replica and log file from the left panel to display its contents.
+The left panel lists the Replicas, each marked **running** or **stopped**, with when it started and stopped. Select one to display its logs.
 
 | Filter | Description |
 | --- | --- |
-| **Replica / File Search** | Quickly find a specific Replica or log file. |
-| **Time Range** | Display logs within a specific time range. |
+| **Replica Search** | Quickly find a specific Replica. |
+| **Time Range** | Display logs within a specific time range. The view starts from the last **7 days**. |
 | **Keyword Search** | Search log contents using plain text or regular expressions. |
-| **Source Filter** | Display logs from all sources or only selected sources. |
-| **View Options** | Customize how logs are displayed. |
+| **Log Level** | Filter by Debug, Info, Warning, or Error. |
+| **Log Source** | Filter by standard output (`stdout`) or standard error (`stderr`). |
+| **View Options** | Show timestamps, show raw data, hide health-check lines, and toggle word wrap. |
 
-- View logs from both **Running** and **Terminated** Replicas.
-- Browse log files organized by date.
-- Click **Download All Logs** to download all available log files.
+- Logs from both **running** and **stopped** Replicas remain viewable.
+- **Jump to latest** returns to the newest lines after scrolling back.
+- **Download** saves the selected Replica's logs, and **Download all** saves every Replica's logs at once.
 
 <Note>
-  If a deployment fails or behaves unexpectedly, checking the runtime logs is usually the fastest way to identify the cause. Runtime logs are retained for a period of time even after a container has stopped.
+  If a deployment fails or behaves unexpectedly, checking the runtime logs is usually the fastest way to identify the cause. Very long logs are truncated in the viewer to the most recent lines — download the file to read the whole thing.
 </Note>
 
 ## Related Documentation

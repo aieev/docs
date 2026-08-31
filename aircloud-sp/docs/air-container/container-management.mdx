@@ -12,21 +12,23 @@ A deployed container can be in one of five states. Billing and data persistence 
 
 | State | Description | Billing |
 | --- | --- | --- |
-| 🟢 **Running** | The container is running normally. | Charged hourly |
-| 🟡 **Updating** | The container is restarting to apply configuration changes. | Charged hourly |
-| ⚫ **Pending** | The container is not running and no compute resources are allocated. | Not charged |
-| 🔴 **Deployment Failed** | An error occurred during deployment, such as a failed image pull. | Not charged |
-| 🔴 **Unhealthy** | The container is running but has failed health checks or is not operating correctly. | Not charged |
+| 🟢 **RUNNING** | The container is running normally. | Charged hourly |
+| 🟡 **UPDATING** | The container is restarting to apply configuration changes. | Charged hourly |
+| ⚫ **READY** | The container is stopped and no compute resources are allocated. | Not charged |
+| 🔴 **DEPLOY FAILED** | An error occurred during deployment, such as a failed image pull. | Not charged |
+| 🔴 **UNHEALTHY** | The container is running but has failed health checks or is not operating correctly. | Not charged |
+
+When a container is in **DEPLOY FAILED** or **UNHEALTHY**, an **Error Details** chip appears next to the status. Opening it shows the diagnosed cause and what to do about it — see [Troubleshooting](/docs/air-container/troubleshooting).
 
 <Warning>
   If you do not use **Persistent Storage**, all data stored inside the container will be lost when the container is stopped or restarted. To preserve your data, make sure Persistent Storage is enabled.
 </Warning>
 
-Hourly charges apply only while the container is in the **Running** or **Updating** state. Containers in the **Pending**, **Deployment Failed**, or **Unhealthy** state are not billed.
+Hourly charges apply only while the container is in the **RUNNING** or **UPDATING** state. Containers in the **READY**, **DEPLOY FAILED**, or **UNHEALTHY** state are not billed.
 
 ### Stop a Container
 
-Stopping a container changes its state to **Pending**.
+Stopping a container changes its state to **READY**.
 
 - Compute resources are released and billing stops.
 - Starting the container again launches a new container instance.

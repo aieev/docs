@@ -1,0 +1,93 @@
+---
+title: "Long-term Rentals"
+icon: "calendar-clock"
+description: "Reserve the GPUs you use regularly at a lower hourly rate"
+---
+
+A **long-term rental** secures the GPUs you use regularly for a fixed term, starting from one month. While a rental is running, containers on the same GPU are already paid for up to the rented quantity, so no usage charges are added on top. Longer terms come with a lower hourly rate, so the longer you rent, the less it costs overall.
+
+Rentals belong to the **Organization**, so any Project under it can share them.
+
+Open **Organization → Long-term Rentals** to view and manage them.
+
+<Card title="How a rental relates to your containers" type="info">
+  A rental pays for usage up front — it does not deploy anything for you. You still create and start containers exactly as you normally would. When a running container matches an active rental, the rented quantity runs at no extra cost; anything beyond that quantity is billed as on-demand usage.
+</Card>
+
+## Key Terms
+
+| Item | Value |
+| :-- | :-- |
+| **Minimum term** | 1 month |
+| **Term presets** | 1 month, 2 months, 3 months, 6 months, 1 year, or a custom period |
+| **Discount** | The longer the term, the lower the hourly rate. The best-value terms are marked **Best value**. |
+| **Payment** | The full amount for the entire term is deducted from your credits at once when the rental is confirmed. |
+| **Scope** | Organization-wide — shared across all Projects. |
+| **Time zone** | All rental times are in KST (Korea Standard Time). |
+
+## Request a Rental
+
+Renting directly from the console will open once capacity is ready. Until then, use **rental inquiry** from the same page.
+
+1. Open **Organization → Long-term Rentals** and start a rental.
+2. Choose the **GPU**, the **quantity**, and the **term**.
+3. Choose whether the rental is for containers **with** or **without** a persistent volume.
+4. Review the summary — hourly rate, discount, and total — then submit.
+
+After you submit an inquiry, our team checks availability and contacts you within **1 business day**. No payment is taken at that step, and you can withdraw the request at any time while it is in the **Requested** state.
+
+<Warning>
+  The persistent-volume setting on a rental must match how the container is actually deployed. Containers with a persistent volume run on a dedicated node pool, so a rental taken without a volume will not apply to them — and the usage is billed again on top.
+</Warning>
+
+### When a Rental Becomes a Request
+
+Even when you rent directly, some cases cannot be confirmed on the spot and are submitted as a request instead:
+
+| Situation | What happens |
+| :-- | :-- |
+| Not enough free capacity for the period | Only part of the quantity can be confirmed. You can lower the quantity and rent now, or submit the rest as a request. |
+| Availability cannot be verified | Confirming without that check could leave you without the devices, so our team verifies first. |
+| Not enough credits (postpaid organizations) | The rental is handled by invoice instead. |
+
+For prepaid organizations, if your credit balance falls short at checkout you can add credits inside the same dialog and complete the rental without leaving the page.
+
+## Status
+
+| Status | Description |
+| :-- | :-- |
+| **Requested** | An inquiry has been submitted and our team is reviewing it. |
+| **Scheduled** | The rental is confirmed but has not started yet. |
+| **Active** | The rental is running and applies to matching containers. |
+| **Expired** | The rental term has ended. |
+| **Cancelled** | The rental was cancelled. |
+
+The list shows the GPU, quantity, period, hourly rate, amount paid, and days remaining for each rental.
+
+## Cancellation and Refunds
+
+- **Before the rental starts** — cancel at any time and the full amount is refunded as credits.
+- **After the rental starts** — you cannot cancel it yourself. Contact us through the [Contact and Feedback](/docs/support/contact-and-feedback) page.
+
+## Notifications
+
+You are notified at the following points. Start and expiry notifications are also delivered by email.
+
+- Rental completed
+- Rented resource started
+- Rented resource expiring soon
+- Rented resource expired
+
+See [Notifications](/docs/console/notifications) to configure which channels you receive them on.
+
+## Related Documentation
+
+<Columns cols={2}>
+  <Card title="Organization Management" icon="building" href="/docs/console/organization" cta="View Documentation" arrow="true">
+    Manage members, usage, and organization settings.
+  </Card>
+
+  <Card title="Billing" icon="credit-card" href="/docs/console/billing" cta="View Billing" arrow="true">
+    Purchase credits, configure Auto Top-up, and manage invoices.
+  </Card>
+</Columns>

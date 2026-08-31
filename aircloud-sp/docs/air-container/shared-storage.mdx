@@ -13,13 +13,17 @@ Persistent Storage provides flexible data management across your deployments.
 - **Support Autoscaling**: Attach the same volume to deployments using Autoscaling and multiple Replicas.
 - **Create or Reuse Volumes**: Create a new volume or attach an existing one during container deployment.
 - **Share Across Deployments**: Attach the same volume to multiple deployments. When selecting a volume, AirCloud also shows which deployments are currently using it.
-- **Modify While Stopped**: Enable, disable, or replace an attached volume while the container is in the **Pending** state.
+- **Modify While Stopped**: Enable, disable, or replace an attached volume while the container is stopped (**READY**).
+- **Resize While Running**: Increase the size of a volume that is already in use, without stopping the container.
+- **Mount at Several Paths**: Mount one volume at more than one path inside the container.
 
 ## Usage
 
 ### Create a New Volume
 
-You can create and attach a new Persistent Storage volume during container deployment. Each volume supports up to **300 GB** of storage.
+You can create and attach a new Persistent Storage volume during container deployment. A volume can be **1 GB to 1,000 GB**, and defaults to **30 GB**.
+
+The actual limit also depends on free space on the device your container lands on. If the requested size exceeds it, creation fails with a `VOLUME_SIZE_EXCEEDED` error — lower the size and try again.
 
 ![Persist Volume Eng498](/images/persist-volume-eng498.png)
 
@@ -35,9 +39,21 @@ When selecting a volume, AirCloud displays the deployments that are currently us
   **Multiple Replicas within the same deployment can share a single Persistent Storage volume.** This works seamlessly with Autoscaling-enabled deployments.
 </Tip>
 
+### Mount at Several Paths
+
+**Mount Path** accepts more than one path, separated by commas — for example `/workspace, /data`. The same volume is then mounted at each of those paths inside the container.
+
+### Resize a Volume
+
+You can increase the size of a volume that is already attached, **while the container is running**. The change applies within about a minute.
+
+<Note>
+  A volume can only be made larger. Shrinking is not supported.
+</Note>
+
 ### Modify a Volume While Stopped
 
-You can modify Persistent Storage settings only when the container is in the **Pending (Stopped)** state.
+Enabling, disabling, or replacing a volume requires the container to be stopped (**READY**).
 
 You can:
 

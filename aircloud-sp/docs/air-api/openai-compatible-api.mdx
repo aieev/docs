@@ -102,6 +102,7 @@ https://ap-1.aieev.cloud/endpoints/qwen3-6-35b-a3b/v1
 
 | Model | Endpoint ID | Model ID (`model`) | Context | Streaming | Tool Calling | Vision | Reasoning |
 | :-- | :-- | :-- | :-: | :-: | :-: | :-: | :-: |
+| Qwen3.8-27B | `qwen-3-8-27b` | `qwen/qwen3.8-27b` | 256K | ✅ | ✅ | ✅ image + video | ✅ |
 | Qwen3.6-35B-A3B | `qwen3-6-35b-a3b` | `qwen/qwen3.6-35b-a3b` | 256K | ✅ | ✅ | ✅ up to 4 | ✅ |
 | Qwen3.5-9B | `qwen3-5-9b` | `qwen/qwen3.5-9b` | 256K | ✅ | ✅ | ✅ up to 1 | ✅ |
 | Llama3.3-70B | `llama3-3-70b-instruct` | `meta-llama/meta-llama-3.3-70b-instruct` | 128K | ✅ | ✅ | ❌ | ❌ |
@@ -171,12 +172,12 @@ for chunk in response:
 - Send `stream_options={"include_usage": true}` to receive token usage (`usage`) in the final chunk.
 
 <Note>
-  Streaming is currently supported on **Qwen3.6-35B-A3B**, **Qwen3.5-9B**, **Qwen3-32B**, **Llama3.3-70B**, and **DeepSeek V4 Flash**.
+  Streaming is supported on every chat model: **Qwen3.8-27B**, **Qwen3.6-35B-A3B**, **Qwen3.5-9B**, **Qwen3-32B**, **Llama3.3-70B**, and **DeepSeek V4 Flash**.
 </Note>
 
 ## Tool Calling (Function Calling)
 
-Lets the model call external functions or services. Supported on **Qwen3.6-35B-A3B**, **Qwen3.5-9B**, **Qwen3-32B**, **Llama3.3-70B**, and **DeepSeek V4 Flash**.
+Lets the model call external functions or services. Supported on **Qwen3.8-27B**, **Qwen3.6-35B-A3B**, **Qwen3.5-9B**, **Qwen3-32B**, **Llama3.3-70B**, and **DeepSeek V4 Flash**.
 
 Tool calling is a three-step flow: define functions and send the request, the model suggests a function call, then execute the function and send back the result. The model does not execute functions itself — it only generates which function to call and with what arguments.
 
@@ -310,7 +311,7 @@ for chunk in stream:
 
 ## Vision (Image Input)
 
-Qwen3.6-35B-A3B and Qwen3.5-9B accept image input. Pass `messages[].content` as an array and include images with the `image_url` type. `image_url.url` accepts an externally reachable image URL or a base64-encoded data URI (`data:image/jpeg;base64,...`).
+Qwen3.8-27B, Qwen3.6-35B-A3B, and Qwen3.5-9B accept image input. Qwen3.8-27B also accepts video, passed as a `video_url` block. Pass `messages[].content` as an array and include images with the `image_url` type. `image_url.url` accepts an externally reachable image URL or a base64-encoded data URI (`data:image/jpeg;base64,...`).
 
 ```python
 response = client.chat.completions.create(
@@ -328,12 +329,12 @@ response = client.chat.completions.create(
 ```
 
 <Note>
-  The number of images per request is limited per model — **Qwen3.6-35B-A3B: up to 4**, **Qwen3.5-9B: up to 1**. Video input is not supported.
+  The number of images per request is limited per model — **Qwen3.6-35B-A3B: up to 4**, **Qwen3.5-9B: up to 1**. Video input is supported on **Qwen3.8-27B** only.
 </Note>
 
 ## Reasoning
 
-Qwen chat models and DeepSeek V4 Flash support reasoning (thinking). The reasoning trace is returned separately from the final answer (`content`) in the `reasoning` field.
+Qwen chat models and DeepSeek V4 Flash support reasoning (thinking). On **Qwen3.8-27B** the depth is tunable with `reasoning_effort` (`xhigh` / `medium` / `low`), and streamed reasoning arrives in `reasoning_content` rather than `reasoning`. The reasoning trace is returned separately from the final answer (`content`) in the `reasoning` field.
 
 ```python
 response = client.chat.completions.create(

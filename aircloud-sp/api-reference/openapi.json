@@ -21,15 +21,29 @@
     }
   ],
   "tags": [
-    { "name": "Authentication", "description": "Verify API key context." },
-    { "name": "Endpoints", "description": "Manage endpoints: list, start, stop, scale, and patch." },
-    { "name": "Replicas", "description": "View live replica status." },
-    { "name": "Logs", "description": "Access endpoint log files." }
+    {
+      "name": "Authentication",
+      "description": "Verify API key context."
+    },
+    {
+      "name": "Endpoints",
+      "description": "Manage endpoints: list, start, stop, scale, and patch."
+    },
+    {
+      "name": "Replicas",
+      "description": "View live replica status."
+    },
+    {
+      "name": "Logs",
+      "description": "Access endpoint log files."
+    }
   ],
   "paths": {
     "/me": {
       "get": {
-        "tags": ["Authentication"],
+        "tags": [
+          "Authentication"
+        ],
         "summary": "Get API Key Context",
         "description": "Returns the organization, project, and user mapped to the current API key.",
         "operationId": "getMe",
@@ -38,7 +52,9 @@
             "description": "Authenticated context information.",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/MeResponse" }
+                "schema": {
+                  "$ref": "#/components/schemas/MeResponse"
+                }
               }
             }
           },
@@ -46,7 +62,9 @@
             "description": "Missing or invalid API key.",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/Error" }
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
               }
             }
           }
@@ -55,34 +73,61 @@
     },
     "/endpoints": {
       "get": {
-        "tags": ["Endpoints"],
+        "tags": [
+          "Endpoints"
+        ],
         "summary": "List Endpoints",
         "description": "Returns a paginated list of endpoints accessible by the current API key.",
         "operationId": "listEndpoints",
         "parameters": [
           {
+            "name": "project_id",
+            "in": "query",
+            "description": "Project ID to filter by. Optional — it must match the API key's project; any other value returns 403.",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "example": "proj-sGF4ynUPbc8H"
+          },
+          {
             "name": "search",
             "in": "query",
             "description": "Search endpoints by name.",
-            "schema": { "type": "string", "example": "my-model" }
+            "schema": {
+              "type": "string",
+              "example": "my-model"
+            }
           },
           {
             "name": "is_active",
             "in": "query",
             "description": "Filter by active status. `true` returns only running endpoints, `false` returns only stopped endpoints.",
-            "schema": { "type": "boolean", "example": true }
+            "schema": {
+              "type": "boolean",
+              "example": true
+            }
           },
           {
             "name": "page",
             "in": "query",
             "description": "Page number, starting from 1.",
-            "schema": { "type": "integer", "minimum": 1, "default": 1 }
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            }
           },
           {
             "name": "size",
             "in": "query",
             "description": "Number of items per page. Min 1, max 2000.",
-            "schema": { "type": "integer", "minimum": 1, "maximum": 2000, "default": 50 }
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2000,
+              "default": 50
+            }
           }
         ],
         "responses": {
@@ -90,17 +135,23 @@
             "description": "Paginated list of endpoints.",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/EndpointListResponse" }
+                "schema": {
+                  "$ref": "#/components/schemas/EndpointListResponse"
+                }
               }
             }
           },
-          "401": { "description": "Missing or invalid API key." }
+          "401": {
+            "description": "Missing or invalid API key."
+          }
         }
       }
     },
     "/endpoints/{endpoint_id}": {
       "get": {
-        "tags": ["Endpoints"],
+        "tags": [
+          "Endpoints"
+        ],
         "summary": "Get Endpoint Status",
         "description": "Returns the current status of an endpoint. Includes replica status summary when active.",
         "operationId": "getEndpointStatus",
@@ -110,7 +161,10 @@
             "in": "path",
             "required": true,
             "description": "Unique endpoint ID.",
-            "schema": { "type": "string", "example": "51c910f7-ecde-4c6c-88f8-d8e37ca9d598" }
+            "schema": {
+              "type": "string",
+              "example": "51c910f7-ecde-4c6c-88f8-d8e37ca9d598"
+            }
           }
         ],
         "responses": {
@@ -118,16 +172,24 @@
             "description": "Endpoint status.",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/EndpointStatusResponse" }
+                "schema": {
+                  "$ref": "#/components/schemas/EndpointStatusResponse"
+                }
               }
             }
           },
-          "403": { "description": "Endpoint does not belong to your organization or project." },
-          "404": { "description": "Endpoint not found." }
+          "403": {
+            "description": "Endpoint does not belong to your organization or project."
+          },
+          "404": {
+            "description": "Endpoint not found."
+          }
         }
       },
       "patch": {
-        "tags": ["Endpoints"],
+        "tags": [
+          "Endpoints"
+        ],
         "summary": "Patch Endpoint Settings",
         "description": "Update runtime settings for an inactive endpoint. At least one field must be provided. Stop the endpoint first if it is active.",
         "operationId": "patchEndpoint",
@@ -137,7 +199,9 @@
             "in": "path",
             "required": true,
             "description": "Unique endpoint ID.",
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {
@@ -145,7 +209,9 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/EndpointPatchInput" }
+              "schema": {
+                "$ref": "#/components/schemas/EndpointPatchInput"
+              }
             }
           }
         },
@@ -154,18 +220,26 @@
             "description": "Updated endpoint settings.",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/EndpointPatchResponse" }
+                "schema": {
+                  "$ref": "#/components/schemas/EndpointPatchResponse"
+                }
               }
             }
           },
-          "400": { "description": "No patch field provided." },
-          "409": { "description": "Endpoint is active. Stop it first." }
+          "400": {
+            "description": "No patch field provided."
+          },
+          "409": {
+            "description": "Endpoint is active. Stop it first."
+          }
         }
       }
     },
     "/endpoints/{endpoint_id}/start": {
       "post": {
-        "tags": ["Endpoints"],
+        "tags": [
+          "Endpoints"
+        ],
         "summary": "Start Endpoint",
         "description": "Start an inactive endpoint. The organization must have sufficient credit balance. The endpoint must be active before scaling replicas.",
         "operationId": "startEndpoint",
@@ -175,7 +249,9 @@
             "in": "path",
             "required": true,
             "description": "Unique endpoint ID.",
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -183,27 +259,41 @@
             "description": "Start result.",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/StartStopResponse" },
+                "schema": {
+                  "$ref": "#/components/schemas/StartStopResponse"
+                },
                 "examples": {
                   "started": {
                     "summary": "Successfully started",
-                    "value": { "endpoint_id": "51c910f7-ecde-4c6c-88f8-d8e37ca9d598", "is_active": true, "message": "Endpoint started successfully" }
+                    "value": {
+                      "endpoint_id": "51c910f7-ecde-4c6c-88f8-d8e37ca9d598",
+                      "is_active": true,
+                      "message": "Endpoint started successfully"
+                    }
                   },
                   "already_active": {
                     "summary": "Already active",
-                    "value": { "endpoint_id": "51c910f7-ecde-4c6c-88f8-d8e37ca9d598", "is_active": true, "message": "Endpoint is already active" }
+                    "value": {
+                      "endpoint_id": "51c910f7-ecde-4c6c-88f8-d8e37ca9d598",
+                      "is_active": true,
+                      "message": "Endpoint is already active"
+                    }
                   }
                 }
               }
             }
           },
-          "500": { "description": "Failed to start (insufficient balance, resource allocation failure, etc.)." }
+          "500": {
+            "description": "Failed to start (insufficient balance, resource allocation failure, etc.)."
+          }
         }
       }
     },
     "/endpoints/{endpoint_id}/stop": {
       "post": {
-        "tags": ["Endpoints"],
+        "tags": [
+          "Endpoints"
+        ],
         "summary": "Stop Endpoint",
         "description": "Stop an active endpoint.",
         "operationId": "stopEndpoint",
@@ -213,7 +303,9 @@
             "in": "path",
             "required": true,
             "description": "Unique endpoint ID.",
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -221,27 +313,41 @@
             "description": "Stop result.",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/StartStopResponse" },
+                "schema": {
+                  "$ref": "#/components/schemas/StartStopResponse"
+                },
                 "examples": {
                   "stopped": {
                     "summary": "Successfully stopped",
-                    "value": { "endpoint_id": "51c910f7-ecde-4c6c-88f8-d8e37ca9d598", "is_active": false, "message": "Endpoint stopped successfully" }
+                    "value": {
+                      "endpoint_id": "51c910f7-ecde-4c6c-88f8-d8e37ca9d598",
+                      "is_active": false,
+                      "message": "Endpoint stopped successfully"
+                    }
                   },
                   "already_stopped": {
                     "summary": "Already stopped",
-                    "value": { "endpoint_id": "51c910f7-ecde-4c6c-88f8-d8e37ca9d598", "is_active": false, "message": "Endpoint is already stopped" }
+                    "value": {
+                      "endpoint_id": "51c910f7-ecde-4c6c-88f8-d8e37ca9d598",
+                      "is_active": false,
+                      "message": "Endpoint is already stopped"
+                    }
                   }
                 }
               }
             }
           },
-          "500": { "description": "Failed to stop." }
+          "500": {
+            "description": "Failed to stop."
+          }
         }
       }
     },
     "/endpoints/{endpoint_id}/scale": {
       "post": {
-        "tags": ["Endpoints"],
+        "tags": [
+          "Endpoints"
+        ],
         "summary": "Scale Endpoint Replicas",
         "description": "Scale the number of replicas for an active endpoint. Autoscaling must be disabled.",
         "operationId": "scaleEndpoint",
@@ -251,14 +357,18 @@
             "in": "path",
             "required": true,
             "description": "Unique endpoint ID.",
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/ScaleReplicasInput" }
+              "schema": {
+                "$ref": "#/components/schemas/ScaleReplicasInput"
+              }
             }
           }
         },
@@ -267,17 +377,23 @@
             "description": "Scale result.",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/ScaleReplicasResponse" }
+                "schema": {
+                  "$ref": "#/components/schemas/ScaleReplicasResponse"
+                }
               }
             }
           },
-          "400": { "description": "Endpoint is inactive or autoscaling is enabled." }
+          "400": {
+            "description": "Endpoint is inactive or autoscaling is enabled."
+          }
         }
       }
     },
     "/endpoints/{endpoint_id}/replicas": {
       "get": {
-        "tags": ["Replicas"],
+        "tags": [
+          "Replicas"
+        ],
         "summary": "List Replicas",
         "description": "Returns live replica details for an active endpoint.",
         "operationId": "listReplicas",
@@ -287,7 +403,9 @@
             "in": "path",
             "required": true,
             "description": "Unique endpoint ID.",
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -295,7 +413,12 @@
             "description": "List of replicas.",
             "content": {
               "application/json": {
-                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/ReplicaResponse" } }
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ReplicaResponse"
+                  }
+                }
               }
             }
           }
@@ -304,7 +427,9 @@
     },
     "/endpoints/{endpoint_id}/logs": {
       "get": {
-        "tags": ["Logs"],
+        "tags": [
+          "Logs"
+        ],
         "summary": "List Log Files",
         "description": "Returns available log files for an endpoint. Supports filtering by replica and history.",
         "operationId": "listLogFiles",
@@ -314,19 +439,26 @@
             "in": "path",
             "required": true,
             "description": "Unique endpoint ID.",
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           },
           {
             "name": "replica_id",
             "in": "query",
             "description": "Filter logs by a specific replica ID.",
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           },
           {
             "name": "include_history",
             "in": "query",
             "description": "Set to `false` to exclude rotated historical logs and return only current active logs.",
-            "schema": { "type": "boolean", "default": true }
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
           }
         ],
         "responses": {
@@ -334,7 +466,12 @@
             "description": "List of log files.",
             "content": {
               "application/json": {
-                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/LogFile" } }
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LogFile"
+                  }
+                }
               }
             }
           }
@@ -343,7 +480,9 @@
     },
     "/endpoints/{endpoint_id}/logs/file": {
       "get": {
-        "tags": ["Logs"],
+        "tags": [
+          "Logs"
+        ],
         "summary": "Get Log File Content",
         "description": "Returns the content of a specific log file by line range.",
         "operationId": "getLogFileContent",
@@ -353,33 +492,48 @@
             "in": "path",
             "required": true,
             "description": "Unique endpoint ID.",
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           },
           {
             "name": "node_id",
             "in": "query",
             "required": true,
             "description": "Node ID where the log file is located. Use the `node_id` value from the `/logs` response.",
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           },
           {
             "name": "filename",
             "in": "query",
             "required": true,
             "description": "Log file path. Use the `filename` value from the `/logs` response.",
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           },
           {
             "name": "start_line",
             "in": "query",
             "description": "Starting line number (1-based).",
-            "schema": { "type": "integer", "minimum": 1, "default": 1 }
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            }
           },
           {
             "name": "end_line",
             "in": "query",
             "description": "Ending line number. Max 50000.",
-            "schema": { "type": "integer", "minimum": 1, "maximum": 50000, "default": 1000 }
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50000,
+              "default": 1000
+            }
           }
         ],
         "responses": {
@@ -387,7 +541,9 @@
             "description": "Log file content.",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/LogContent" }
+                "schema": {
+                  "$ref": "#/components/schemas/LogContent"
+                }
               }
             }
           }
@@ -407,155 +563,579 @@
       "MeResponse": {
         "type": "object",
         "properties": {
-          "organization_id": { "type": "string", "description": "Organization ID linked to the API key.", "example": "org-0I2GoSBhwODG" },
-          "project_id": { "type": "string", "description": "Project ID linked to the API key.", "example": "proj-sGF4ynUPbc8H" },
-          "api_key_id": { "type": "string", "description": "API key ID used for authentication.", "example": "9e9a776f-2ce6-42c9-ad70-c75936ce662b" },
-          "user_id": { "type": "string", "nullable": true, "description": "User ID who created the API key.", "example": "6377ae7c-8986-477c-ab87-7f8eb63bf785" },
-          "authenticated_via": { "type": "string", "description": "Authentication method.", "example": "api_key" }
+          "organization_id": {
+            "type": "string",
+            "description": "Organization ID linked to the API key.",
+            "example": "org-0I2GoSBhwODG"
+          },
+          "project_id": {
+            "type": "string",
+            "description": "Project ID linked to the API key.",
+            "example": "proj-sGF4ynUPbc8H"
+          },
+          "api_key_id": {
+            "type": "string",
+            "description": "API key ID used for authentication.",
+            "example": "9e9a776f-2ce6-42c9-ad70-c75936ce662b"
+          },
+          "user_id": {
+            "type": "string",
+            "nullable": true,
+            "description": "User ID who created the API key.",
+            "example": "6377ae7c-8986-477c-ab87-7f8eb63bf785"
+          },
+          "authenticated_via": {
+            "type": "string",
+            "description": "Authentication method.",
+            "example": "api_key"
+          }
         }
       },
       "EndpointListItem": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "description": "Unique endpoint ID.", "example": "cad59665-b77b-4cb6-9308-d276294bce79" },
-          "name": { "type": "string", "description": "Endpoint name.", "example": "my-llm-endpoint" },
-          "endpoint_type": { "type": "string", "description": "Endpoint type.", "example": "container" },
-          "is_active": { "type": "boolean", "description": "Whether the endpoint is currently active (running).", "example": true },
-          "status": { "type": "string", "description": "Current status (RUNNING, STOPPED, DEPLOYING, etc.).", "example": "RUNNING" },
-          "num_replicas": { "type": "integer", "description": "Current number of replicas.", "example": 2 },
-          "enable_autoscaling": { "type": "boolean", "description": "Whether autoscaling is enabled.", "example": false },
-          "instance_type_name": { "type": "string", "nullable": true, "description": "Assigned instance type name.", "example": "RTX 4070 Super" },
-          "serving_endpoint_url": { "type": "string", "nullable": true, "description": "Public URL for the endpoint.", "example": "https://ap-1.aieev.cloud/ac/7/cad59665-b77b-4cb6-9308-d276294bce79" },
-          "created_at": { "type": "string", "format": "date-time", "description": "Creation time (ISO 8601)." },
-          "updated_at": { "type": "string", "format": "date-time", "description": "Last update time (ISO 8601)." }
+          "id": {
+            "type": "string",
+            "description": "Unique endpoint ID.",
+            "example": "cad59665-b77b-4cb6-9308-d276294bce79"
+          },
+          "name": {
+            "type": "string",
+            "description": "Endpoint name.",
+            "example": "my-llm-endpoint"
+          },
+          "endpoint_type": {
+            "type": "string",
+            "description": "Endpoint type.",
+            "example": "container"
+          },
+          "is_active": {
+            "type": "boolean",
+            "description": "Whether the endpoint is currently active (running).",
+            "example": true
+          },
+          "status": {
+            "type": "string",
+            "description": "Current status (RUNNING, STOPPED, DEPLOYING, etc.).",
+            "example": "RUNNING"
+          },
+          "num_replicas": {
+            "type": "integer",
+            "description": "Current number of replicas.",
+            "example": 2
+          },
+          "enable_autoscaling": {
+            "type": "boolean",
+            "description": "Whether autoscaling is enabled.",
+            "example": false
+          },
+          "instance_type_name": {
+            "type": "string",
+            "nullable": true,
+            "description": "Assigned instance type name.",
+            "example": "RTX 4070 Super"
+          },
+          "serving_endpoint_url": {
+            "type": "string",
+            "nullable": true,
+            "description": "Public URL for the endpoint.",
+            "example": "https://ap-1.aieev.cloud/endpoints/cad59665-b77b-4cb6-9308-d276294bce79"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Tags assigned to the endpoint.",
+            "example": [
+              "prod",
+              "llm"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Creation time (ISO 8601)."
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Last update time (ISO 8601)."
+          }
         }
       },
       "EndpointListResponse": {
         "type": "object",
         "properties": {
-          "items": { "type": "array", "items": { "$ref": "#/components/schemas/EndpointListItem" }, "description": "Array of endpoint objects." },
-          "total": { "type": "integer", "description": "Total number of endpoints.", "example": 5 },
-          "page": { "type": "integer", "description": "Current page number.", "example": 1 },
-          "size": { "type": "integer", "description": "Items per page.", "example": 50 },
-          "pages": { "type": "integer", "description": "Total number of pages.", "example": 1 }
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EndpointListItem"
+            },
+            "description": "Array of endpoint objects."
+          },
+          "total": {
+            "type": "integer",
+            "description": "Total number of endpoints.",
+            "example": 5
+          },
+          "page": {
+            "type": "integer",
+            "description": "Current page number.",
+            "example": 1
+          },
+          "size": {
+            "type": "integer",
+            "description": "Items per page.",
+            "example": 50
+          },
+          "pages": {
+            "type": "integer",
+            "description": "Total number of pages.",
+            "example": 1
+          }
         }
       },
       "EndpointStatusResponse": {
         "type": "object",
         "properties": {
-          "endpoint_id": { "type": "string", "description": "Unique endpoint ID.", "example": "51c910f7-ecde-4c6c-88f8-d8e37ca9d598" },
-          "name": { "type": "string", "description": "Endpoint name.", "example": "aieev-endpoint" },
-          "endpoint_type": { "type": "string", "description": "Endpoint type.", "example": "container" },
-          "is_active": { "type": "boolean", "description": "Whether the endpoint is active.", "example": true },
-          "status": { "type": "string", "description": "Current status. When active, fetched in real-time from Ray Serve.", "example": "RUNNING" },
-          "num_replicas": { "type": "integer", "description": "Current number of replicas.", "example": 2 },
-          "enable_autoscaling": { "type": "boolean", "description": "Whether autoscaling is enabled.", "example": false },
-          "instance_type_name": { "type": "string", "nullable": true, "description": "Instance type name.", "example": "RTX 5090" },
-          "serving_endpoint_url": { "type": "string", "nullable": true, "description": "Public endpoint URL.", "example": "https://ap-1.aieev.cloud/ac/7/51c910f7-ecde-4c6c-88f8-d8e37ca9d598" },
-          "replica_status_summary": { "type": "object", "nullable": true, "additionalProperties": { "type": "integer" }, "description": "Replica count by status. Only available when endpoint is active.", "example": { "RUNNING": 2, "STARTING": 0 } },
-          "created_at": { "type": "string", "format": "date-time", "description": "Creation time." },
-          "updated_at": { "type": "string", "format": "date-time", "description": "Last update time." }
+          "endpoint_id": {
+            "type": "string",
+            "description": "Unique endpoint ID.",
+            "example": "51c910f7-ecde-4c6c-88f8-d8e37ca9d598"
+          },
+          "name": {
+            "type": "string",
+            "description": "Endpoint name.",
+            "example": "aieev-endpoint"
+          },
+          "endpoint_type": {
+            "type": "string",
+            "description": "Endpoint type.",
+            "example": "container"
+          },
+          "is_active": {
+            "type": "boolean",
+            "description": "Whether the endpoint is active.",
+            "example": true
+          },
+          "status": {
+            "type": "string",
+            "description": "Current status. When active, fetched in real-time from Ray Serve.",
+            "example": "RUNNING"
+          },
+          "num_replicas": {
+            "type": "integer",
+            "description": "Current number of replicas.",
+            "example": 2
+          },
+          "enable_autoscaling": {
+            "type": "boolean",
+            "description": "Whether autoscaling is enabled.",
+            "example": false
+          },
+          "instance_type_name": {
+            "type": "string",
+            "nullable": true,
+            "description": "Instance type name.",
+            "example": "RTX 5090"
+          },
+          "serving_endpoint_url": {
+            "type": "string",
+            "nullable": true,
+            "description": "Public endpoint URL.",
+            "example": "https://ap-1.aieev.cloud/endpoints/51c910f7-ecde-4c6c-88f8-d8e37ca9d598"
+          },
+          "error": {
+            "$ref": "#/components/schemas/ProblemDetails"
+          },
+          "replica_status_summary": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "description": "Replica count by status. Only available when endpoint is active.",
+            "example": {
+              "RUNNING": 2,
+              "STARTING": 0
+            }
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Tags assigned to the endpoint.",
+            "example": [
+              "prod",
+              "llm"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Creation time."
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Last update time."
+          }
         }
       },
       "StartStopResponse": {
         "type": "object",
         "properties": {
-          "endpoint_id": { "type": "string", "description": "Unique endpoint ID.", "example": "51c910f7-ecde-4c6c-88f8-d8e37ca9d598" },
-          "is_active": { "type": "boolean", "description": "Active status after the operation.", "example": true },
-          "message": { "type": "string", "description": "Result message.", "example": "Endpoint started successfully" }
+          "endpoint_id": {
+            "type": "string",
+            "description": "Unique endpoint ID.",
+            "example": "51c910f7-ecde-4c6c-88f8-d8e37ca9d598"
+          },
+          "is_active": {
+            "type": "boolean",
+            "description": "Active status after the operation.",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "description": "Result message.",
+            "example": "Endpoint started successfully"
+          }
         }
       },
       "ScaleReplicasInput": {
         "type": "object",
-        "required": ["num_replicas"],
+        "required": [
+          "num_replicas"
+        ],
         "properties": {
-          "num_replicas": { "type": "integer", "minimum": 1, "maximum": 100, "description": "Desired number of replicas (1-100).", "example": 3 }
+          "num_replicas": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "description": "Desired number of replicas (1-100).",
+            "example": 3
+          }
         }
       },
       "ScaleReplicasResponse": {
         "type": "object",
         "properties": {
-          "endpoint_id": { "type": "string", "description": "Unique endpoint ID.", "example": "51c910f7-ecde-4c6c-88f8-d8e37ca9d598" },
-          "previous_replicas": { "type": "integer", "description": "Replica count before scaling.", "example": 1 },
-          "current_replicas": { "type": "integer", "description": "Replica count after scaling.", "example": 3 },
-          "message": { "type": "string", "description": "Result message.", "example": "Successfully scaled from 1 to 3 replicas" }
+          "endpoint_id": {
+            "type": "string",
+            "description": "Unique endpoint ID.",
+            "example": "51c910f7-ecde-4c6c-88f8-d8e37ca9d598"
+          },
+          "previous_replicas": {
+            "type": "integer",
+            "description": "Replica count before scaling.",
+            "example": 1
+          },
+          "current_replicas": {
+            "type": "integer",
+            "description": "Replica count after scaling.",
+            "example": 3
+          },
+          "message": {
+            "type": "string",
+            "description": "Result message.",
+            "example": "Successfully scaled from 1 to 3 replicas"
+          }
         }
       },
       "EndpointPatchInput": {
         "type": "object",
         "properties": {
-          "container_start_command": { "type": "string", "nullable": true, "description": "Container start command.", "example": "python app.py" },
+          "container_start_command": {
+            "type": "string",
+            "nullable": true,
+            "description": "Container start command.",
+            "example": "python app.py"
+          },
           "container_env_vars": {
-            "type": "array", "nullable": true,
+            "type": "array",
+            "nullable": true,
             "items": {
               "type": "object",
               "properties": {
-                "key": { "type": "string", "description": "Environment variable key.", "example": "ENV" },
-                "value": { "type": "string", "description": "Environment variable value.", "example": "prod" }
+                "key": {
+                  "type": "string",
+                  "description": "Environment variable key.",
+                  "example": "ENV"
+                },
+                "value": {
+                  "type": "string",
+                  "description": "Environment variable value.",
+                  "example": "prod"
+                }
               }
             },
             "description": "Container environment variables."
           },
-          "container_port": { "type": "integer", "minimum": 1, "maximum": 65535, "nullable": true, "description": "Container service port (1-65535).", "example": 8080 },
-          "container_health_check_path": { "type": "string", "nullable": true, "description": "Health check endpoint path.", "example": "/healthz" },
-          "container_health_check_timeout": { "type": "integer", "minimum": 1, "nullable": true, "description": "Container health check timeout in seconds.", "example": 30 },
-          "health_check_timeout": { "type": "integer", "minimum": 1, "nullable": true, "description": "Overall health check timeout in seconds. Deployment fails if health check does not pass within this time.", "example": 300 },
-          "container_metric_path": { "type": "string", "nullable": true, "description": "Prometheus metrics endpoint path.", "example": "/metrics" }
+          "container_port": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 65535,
+            "nullable": true,
+            "description": "Container service port (1-65535).",
+            "example": 8080
+          },
+          "container_health_check_path": {
+            "type": "string",
+            "nullable": true,
+            "description": "Health check endpoint path.",
+            "example": "/healthz"
+          },
+          "container_health_check_timeout": {
+            "type": "integer",
+            "minimum": 1,
+            "nullable": true,
+            "description": "Container health check timeout in seconds.",
+            "example": 30
+          },
+          "health_check_timeout": {
+            "type": "integer",
+            "minimum": 1,
+            "nullable": true,
+            "description": "Overall health check timeout in seconds. Deployment fails if health check does not pass within this time.",
+            "example": 300
+          },
+          "container_metric_path": {
+            "type": "string",
+            "nullable": true,
+            "description": "Prometheus metrics endpoint path.",
+            "example": "/metrics"
+          },
+          "auth_mode": {
+            "type": "string",
+            "enum": [
+              "api_key",
+              "oidc",
+              "none"
+            ],
+            "nullable": true,
+            "description": "Authentication mode for the endpoint's public URL. `api_key` requires an AirCloud API key, `oidc` uses OIDC login, and `none` exposes the endpoint without AirCloud authentication.",
+            "example": "api_key"
+          }
         }
       },
       "EndpointPatchResponse": {
         "type": "object",
         "properties": {
-          "endpoint_id": { "type": "string", "description": "Unique endpoint ID." },
-          "name": { "type": "string", "description": "Endpoint name." },
-          "is_active": { "type": "boolean", "description": "Active status (always false after successful patch)." },
-          "container_start_command": { "type": "string", "nullable": true, "description": "Current start command." },
-          "container_env_vars": { "type": "array", "nullable": true, "items": { "type": "object" }, "description": "Current environment variables." },
-          "container_port": { "type": "integer", "nullable": true, "description": "Current port." },
-          "container_health_check_path": { "type": "string", "nullable": true, "description": "Current health check path." },
-          "container_health_check_timeout": { "type": "integer", "nullable": true, "description": "Current health check timeout." },
-          "health_check_timeout": { "type": "integer", "nullable": true, "description": "Current overall health check timeout." },
-          "container_metric_path": { "type": "string", "nullable": true, "description": "Current metric path." },
-          "updated_at": { "type": "string", "format": "date-time", "description": "Update time." }
+          "endpoint_id": {
+            "type": "string",
+            "description": "Unique endpoint ID."
+          },
+          "name": {
+            "type": "string",
+            "description": "Endpoint name."
+          },
+          "is_active": {
+            "type": "boolean",
+            "description": "Active status (always false after successful patch)."
+          },
+          "container_start_command": {
+            "type": "string",
+            "nullable": true,
+            "description": "Current start command."
+          },
+          "container_env_vars": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "object"
+            },
+            "description": "Current environment variables."
+          },
+          "container_port": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Current port."
+          },
+          "container_health_check_path": {
+            "type": "string",
+            "nullable": true,
+            "description": "Current health check path."
+          },
+          "container_health_check_timeout": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Current health check timeout."
+          },
+          "health_check_timeout": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Current overall health check timeout."
+          },
+          "container_metric_path": {
+            "type": "string",
+            "nullable": true,
+            "description": "Current metric path."
+          },
+          "auth_mode": {
+            "type": "string",
+            "nullable": true,
+            "description": "Current authentication mode for the endpoint's public URL.",
+            "example": "api_key"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Update time."
+          }
         }
       },
       "ReplicaResponse": {
         "type": "object",
         "properties": {
-          "replica_id": { "type": "string", "description": "Unique replica ID.", "example": "2xoeq1pe" },
-          "state": { "type": "string", "description": "Replica state (RUNNING, STARTING, STOPPING, etc.).", "example": "RUNNING" },
-          "node_id": { "type": "string", "nullable": true, "description": "Node ID where the replica is running." },
-          "node_ip": { "type": "string", "nullable": true, "description": "Node IP address.", "example": "100.64.0.11" },
-          "actor_id": { "type": "string", "nullable": true, "description": "Ray actor ID." },
-          "actor_name": { "type": "string", "nullable": true, "description": "Ray actor name." },
-          "worker_id": { "type": "string", "nullable": true, "description": "Ray worker ID." },
-          "pid": { "type": "integer", "nullable": true, "description": "Process ID." },
-          "start_time_s": { "type": "number", "nullable": true, "description": "Replica start time (Unix timestamp in seconds)." }
+          "replica_id": {
+            "type": "string",
+            "description": "Unique replica ID.",
+            "example": "2xoeq1pe"
+          },
+          "state": {
+            "type": "string",
+            "description": "Replica state (RUNNING, STARTING, STOPPING, etc.).",
+            "example": "RUNNING"
+          },
+          "node_id": {
+            "type": "string",
+            "nullable": true,
+            "description": "Node ID where the replica is running."
+          },
+          "node_ip": {
+            "type": "string",
+            "nullable": true,
+            "description": "Node IP address.",
+            "example": "100.64.0.11"
+          },
+          "actor_id": {
+            "type": "string",
+            "nullable": true,
+            "description": "Ray actor ID."
+          },
+          "actor_name": {
+            "type": "string",
+            "nullable": true,
+            "description": "Ray actor name."
+          },
+          "worker_id": {
+            "type": "string",
+            "nullable": true,
+            "description": "Ray worker ID."
+          },
+          "pid": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Process ID."
+          },
+          "start_time_s": {
+            "type": "number",
+            "nullable": true,
+            "description": "Replica start time (Unix timestamp in seconds)."
+          }
         }
       },
       "LogFile": {
         "type": "object",
         "properties": {
-          "node_id": { "type": "string", "description": "Node ID where the log is stored." },
-          "replica_id": { "type": "string", "description": "Associated replica ID." },
-          "filename": { "type": "string", "description": "Log file path. Use as the `filename` parameter in the `/logs/file` API." },
-          "is_historical": { "type": "boolean", "description": "Whether this is a rotated historical log file from a terminated replica." },
-          "start_time": { "type": "string", "format": "date-time", "nullable": true, "description": "Log start time. Only available for historical logs." },
-          "end_time": { "type": "string", "format": "date-time", "nullable": true, "description": "Log end time. Only available for historical logs." }
+          "node_id": {
+            "type": "string",
+            "description": "Node ID where the log is stored."
+          },
+          "replica_id": {
+            "type": "string",
+            "description": "Associated replica ID."
+          },
+          "filename": {
+            "type": "string",
+            "description": "Log file path. Use as the `filename` parameter in the `/logs/file` API."
+          },
+          "is_historical": {
+            "type": "boolean",
+            "description": "Whether this is a rotated historical log file from a terminated replica."
+          },
+          "start_time": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "Log start time. Only available for historical logs."
+          },
+          "end_time": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "Log end time. Only available for historical logs."
+          }
         }
       },
       "LogContent": {
         "type": "object",
         "properties": {
-          "content": { "type": "string", "description": "Log file content for the specified line range. Each line is a JSON log entry." },
-          "start_line": { "type": "integer", "description": "Actual start line number returned." },
-          "end_line": { "type": "integer", "description": "Actual end line number returned." }
+          "content": {
+            "type": "string",
+            "description": "Log file content for the specified line range. Each line is a JSON log entry."
+          },
+          "start_line": {
+            "type": "integer",
+            "description": "Actual start line number returned."
+          },
+          "end_line": {
+            "type": "integer",
+            "description": "Actual end line number returned."
+          }
         }
       },
       "Error": {
         "type": "object",
         "properties": {
-          "detail": { "type": "string", "description": "Error message." }
+          "detail": {
+            "type": "string",
+            "description": "Error message."
+          }
+        }
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "nullable": true,
+        "description": "Problem details for the endpoint, following RFC 9457. Present only when the live status lookup failed or the serving application reported an error; the response itself is still 200.",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Problem type identifier, for example `/errors/upstream-timeout`.",
+            "example": "/errors/upstream-timeout"
+          },
+          "title": {
+            "type": "string",
+            "description": "Short, human-readable summary of the problem.",
+            "example": "Upstream timeout"
+          },
+          "status": {
+            "type": "integer",
+            "description": "HTTP status code that corresponds to the problem.",
+            "example": 504
+          },
+          "detail": {
+            "type": "string",
+            "description": "Human-readable explanation of this specific occurrence."
+          },
+          "code": {
+            "type": "string",
+            "description": "AirCloud error code.",
+            "example": "UPSTREAM_TIMEOUT"
+          },
+          "layer": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Internal layer that produced the problem.",
+            "example": 0
+          },
+          "context": {
+            "type": "object",
+            "nullable": true,
+            "description": "Additional context for the problem, when available."
+          }
         }
       }
     }

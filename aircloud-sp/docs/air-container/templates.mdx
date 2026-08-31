@@ -8,14 +8,15 @@ Templates are preconfigured container configurations for commonly used AI and ML
 
 ## Official Templates
 
-Official templates provided by AirCloud are available from **Select Template** during container creation. You can filter templates by framework or CUDA version, or search for a template by name.
+Official templates provided by AirCloud are available from **Select Template** during container creation. The picker groups them by what you are trying to do, and you can search by name.
 
-| Category | Included Environments |
+| Grouping | Values |
 | --- | --- |
-| **Jupyter AI** | PyTorch or TensorFlow with CUDA 11/12 and Python 3.11 |
-| **Jupyter Base** | Python 3.11 base environment |
-| **Code** | VS Code Server–based development environment (Base / CUDA 12 / CUDA 13) |
-| **AirCloud Studio Beta** | AirCloud's integrated development environment |
+| **Core workload** | PyTorch, TensorFlow, other deep learning, vLLM, Hugging Face TGI, Ollama, ComfyUI, Stable Diffusion WebUI, other serving, general workspace, other dev environment |
+| **Interface** | Jupyter, VS Code, or none (a serving API) |
+| **Variants** | What differs within the same workload and interface — for example CUDA version, Python version, or a bundled tool |
+
+Templates whose image runs `sshd` are marked as supporting **SSH access**, which works alongside Jupyter or VS Code once you register an SSH key for the container.
 
 <Note>
   The list of available templates may change over time. Refer to the container creation page for the latest templates.
@@ -39,13 +40,13 @@ You can save an existing container configuration as a reusable template, allowin
 | Field | Description |
 | --- | --- |
 | **Template Name** | A name used to identify the template. (Required) |
-| **Description** | A brief description of the template. (Optional) |
-| **Keywords** | Comma-separated tags used to search for the template (for example, `web`, `server`, `database`). |
+| **Description** | A brief description of the template. It appears on the template card in the picker. (Optional) |
+| **Icon** | An icon shown on the template card. |
 
 After saving, the template will appear under the **My Templates** filter during container creation.
 
 <Note>
-  Templates are shared with all members who have access to the current Project.
+  Templates are shared with all members who have access to the current Project. Only the person who created a template or a project manager can delete it, and built-in templates cannot be deleted.
 </Note>
 
 ## Use a Template

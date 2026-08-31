@@ -31,21 +31,35 @@ The port your service listens on for external requests.
 
 A path used to verify the container is healthy.
 
-### Max wait time
+### Metrics path
 
-The maximum time allowed for startup.
+The path your application exposes metrics on, for example `/metrics`.
 
-### Boot wait time
+### Health check timeout
 
-How long to wait for the service to become ready.
+How long to wait for a health check response. Default: **300 seconds**.
+
+### Startup timeout
+
+The maximum time allowed for the container to start successfully. Default: **600 seconds**.
 
 ### Environment variables
 
 Key-value configuration required by your application.
 
-### Endpoint ID
+AirCloud also injects `AIRCLOUD_AUTHORIZED_KEYS` at deploy time, containing the SSH public keys registered for the container. See [Connect with SSH](/docs/air-container/connect-with-ssh).
 
-An optional identifier you can use for endpoint tracking.
+### Shared memory (`/dev/shm`)
+
+The size of `/dev/shm`, for workloads that use shared memory such as a PyTorch DataLoader. Off by default, in which case half the instance memory applies. When set, it can range from 1 GB up to the instance's memory size.
+
+### Container ID
+
+The container's identifier. Generated automatically, but you can set a fixed slug (lowercase letters, numbers, and hyphens). It becomes part of the container's public URL.
+
+### Public URL
+
+Deployed containers are served at `https://ap-1.aieev.cloud/endpoints/<container-id>`. The create form previews the URL as you edit the container ID.
 
 ## Operational recommendations
 

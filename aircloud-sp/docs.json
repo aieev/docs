@@ -72,7 +72,9 @@
                 "group": "Reference",
                 "pages": [
                   "docs/reference/infrastructure-and-resource-types",
-                  "docs/reference/container-runtime-reference"
+                  "docs/reference/container-runtime-reference",
+                  "docs/reference/gpu-availability-and-limits",
+                  "docs/reference/error-codes"
                 ]
               },
               {
@@ -80,8 +82,12 @@
                 "pages": [
                   "docs/console/organization",
                   "docs/console/billing",
+                  "docs/console/long-term-rentals",
+                  "docs/console/requests",
                   "docs/console/notifications",
-                  "docs/console/desktop-notifications"
+                  "docs/console/desktop-notifications",
+                  "docs/console/account",
+                  "docs/console/organization-deletion"
                 ]
               },
               {
@@ -101,6 +107,7 @@
                 "group": "Models",
                 "pages": [
                   "models/index",
+                  "models/qwen3-8-27b",
                   "models/qwen3-6-35b-a3b",
                   "models/qwen3-5-9b",
                   "models/qwen3-32b",
@@ -219,7 +226,9 @@
                 "group": "레퍼런스",
                 "pages": [
                   "docs/ko/reference/infrastructure-and-resource-types",
-                  "docs/ko/reference/container-runtime-reference"
+                  "docs/ko/reference/container-runtime-reference",
+                  "docs/ko/reference/gpu-availability-and-limits",
+                  "docs/ko/reference/error-codes"
                 ]
               },
               {
@@ -227,8 +236,12 @@
                 "pages": [
                   "docs/ko/console/organization",
                   "docs/ko/console/billing",
+                  "docs/ko/console/long-term-rentals",
+                  "docs/ko/console/requests",
                   "docs/ko/console/notifications",
-                  "docs/ko/console/desktop-notifications"
+                  "docs/ko/console/desktop-notifications",
+                  "docs/ko/console/account",
+                  "docs/ko/console/organization-deletion"
                 ]
               },
               {
@@ -248,6 +261,7 @@
                 "group": "모델",
                 "pages": [
                   "models/ko/index",
+                  "models/ko/qwen3-8-27b",
                   "models/ko/qwen3-6-35b-a3b",
                   "models/ko/qwen3-5-9b",
                   "models/ko/qwen3-32b",

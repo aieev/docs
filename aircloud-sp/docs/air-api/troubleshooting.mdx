@@ -46,7 +46,7 @@ Most issues encountered while using Air API fall into one of four categories: au
 
 <AccordionGroup>
   <Accordion title="402 Payment Required — Insufficient credits">
-    **Cause:** Your Organization's AU balance has been exhausted, preventing further API requests.
+    **Cause:** Your Organization's credit balance has been exhausted, preventing further API requests.
 
     **Resolution:**
 
@@ -54,9 +54,7 @@ Most issues encountered while using Air API fall into one of four categories: au
     - Retry your API request after the credits have been added.
     - To prevent interruptions, enable **Auto Top-up**.
 
-    <Note>
-      The exact error message returned when credits are exhausted is currently being finalized.
-    </Note>
+
   </Accordion>
 </AccordionGroup>
 
@@ -94,7 +92,7 @@ Most issues encountered while using Air API fall into one of four categories: au
     - Distribute requests over time or implement exponential backoff.
 
     <Note>
-      Model-specific RPM and TPM limits for Air API will be documented in a future update.
+      Air API does not enforce a published per-account request or token rate limit today. A 429 means the model's serving capacity is saturated at that moment, so backing off and retrying is the right response.
     </Note>
   </Accordion>
 
@@ -109,7 +107,7 @@ Most issues encountered while using Air API fall into one of four categories: au
   </Accordion>
 
   <Accordion title="502 Bad Gateway / 503 Service Unavailable">
-    **Cause:** The model service is temporarily unavailable or undergoing maintenance. These errors are common across cloud AI platforms such as RunPod and OpenRouter.
+    **Cause:** The model service is temporarily unavailable or undergoing maintenance.
 
     **Resolution:**
 
@@ -117,7 +115,7 @@ Most issues encountered while using Air API fall into one of four categories: au
     - If the issue persists, contact us through the [Contact and Feedback](/docs/support/contact-and-feedback) page.
 
     <Note>
-      The AirCloud service status page URL will be published in a future update.
+      Planned maintenance and incidents are announced through console notifications. See [Notifications](/docs/console/notifications).
     </Note>
   </Accordion>
 
@@ -161,9 +159,10 @@ Most issues encountered while using Air API fall into one of four categories: au
   <Accordion title="403 Forbidden — Access to the model is denied">
     **Cause:** Your current account or Project does not have permission to access the requested model.
 
-    <Note>
-      Details about the Air API model access policy will be documented in a future update.
-    </Note>
+    **Resolution:**
+
+    - An API key can only reach the Air API endpoints selected when the key was created. Check the key's **Air API Access** setting in the Console, or create a new key that includes the model you need.
+    - Some models are enabled per organization. If the model does not appear in your Console at all, request it through the [Contact and Feedback](/docs/support/contact-and-feedback) page.
   </Accordion>
 </AccordionGroup>
 

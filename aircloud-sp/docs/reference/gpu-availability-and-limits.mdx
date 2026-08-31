@@ -1,0 +1,63 @@
+---
+title: "GPU Availability and Limits"
+description: "Why a GPU may be unselectable, and how replica limits work"
+icon: "gauge"
+---
+
+Two separate things decide whether you can start a container right now: whether the **GPU has free capacity**, and whether your **organization's replica limit** has room. This page explains both, and what to do when either one blocks you.
+
+## GPU Availability
+
+Every GPU in the container create flow carries an availability badge, refreshed from the live device fleet. Use **Refresh availability** to re-check without reloading the page.
+
+| Badge | Meaning |
+| :-- | :-- |
+| **Available** | Plenty of free capacity. |
+| **Limited** | Some capacity left. |
+| **Low** | Very little capacity left — it may run out while you are configuring. |
+| **Unavailable** | Sold out. The GPU cannot be selected until capacity frees up. |
+
+When the badge is missing, availability could not be verified at that moment. You can still create the container, but it may wait before it starts.
+
+<Note>
+  Availability reflects the pool your container will actually deploy to, not the total number of devices AirCloud operates. Capacity held by long-term rentals, or reserved for another deployment shape, is not counted as free.
+</Note>
+
+### Persistent Volumes Use a Separate Pool
+
+Containers that use a persistent volume run on a dedicated node pool. That pool's capacity is evaluated separately, so a GPU can be available for containers without a volume and sold out for containers with one.
+
+Two consequences follow:
+
+- Turning a persistent volume on or off can change which GPUs are selectable.
+- CPU type cannot be selected together with a persistent volume — the dedicated pool assigns without that distinction.
+
+### When a GPU Is Sold Out
+
+- **Join the waitlist** — you are notified in the console and by email as soon as capacity frees up.
+- **Pick another GPU** — availability differs per model.
+- **Rent it long term** — a [long-term rental](/docs/console/long-term-rentals) secures capacity ahead of time, and can be arranged even for periods with nothing free right now.
+
+## Replica Limits
+
+Separately from availability, your organization has a limit on how many replicas it can run, set per GPU type. The create form shows both figures — how many of your limit are already in use, and how many you can start right now.
+
+| Situation | What you see |
+| :-- | :-- |
+| Limit has room | The number of replicas you can start immediately. |
+| Limit reached | You can still create the container, but starting it requires stopping other containers or lowering the replica count. |
+| Limit is 1 | Autoscaling is turned off automatically, since it needs at least 2. |
+
+To raise the limit, request an increase from the replica settings or the limits page. Once approved, the new limit applies automatically and you are notified — see [Requests and Waitlist](/docs/console/requests).
+
+## Related Documentation
+
+<Columns cols={2}>
+  <Card title="Deploy a Container" icon="container" href="/docs/air-container/deploy-a-container" cta="Deploy a Container" arrow="true">
+    Configure resources and replicas during deployment.
+  </Card>
+
+  <Card title="Requests and Waitlist" icon="inbox" href="/docs/console/requests" cta="View Guide" arrow="true">
+    Join a waitlist or request a higher replica limit.
+  </Card>
+</Columns>

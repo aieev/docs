@@ -1,7 +1,67 @@
 ---
-title: "Error Codes"
+title: "Deployment Error Codes"
+description: "What each container deployment error means and how to resolve it"
+icon: "circle-alert"
 ---
 
-<Note>
-  TODO: This page is under construction.
-</Note>
+When a container ends up in **DEPLOY FAILED** or **UNHEALTHY**, an **Error Details** chip appears next to its status in the console. Opening it shows the diagnosed cause, the raw message from the platform, and a shortcut to the container's runtime logs.
+
+This page lists the codes you may see there.
+
+## Image and Registry
+
+| Code | Meaning | What to do |
+| :-- | :-- | :-- |
+| `IMAGE_INACCESSIBLE` | The image could not be pulled. | Check the image URL and, for private registries, the username and password or access token. |
+| `IMAGE_PULL_NETWORK` | A network error occurred while pulling the image. | Transient. Try again in a few minutes. |
+
+## Resources
+
+| Code | Meaning | What to do |
+| :-- | :-- | :-- |
+| `RESOURCE_INSUFFICIENT` | The requested resources exceed what the device can provide. | Lower the GPU, CPU, memory, or shared-memory settings, or pick a larger instance type. |
+| `DISK_FULL` | The device ran out of disk space. | Transient. Try again later, or reduce the persistent volume size. |
+| `VALIDATION_FAILED` | The submitted configuration is invalid. | Check the memory and CPU settings. |
+
+## Scheduling and Runtime
+
+| Code | Meaning | What to do |
+| :-- | :-- | :-- |
+| `RAY_SCHEDULING_TIMEOUT` | No device is free yet. | Nothing to do — the container deploys automatically once a device frees up. If it persists, the GPU may be sold out; check availability or join the waitlist. |
+| `RAY_HEALTH_CHECK_FAILED` | The deployed container is not responding to health checks. | The platform retries on another device. If it keeps failing, verify the health check path and port, and raise the health check timeout for slow-loading models. |
+| `RAY_DEPLOY_FAILED` | Deployment failed repeatedly. | Check the image and the resource settings, then redeploy. |
+| `RAY_ACTOR_DIED` | The container exited unexpectedly. | Check the runtime logs for the process's own error. Retry, and contact support if it persists. |
+| `CONTAINER_RUN_FAILED` | The container failed to start. | Check the startup command and the runtime logs. |
+| `DAEMON_UNREACHABLE` | The container engine on the device is not responding. | Transient. Try again later. |
+| `RAY_UNKNOWN` | An unclassified deployment error. | Check the runtime logs, then contact support with the raw message. |
+
+## Platform
+
+These indicate a problem on the AirCloud side rather than in your configuration.
+
+| Code | Meaning | What to do |
+| :-- | :-- | :-- |
+| `PEER_NOT_FOUND` | Internal error during deployment. | Retry. Contact support if it persists. |
+| `NETWORK_MISSING` | Internal error during deployment. | Contact support. |
+| `ENDPOINT_NOT_FOUND` | The endpoint could not be found. | Reload the container list. Contact support if it persists. |
+| `UPSTREAM_UNAVAILABLE` | A platform service is temporarily unavailable. | Try again later. |
+| `UPSTREAM_TIMEOUT` | A platform service took too long to respond. | Try again later. |
+| `DB_ERROR` | Temporary platform error. | Try again later. |
+| `INTERNAL_ERROR` | Temporary platform error. | Try again later. |
+| `UNKNOWN` | The cause could not be determined. | Contact support with the raw message from the Error Details dialog. |
+
+<Tip>
+  The Error Details dialog also shows the **raw message** from the platform. When contacting support, include that message along with the container ID and the time the failure occurred.
+</Tip>
+
+## Related Documentation
+
+<Columns cols={2}>
+  <Card title="Troubleshooting" icon="wrench" href="/docs/air-container/troubleshooting" cta="View Guide" arrow="true">
+    Diagnose common deployment and runtime issues.
+  </Card>
+
+  <Card title="Monitoring" icon="chart-line" href="/docs/air-container/monitoring" cta="View Monitoring" arrow="true">
+    Read runtime logs to find the underlying cause.
+  </Card>
+</Columns>

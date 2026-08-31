@@ -1,7 +1,7 @@
 ---
 title: "Organization Management"
 icon: "building"
-description: "Manage members, usage, reserved instances, and organization settings"
+description: "Manage members, usage, long-term rentals, and organization settings"
 ---
 
 An **Organization** is the top-level management unit in AirCloud. Members, Projects, usage, and billing are all managed at the Organization level.
@@ -69,7 +69,7 @@ Expand **Options** at the top of the page to configure the following:
 | :-- | :-- |
 | **TOTAL SPEND** | Total spend across the selected period. |
 | **ON DEMAND** | Cost from on-demand GPU usage. |
-| **RESERVED** | Cost from Reserved Instance usage. |
+| **RESERVED** | Cost from long-term rental usage. |
 | **API CALL** | Cost from Air API calls. |
 
 #### Usage Trend
@@ -121,7 +121,7 @@ Use the toggle in the upper-right to switch between two ways of viewing Settleme
 | **Type** | Transaction type (Deposit or Withdrawal). |
 | **Usage Type** | Billing type, such as On Demand, Reserved, or API Call. |
 | **Interval** | Billing period for the transaction (for example, `2026-07-22 11:20:00 ~ 2026-07-22 11:30:00`). |
-| **Points** | AU deducted or credited for the interval. |
+| **Credits** | Credits deducted or granted for the interval. |
 
 Click the chevron on a row to expand its detail and see the fields below.
 
@@ -133,7 +133,7 @@ Click the chevron on a row to expand its detail and see the fields below.
 | **Interval** | The 10-minute billing interval. |
 | **Hourly Rate** | Hourly rate for the GPU. |
 | **Job Type** | Workload type (for example, `SERVE_REPLICA`). |
-| **Amount** | AU deducted for the interval. |
+| **Amount** | Credits deducted for the interval. |
 | **Raw Description** | Original description recorded by the billing system. |
 
 #### Export Settlement Data
@@ -150,31 +150,15 @@ You can configure:
   Exporting a large number of transactions may take several minutes.
 </Info>
 
-## Reserved Instances
+## Long-term Rentals
 
-Reserved Instances allow you to reserve GPU resources for **three months or longer**.
+A **long-term rental** secures the GPUs you use regularly for a fixed term, starting from **one month**. While a rental is running, containers on the same GPU are already paid for up to the rented quantity, so no usage charges are added on top, and longer terms come with a lower hourly rate.
 
-Reservations are arranged through the AirCloud team rather than directly through the Console. To request a reservation, contact us with your preferred GPU type and reservation period.
+Rentals belong to the Organization and are shared across all its Projects. Manage them from **Organization → Long-term Rentals**.
 
-Compared to On-demand instances, Reserved Instances provide lower hourly pricing and guaranteed capacity.
-
-<Tip>
-  Reserved GPU resources are shared across all Projects within the Organization rather than being dedicated to a single deployment.
-</Tip>
-
-### Reservation Details
-
-- **Reservation Term** — Minimum reservation period is **3 months**. Longer terms receive larger discounts.
-- **Billing** — Reservations are prepaid by default. Enterprise customers may also be billed by invoice.
-
-Reserved Instances are managed from **Organization → Reserved Instances**.
-
-| Status | Description |
-| :-- | :-- |
-| **Active** | Reservation is active and available for use. |
-| **Scheduled** | Reservation has been confirmed but has not yet started. |
-| **Completed** | Reservation period has ended. |
-| **Canceled** | Reservation has been canceled. |
+<Card title="Long-term Rentals" icon="calendar-clock" href="/docs/console/long-term-rentals" arrow="true">
+  Terms, discounts, payment, status, cancellation, and how a rental applies to your containers.
+</Card>
 
 ## Organization Settings
 
@@ -194,10 +178,10 @@ AirCloud uses a **prepaid** billing model by default. **Postpaid** billing is av
 
 | Billing Method | Description |
 | :-- | :-- |
-| **Prepaid** | Purchase AU credits in advance and consume them based on usage. |
+| **Prepaid** | Purchase credits in advance and consume them based on usage. |
 | **Postpaid** | Use the service first and receive an invoice according to the billing cycle. |
 
-For Postpaid billing, available AU credits are consumed first. Once the balance becomes negative, usage continues to accumulate as a negative balance. At the end of each month, an invoice is automatically generated for the outstanding amount. After payment is completed, the balance is reset to zero.
+For Postpaid billing, available credits are consumed first. Once the balance becomes negative, usage continues to accumulate as a negative balance. At the end of each month, an invoice is automatically generated for the outstanding amount. After payment is completed, the balance is reset to zero.
 
 Enabling **Automatic Payment** allows invoices to be paid automatically using the registered payment method.
 

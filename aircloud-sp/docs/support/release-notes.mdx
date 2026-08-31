@@ -4,6 +4,44 @@ description: "AirCloud documentation update history"
 icon: "newspaper"
 ---
 
+## 2026-08
+
+### New pages
+
+- **Long-term Rentals**: New Console page covering terms, discounts, payment, status, cancellation and refunds, and how a rental applies to your containers. Replaces the outdated "Reserved Instances" section in Organization Management.
+- **Requests and Waitlist**: New Console page for the waitlist, replica limit increases, and GPU/template/model requests, and how they are tracked in My requests.
+- **Account Settings**: New Console page for profile name, password change, email preferences, and account withdrawal.
+- **Deleting an Organization**: New Console page listing what must be settled before deletion and what is irrecoverably removed.
+- **GPU Availability and Limits**: New Reference page on availability badges, the separate persistent-volume node pool, and replica limits.
+- **Deployment Error Codes**: New Reference page documenting every code shown in the Error Details dialog, with what to do about each.
+
+### API Reference
+
+- **Spec synced with the running API**: Verified the External API spec against the schema the production service publishes, and added the fields that were missing — `tags` on the endpoint list and status responses, the RFC 9457 `error` object on the status response, `auth_mode` on the PATCH request and response, and the `project_id` query parameter on the endpoint list.
+- **Endpoint URL examples**: `serving_endpoint_url` examples now use the unified `https://ap-1.aieev.cloud/endpoints/<container-id>` form instead of the retired cluster-numbered path.
+
+### Corrections
+
+- **Credit unit**: Replaced "AU" with the credit unit **C** used across the console. Documented the purchase range (10,000 C – 10,000,000 C).
+- **Model catalog**: Removed a model that is not offered, added **DeepSeek V4 Flash** and the new **Qwen3.8-27B** to the supported model list, and corrected all KRW prices to the live catalog. TTS is now correctly priced per 1,000 characters rather than per million tokens.
+- **Container status**: Aligned the state names with the console — READY, RUNNING, UPDATING, DEPLOY FAILED, UNHEALTHY.
+- **Persistent volume**: Corrected the size range to 1–1,000 GB (default 30 GB). Documented resizing while running and mounting one volume at several paths.
+- **Runtime logs**: Rewrote the logs section for the current replica-based viewer — log level and source filters, a 7-day default window, and per-replica or bulk download.
+- **Templates**: Replaced the old category table with the current workload / interface / variant grouping, and corrected the save-as-template fields.
+- **Desktop notifications**: The toggle moved from profile settings to the Notifications settings tab.
+- **Monitoring**: Removed the Task Errors metric, which no longer exists.
+- **Air API troubleshooting**: Replaced unresolved placeholders with the actual behavior for rate limits, model access, and status announcements.
+
+### Improvements
+
+- **Notifications**: Rewrote the page as a full event-by-channel reference covering every notification, its recipients, and the 30-day console retention.
+- **Deploy a Container**: Documented shared memory (`/dev/shm`), the editable container ID and its public URL, and how GPU availability affects selection.
+- **Container Runtime Reference**: Corrected field names to match the console and added shared memory, the public URL format, and the injected `AIRCLOUD_AUTHORIZED_KEYS` variable.
+- **Contact and Feedback**: Added the in-console request routes as the primary channel for product requests.
+- **Fixes**: Repaired duplicated sentences and table headers on the Concepts and Billing pages, and corrected broken internal links across the FAQ, API Reference introduction, and release notes.
+
+---
+
 ## 2026-07
 
 ### API Reference
