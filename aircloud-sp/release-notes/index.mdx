@@ -7,18 +7,41 @@ mode: "wide"
 
 <Update label="September 2026">
 
-## Accurate payment cancellation
+## Credit breakdown and expiry, payment improvements, and GPU auto-upgrade
 
-**Cancelling unused card payments**
+**Where your credits came from, and when they expire**
 
-- **Exact eligibility**: Whether a payment can be cancelled is now decided by **whether the credits granted by that payment are still untouched**, not by the organization's total balance. A payment whose credits were used even partially cannot be cancelled; an unused one can, regardless of how long ago it was made.
-- **No 7-day limit**: The time window for cancellation is gone.
+See what your balance is made of and when each part expires.
+
+- **Credit breakdown**: **Credit breakdown** on the Billing page lists your remaining credits by source (payments, sign-up credit, promotions, rewards, and more) and whether each is paid or free.
+- **Expiry dates**: Each credit shows its expiry date and days remaining. Free credits and credits closest to expiring are used first.
+- **Expiry reminders**: You get a notification when some of your credits are about to expire.
+- **Promo code deadlines**: Promo codes can now have a redemption deadline, and credits granted by a code can carry their own validity period.
+
+**Cancel unused payments, with no time limit**
+
+- **Exact eligibility**: Whether a payment can be cancelled is now decided by **whether the credits granted by that payment are still untouched**, not by the organization's total balance. A payment whose credits were used even partially cannot be cancelled; an unused one can, regardless of how long ago it was made. The 7-day limit is gone.
 - **Auto top-up included**: Auto top-up charges made with a saved card can be cancelled when unused. Recurring contracts settled offline are not covered.
-- **Reasons shown**: In the cancellation dialog, hover over a payment that cannot be cancelled to see why.
+- **Before deleting an organization**: The organization deletion dialog (including a last owner's account withdrawal) shows how many of your own card payments can still be cancelled, with a direct link to Payment History.
+- **Clear failure reasons**: When a card payment fails, the console tells you why — issuer decline, additional authentication required, overseas payments blocked — and what to try next.
+- **Card receipt link**: The payment confirmation email links straight to the card issuer's receipt.
+- **Extra invoice recipients**: Postpaid organizations can send invoices to addresses outside the organization, such as an accounting contact.
 
-**Before deleting an organization**
+**Upgrade to an equal-or-better GPU when yours is busy**
 
-- The organization deletion dialog (including a last owner's account withdrawal) now shows how many of your own card payments can still be cancelled, with a direct link to Payment History.
+Choose what happens when the GPU you picked has no free capacity.
+
+- **On (default)**: Your GPU is tried first; if none is free, the endpoint starts right away on an equal-or-better GPU in the same family. You are still billed at the rate of the GPU you selected.
+- **Off**: The endpoint runs only on exactly the GPU you selected and waits until one frees up. Useful for benchmarks and other work where the GPU model affects results.
+- **Where to set it**: In the container creation flow and under Resources in container settings. If your GPU is sold out, you can turn auto-upgrade on right from the creation screen.
+
+**Other improvements**
+
+- **Your time zone**: Dates and times in the console follow your device's time zone, and emails and billing documents label the time zone they use.
+- **Environment variable placeholders**: When you create a container, `{endpoint_id}`, `{endpoint_name}`, and `{project_id}` in environment variable values are replaced with the actual values. The container name is fixed at creation time.
+- **GPU locked by templates**: When a template specifies an instance type, the GPU selection is locked to that type when you create a container from it.
+- **Volume mounts carried over**: Creating a container from an existing one now carries over its volume mount settings too.
+- **USD organizations**: Organizations paying in USD see balances, rates, payments, and exports in a single consistent unit.
 
 </Update>
 
