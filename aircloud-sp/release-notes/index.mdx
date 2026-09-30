@@ -7,7 +7,7 @@ mode: "wide"
 
 <Update label="September 2026">
 
-## Credit breakdown and expiry, payment improvements, and GPU auto-upgrade
+## Credit breakdown and expiry, payment improvements, GPU auto-upgrade, and replica timeline
 
 **Where your credits came from, and when they expire**
 
@@ -34,6 +34,16 @@ Choose what happens when the GPU you picked has no free capacity.
 - **On (default)**: Your GPU is tried first; if none is free, the endpoint starts right away on an equal-or-better GPU in the same family. You are still billed at the rate of the GPU you selected.
 - **Off**: The endpoint runs only on exactly the GPU you selected and waits until one frees up. Useful for benchmarks and other work where the GPU model affects results.
 - **Where to set it**: In the container creation flow and under Resources in container settings. If your GPU is sold out, you can turn auto-upgrade on right from the creation screen.
+
+**See when replicas scaled up and down**
+
+The container's runtime overview now shows when autoscaling added or removed replicas, alongside your other metrics.
+
+- **Active replicas card**: At the top of the runtime overview, one card shows how the replica count changed and when each replica was running. Replicas that ran only briefly appear as dots.
+- **Min and max guides**: The autoscaling minimum and maximum replica counts are drawn as dashed lines, so you can see how close you are to the limit. Containers with autoscaling off show their fixed replica count instead. Hover ⓘ to see how replicas are scaled.
+- **Scale markers**: Every metric chart marks the moments the replica count changed with a vertical dashed line, so you can compare how requests, latency, GPU utilization, and more changed before and after each scale.
+- **Drag to zoom**: Drag across any chart to zoom every chart on the page into that range, re-queried at a finer interval. Click Reset zoom to go back to the previous range.
+- **Default metric order**: Requests, errors, and latency now come first by default. Any order you arranged yourself is kept.
 
 **Other improvements**
 
