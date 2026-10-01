@@ -1556,8 +1556,8 @@
                   "$ref": "#/components/schemas/Error"
                 },
                 "example": {
-                  "message": "VolumeModel not found",
-                  "detail": "VolumeModel not found"
+                  "message": "Volume not found",
+                  "detail": "Volume not found"
                 }
               }
             }
