@@ -1,0 +1,97 @@
+---
+title: "Air Job"
+description: "Run a container image and command to completion"
+icon: "play"
+---
+
+<Note>
+  Air Job is in private preview. Behavior, limits, and endpoints may change before general availability. See the [Quickstart](/docs/air-job/quickstart) for the preview base URL.
+</Note>
+
+A Job runs a container image with a command until the command exits, then releases its GPU. Use it for work that has an end: training, batch inference, data processing, or evaluation. Unlike [Air Container](/docs/air-container/index), a Job has no Replicas, ports, or Autoscaling, and you pay only while it runs.
+
+## How it works
+
+1. You submit a Job with an image, a command, and an instance type, using the CLI, the API, or a `job.yaml` file.
+2. AirCloud queues the Job and waits for GPU capacity.
+3. The container starts and runs your command. You can stream `stdout` and `stderr` while it runs.
+4. When the command exits, the Job ends with `SUCCEEDED` or `FAILED`, and its exit code is recorded.
+
+## Prerequisites
+
+- An API key for the project. See [Authentication](/docs/get-started/authentication).
+- A volume if your Job reads or writes persistent data. Today a Job mounts an existing volume that is attached to an Endpoint in the same project.
+- Enough credits in your organization. Prepaid organizations are cancelled when the balance runs out.
+- The `aircloud` CLI version 0.3.0 or later, if you use the CLI.
+
+## Status lifecycle
+
+```text
+QUEUED -> PENDING -> STARTING -> RUNNING -> SUCCEEDED
+                                         -> FAILED
+any active status -> CANCELLING -> CANCELLED
+```
+
+| Status | Meaning |
+| --- | --- |
+| `QUEUED` | The Job was accepted. |
+| `PENDING` | Waiting for GPU capacity. |
+| `STARTING` | Pulling the image and starting the container. |
+| `RUNNING` | Your command is running. |
+| `SUCCEEDED` | The command exited with code 0. |
+| `FAILED` | The Job failed. See `reason`. |
+| `CANCELLING` / `CANCELLED` | A cancel request was accepted, then completed. |
+
+For `FAILED` and `CANCELLED` Jobs, `reason` tells you why.
+
+| Reason | Meaning |
+| --- | --- |
+| `USER_EXIT_NONZERO` | Your command exited with a non-zero code. See `exit_code`. |
+| `OOM` | The container ran out of memory. |
+| `IMAGE_PULL` | The image could not be pulled. Check the image URL and registry credentials. |
+| `CAPACITY_TIMEOUT` | The Job waited more than 900 seconds for capacity. Submit again later or choose another instance type. |
+| `PLATFORM_ERROR` / `PLATFORM_LOST` | Infrastructure failure. The Job is not restarted automatically; submit it again. |
+| `USER_CANCELLED` | You cancelled the Job. |
+| `BALANCE_EXHAUSTED` | The prepaid balance ran out and the Job was cancelled. |
+
+## Logs
+
+Read `stdout` and `stderr` while the Job runs or after it ends. You can filter by source, search text, or time range, and page through results. With the CLI, `--follow` streams logs until the Job finishes.
+
+## Usage and cost
+
+Jobs are billed per Job in 10-minute units, with a minimum of 10 minutes. Amounts are in KRW.
+
+- `amount` is the confirmed charge.
+- `pending_amount` is an estimate for intervals that have not been charged yet. It can be higher than the final charge.
+
+Use the Job usage endpoint for one Job, with a breakdown by 10-minute interval, or the project usage endpoint for totals per Job over a date range (default last 30 days, up to 92 days). Organization balance and transactions are shown in the console, not through a project API key.
+
+## Avoid duplicate submissions
+
+Send an `Idempotency-Key` header with every submit request.
+
+- Create a new key (a UUID works well) for each user submit action, and reuse the same key when you retry that request after a timeout or network error.
+- The same key with the same body returns the original Job and creates nothing new. The response includes `Idempotent-Replayed: true`.
+- The same key with a different body returns `422`.
+- Keys are kept for 24 hours per project. Without a key, every request creates a new Job.
+
+The CLI adds a key to every submission and retries with the same key automatically.
+
+## Limits and behavior
+
+- There is no maximum run time. A Job runs until its command exits, you cancel it, or the prepaid balance is exhausted.
+- A Job can mount one volume.
+- The image `ENTRYPOINT` cannot be overridden. Set `command` instead.
+- A Job is not restarted automatically after an infrastructure failure. Submit it again.
+- Downloading result files through the API is not available yet. Write results to a mounted volume.
+
+<CardGroup cols={2}>
+  <Card title="Quickstart" icon="rocket" href="/docs/air-job/quickstart" cta="Run your first Job" arrow="true">
+    Submit a Job with the CLI or curl and read its logs.
+  </Card>
+
+  <Card title="Job API reference" icon="code" href="/api-reference/job/submit-job" cta="View API" arrow="true">
+    Request and response details for every Job endpoint.
+  </Card>
+</CardGroup>
