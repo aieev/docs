@@ -656,13 +656,28 @@
               }
             }
           },
-          "401": {
-            "description": "Missing or invalid API key.",
+          "400": {
+            "description": "Request rejected by the platform. Retrying with the same `Idempotency-Key` is safe.",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "Failed to submit job",
+                  "detail": "Failed to submit job"
                 }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid API key.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "invalid api key"
               }
             }
           },
@@ -677,21 +692,41 @@
             }
           },
           "422": {
-            "description": "Invalid request. For POST /jobs this includes reusing an `Idempotency-Key` with a different request body.",
+            "description": "Validation error, or the `Idempotency-Key` was already used with a different request body.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "The upstream cluster service failed to handle the request. Retry later.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/HTTPValidationError"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    }
+                  ]
+                },
+                "examples": {
+                  "validation_error": {
+                    "summary": "Validation error",
+                    "value": {
+                      "detail": [
+                        {
+                          "loc": [
+                            "body",
+                            "command"
+                          ],
+                          "msg": "Field required",
+                          "type": "missing"
+                        }
+                      ]
+                    }
+                  },
+                  "idempotency_key_mismatch": {
+                    "summary": "Idempotency-Key reused with a different body",
+                    "value": {
+                      "detail": "Idempotency-Key was already used with a different request body"
+                    }
+                  }
                 }
               }
             }
@@ -764,10 +799,11 @@
           "401": {
             "description": "Missing or invalid API key.",
             "content": {
-              "application/json": {
+              "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
+                  "type": "string"
+                },
+                "example": "invalid api key"
               }
             }
           },
@@ -847,10 +883,11 @@
           "401": {
             "description": "Missing or invalid API key.",
             "content": {
-              "application/json": {
+              "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
+                  "type": "string"
+                },
+                "example": "invalid api key"
               }
             }
           },
@@ -860,6 +897,10 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "JobModel not found",
+                  "detail": "JobModel not found"
                 }
               }
             }
@@ -956,13 +997,28 @@
               }
             }
           },
-          "401": {
-            "description": "Missing or invalid API key.",
+          "400": {
+            "description": "Request rejected by the platform.",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "Failed to cancel job",
+                  "detail": "Failed to cancel job"
                 }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid API key.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "invalid api key"
               }
             }
           },
@@ -972,16 +1028,10 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "The upstream cluster service failed to handle the request. Retry later.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "JobModel not found",
+                  "detail": "JobModel not found"
                 }
               }
             }
@@ -1100,10 +1150,11 @@
           "401": {
             "description": "Missing or invalid API key.",
             "content": {
-              "application/json": {
+              "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
+                  "type": "string"
+                },
+                "example": "invalid api key"
               }
             }
           },
@@ -1113,6 +1164,10 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "JobModel not found",
+                  "detail": "JobModel not found"
                 }
               }
             }
@@ -1123,16 +1178,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "The upstream cluster service failed to handle the request. Retry later.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -1192,10 +1237,11 @@
           "401": {
             "description": "Missing or invalid API key.",
             "content": {
-              "application/json": {
+              "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
+                  "type": "string"
+                },
+                "example": "invalid api key"
               }
             }
           },
@@ -1205,6 +1251,10 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "JobModel not found",
+                  "detail": "JobModel not found"
                 }
               }
             }
@@ -1215,6 +1265,19 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Usage data is temporarily unavailable. Retry later.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "detail": "Usage data is temporarily unavailable. Please retry later."
                 }
               }
             }
@@ -1297,10 +1360,11 @@
           "401": {
             "description": "Missing or invalid API key.",
             "content": {
-              "application/json": {
+              "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
+                  "type": "string"
+                },
+                "example": "invalid api key"
               }
             }
           },
@@ -1320,6 +1384,19 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Usage data is temporarily unavailable. Retry later.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "detail": "Usage data is temporarily unavailable. Please retry later."
                 }
               }
             }
@@ -1382,10 +1459,11 @@
           "401": {
             "description": "Missing or invalid API key.",
             "content": {
-              "application/json": {
+              "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
+                  "type": "string"
+                },
+                "example": "invalid api key"
               }
             }
           },
@@ -1462,10 +1540,11 @@
           "401": {
             "description": "Missing or invalid API key.",
             "content": {
-              "application/json": {
+              "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
+                  "type": "string"
+                },
+                "example": "invalid api key"
               }
             }
           },
@@ -1475,6 +1554,10 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "VolumeModel not found",
+                  "detail": "VolumeModel not found"
                 }
               }
             }
@@ -1569,10 +1652,11 @@
           "401": {
             "description": "Missing or invalid API key.",
             "content": {
-              "application/json": {
+              "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
+                  "type": "string"
+                },
+                "example": "invalid api key"
               }
             }
           },
@@ -2129,9 +2213,13 @@
       "Error": {
         "type": "object",
         "properties": {
-          "detail": {
+          "message": {
             "type": "string",
             "description": "Error message."
+          },
+          "detail": {
+            "type": "string",
+            "description": "Error detail."
           }
         }
       },
@@ -2333,7 +2421,7 @@
           "canonical_key": {
             "type": "string",
             "nullable": true,
-            "description": "Canonical key."
+            "description": "Internal; may change without notice."
           },
           "description": {
             "type": "string",
@@ -2387,16 +2475,16 @@
           "deploy_args": {
             "type": "object",
             "nullable": true,
-            "description": "Deployment arguments."
+            "description": "Internal; may change without notice."
           },
           "max_replicas": {
             "type": "integer",
-            "description": "Maximum replicas."
+            "description": "Maximum number of replicas."
           },
           "is_emulation": {
             "type": "boolean",
             "default": false,
-            "description": "Whether this is an emulated type."
+            "description": "Internal; may change without notice."
           },
           "availability_level": {
             "type": "string",
@@ -2407,7 +2495,7 @@
               "unavailable"
             ],
             "nullable": true,
-            "description": "Capacity availability level."
+            "description": "Current capacity availability level."
           },
           "created_at": {
             "type": "string",
@@ -2549,17 +2637,17 @@
           "message": {
             "type": "string",
             "nullable": true,
-            "description": "Human-readable detail about the status."
+            "description": "Human-readable detail about the current status or failure, when available."
           },
           "cluster_name": {
             "type": "string",
             "nullable": true,
-            "description": "Cluster running the Job."
+            "description": "Internal; may change without notice."
           },
           "container_name": {
             "type": "string",
             "nullable": true,
-            "description": "Container name."
+            "description": "Internal; may change without notice."
           },
           "created_at": {
             "type": "string",
@@ -2588,7 +2676,7 @@
             "type": "string",
             "format": "date-time",
             "nullable": true,
-            "description": "Set when the Job status could not be confirmed, since this time."
+            "description": "Set when the platform temporarily cannot confirm the Job's state; null otherwise."
           },
           "progress": {
             "type": "number",
