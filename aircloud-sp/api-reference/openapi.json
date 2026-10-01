@@ -644,8 +644,6 @@
                   "reason": null,
                   "exit_code": null,
                   "message": null,
-                  "cluster_name": null,
-                  "container_name": null,
                   "created_at": "2026-09-30T05:00:00Z",
                   "started_at": null,
                   "finished_at": null,
@@ -783,8 +781,6 @@
                     "reason": null,
                     "exit_code": null,
                     "message": null,
-                    "cluster_name": null,
-                    "container_name": null,
                     "created_at": "2026-09-30T05:00:00Z",
                     "started_at": null,
                     "finished_at": null,
@@ -868,8 +864,6 @@
                   "reason": null,
                   "exit_code": 0,
                   "message": null,
-                  "cluster_name": "cluster-xxxx",
-                  "container_name": "job-0a1b2c3d4e5f",
                   "created_at": "2026-09-30T05:00:00Z",
                   "started_at": "2026-09-30T05:01:10Z",
                   "finished_at": "2026-09-30T05:03:42Z",
@@ -896,11 +890,15 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "type": "string"
+                    }
+                  }
                 },
                 "example": {
-                  "message": "JobModel not found",
-                  "detail": "JobModel not found"
+                  "detail": "Job not found"
                 }
               }
             }
@@ -956,8 +954,6 @@
                   "reason": null,
                   "exit_code": 0,
                   "message": null,
-                  "cluster_name": "cluster-xxxx",
-                  "container_name": "job-0a1b2c3d4e5f",
                   "created_at": "2026-09-30T05:00:00Z",
                   "started_at": "2026-09-30T05:01:10Z",
                   "finished_at": "2026-09-30T05:03:42Z",
@@ -985,8 +981,6 @@
                   "reason": null,
                   "exit_code": null,
                   "message": null,
-                  "cluster_name": null,
-                  "container_name": null,
                   "created_at": "2026-09-30T05:00:00Z",
                   "started_at": null,
                   "finished_at": null,
@@ -1027,11 +1021,15 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "type": "string"
+                    }
+                  }
                 },
                 "example": {
-                  "message": "JobModel not found",
-                  "detail": "JobModel not found"
+                  "detail": "Job not found"
                 }
               }
             }
@@ -1163,11 +1161,15 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "type": "string"
+                    }
+                  }
                 },
                 "example": {
-                  "message": "JobModel not found",
-                  "detail": "JobModel not found"
+                  "detail": "Job not found"
                 }
               }
             }
@@ -1250,11 +1252,15 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "type": "string"
+                    }
+                  }
                 },
                 "example": {
-                  "message": "JobModel not found",
-                  "detail": "JobModel not found"
+                  "detail": "Job not found"
                 }
               }
             }
@@ -1553,10 +1559,14 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "type": "string"
+                    }
+                  }
                 },
                 "example": {
-                  "message": "Volume not found",
                   "detail": "Volume not found"
                 }
               }
@@ -1620,10 +1630,7 @@
                       "id": "it-xxxxxxxx",
                       "name": "gpu-a100-1x",
                       "display_name": "A100 x1",
-                      "canonical_key": null,
                       "description": "1x A100 80GB",
-                      "is_active": true,
-                      "is_private": false,
                       "is_available": true,
                       "vcpu_count": 16,
                       "memory_gb": 120,
@@ -1633,12 +1640,7 @@
                       "gpu_count": 1,
                       "price_per_hour": 3000,
                       "currency": "KRW",
-                      "deploy_args": null,
-                      "max_replicas": 1,
-                      "is_emulation": false,
-                      "availability_level": "available",
-                      "created_at": "2026-01-01T00:00:00Z",
-                      "updated_at": "2026-01-01T00:00:00Z"
+                      "availability_level": "available"
                     }
                   ],
                   "total": 1,
@@ -2418,23 +2420,10 @@
             "nullable": true,
             "description": "Display name."
           },
-          "canonical_key": {
-            "type": "string",
-            "nullable": true,
-            "description": "Internal; may change without notice."
-          },
           "description": {
             "type": "string",
             "nullable": true,
             "description": "Description."
-          },
-          "is_active": {
-            "type": "boolean",
-            "description": "Whether the type is active."
-          },
-          "is_private": {
-            "type": "boolean",
-            "description": "Whether the type is private."
           },
           "is_available": {
             "type": "boolean",
@@ -2472,20 +2461,6 @@
             "type": "string",
             "description": "Currency code."
           },
-          "deploy_args": {
-            "type": "object",
-            "nullable": true,
-            "description": "Internal; may change without notice."
-          },
-          "max_replicas": {
-            "type": "integer",
-            "description": "Maximum number of replicas."
-          },
-          "is_emulation": {
-            "type": "boolean",
-            "default": false,
-            "description": "Internal; may change without notice."
-          },
           "availability_level": {
             "type": "string",
             "enum": [
@@ -2496,16 +2471,6 @@
             ],
             "nullable": true,
             "description": "Current capacity availability level."
-          },
-          "created_at": {
-            "type": "string",
-            "format": "date-time",
-            "description": "Creation time."
-          },
-          "updated_at": {
-            "type": "string",
-            "format": "date-time",
-            "description": "Last update time."
           }
         },
         "type": "object",
@@ -2513,8 +2478,6 @@
           "id",
           "name",
           "description",
-          "is_active",
-          "is_private",
           "is_available",
           "vcpu_count",
           "memory_gb",
@@ -2523,11 +2486,7 @@
           "gpu_vram_gb",
           "gpu_count",
           "price_per_hour",
-          "currency",
-          "deploy_args",
-          "max_replicas",
-          "created_at",
-          "updated_at"
+          "currency"
         ]
       },
       "JobLogLine": {
@@ -2637,17 +2596,7 @@
           "message": {
             "type": "string",
             "nullable": true,
-            "description": "Human-readable detail about the current status or failure, when available."
-          },
-          "cluster_name": {
-            "type": "string",
-            "nullable": true,
-            "description": "Internal; may change without notice."
-          },
-          "container_name": {
-            "type": "string",
-            "nullable": true,
-            "description": "Internal; may change without notice."
+            "description": "Human-readable explanation derived from `reason`. `null` while the Job is running or when there is no reason. Mapping:\n- `USER_EXIT_NONZERO`: \"The command exited with a non-zero exit code. Check exit_code and the logs.\"\n- `OOM`: \"The container ran out of memory. Choose an instance type with more memory or reduce memory usage.\"\n- `IMAGE_PULL`: \"The container image could not be pulled. Check the image URL and registry credentials.\"\n- `CAPACITY_TIMEOUT`: \"No GPU capacity became available within the queue wait limit. Submit again later or choose another instance type.\"\n- `PLATFORM_ERROR`: \"The Job failed because of a platform error. Submit it again.\"\n- `PLATFORM_LOST`: \"The node running this Job became unreachable. Submit it again.\"\n- `USER_CANCELLED`: \"The Job was cancelled on request.\"\n- `BALANCE_EXHAUSTED`: \"The Job was stopped because the prepaid credit balance ran out.\"\n- unknown state (no `reason`, `status_unknown_since` set): \"The platform cannot confirm this Job's state right now. It will be rechecked automatically.\""
           },
           "created_at": {
             "type": "string",
@@ -2695,8 +2644,6 @@
           "reason",
           "exit_code",
           "message",
-          "cluster_name",
-          "container_name",
           "created_at",
           "started_at",
           "finished_at",

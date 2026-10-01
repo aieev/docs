@@ -44,6 +44,8 @@ any active status -> CANCELLING -> CANCELLED
 
 For `FAILED` and `CANCELLED` Jobs, `reason` tells you why.
 
+`message` is a human-readable explanation derived from `reason`. It is `null` while the Job is running or when there is no `reason`. If the platform temporarily cannot confirm the Job's state, `status_unknown_since` is set and `message` says it will be rechecked automatically.
+
 | Reason | Meaning |
 | --- | --- |
 | `USER_EXIT_NONZERO` | Your command exited with a non-zero code. See `exit_code`. |

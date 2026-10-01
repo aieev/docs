@@ -44,6 +44,8 @@ QUEUED -> PENDING -> STARTING -> RUNNING -> SUCCEEDED
 
 `FAILED`와 `CANCELLED` Job은 `reason`으로 사유를 확인할 수 있습니다.
 
+`message`는 `reason`에서 파생된 사람이 읽을 수 있는 설명이며(영어 문자열), Job이 실행 중이거나 `reason`이 없으면 `null`입니다. 플랫폼이 Job 상태를 일시적으로 확인하지 못하면 `status_unknown_since`가 설정되고 `message`에 자동으로 다시 확인한다는 안내가 표시됩니다.
+
 | Reason | 의미 |
 | --- | --- |
 | `USER_EXIT_NONZERO` | 명령이 0이 아닌 코드로 종료되었습니다. `exit_code`를 확인하세요. |
