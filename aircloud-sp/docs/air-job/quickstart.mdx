@@ -1,0 +1,227 @@
+---
+title: "Job Quickstart"
+description: "Submit your first Job with the CLI or the API"
+icon: "rocket"
+---
+
+<Note>
+  Air Job is in private preview. Behavior, limits, and endpoints may change before general availability.
+</Note>
+
+{/* TODO(before merge): remove preview URL */}
+## Preview base URL
+
+During the preview, use this base URL instead of the production one:
+
+```text
+https://preview.aieev.cloud:2011/external/api/v1
+```
+
+Set it up once.
+
+```bash
+export AIRCLOUD_API_BASE_URL=https://preview.aieev.cloud:2011
+export AIRCLOUD_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+```
+
+## Find an instance type and a volume
+
+<Tabs>
+  <Tab title="CLI">
+    The Job commands require `aircloud-cli` 0.3.0 or later.
+
+    ```bash
+    pip install aircloud-cli
+    aircloud --version
+    aircloud config set api-base-url $AIRCLOUD_API_BASE_URL
+    aircloud config set api-key $AIRCLOUD_API_KEY
+
+    aircloud instance-types list
+    aircloud volumes list
+    ```
+  </Tab>
+  <Tab title="curl">
+    ```bash
+    BASE=$AIRCLOUD_API_BASE_URL/external/api/v1
+    AUTH="Authorization: Bearer $AIRCLOUD_API_KEY"
+
+    curl -s -H "$AUTH" "$BASE/instance-types?size=2000"
+    curl -s -H "$AUTH" "$BASE/volumes"
+    ```
+  </Tab>
+</Tabs>
+
+Use the instance type `id` (or name in the CLI) when you submit.
+
+## Submit a Job
+
+<Tabs>
+  <Tab title="CLI">
+    Everything after `--` is the command that runs in the container.
+
+    ```bash
+    aircloud jobs submit \
+      --name hello \
+      --instance-type <INSTANCE_TYPE> \
+      --image python:3.11-slim \
+      --env EPOCHS=3 \
+      --wait --follow \
+      -- python -c "import os; print('epochs', os.environ['EPOCHS'])"
+    ```
+
+    - `--wait` waits for the Job to finish and returns its result as the exit code.
+    - `--follow` streams logs while waiting. It requires `--wait`.
+  </Tab>
+  <Tab title="curl">
+    ```bash
+    curl -s -X POST "$BASE/jobs" \
+      -H "$AUTH" \
+      -H "Content-Type: application/json" \
+      -H "Idempotency-Key: $(uuidgen)" \
+      -d '{
+        "name": "hello",
+        "instance_type_id": "<INSTANCE_TYPE_ID>",
+        "registry_url": "python:3.11-slim",
+        "registry_type": "docker_hub",
+        "image_is_public": true,
+        "command": ["python", "-c", "import os; print(\"epochs\", os.environ[\"EPOCHS\"])"],
+        "env": [{"key": "EPOCHS", "value": "3"}]
+      }'
+    ```
+
+    The response is `202 Accepted` with the Job object. `command` is an array of strings (use `["sh", "-c", "..."]` for shell syntax), and `env` is an array of `{key, value}` objects.
+  </Tab>
+</Tabs>
+
+<Warning>
+  Generate one `Idempotency-Key` per submit action and reuse it only when retrying that same request. Do not reuse a key for a different request.
+</Warning>
+
+## Use a volume, shared memory, or a private image
+
+```bash
+export REGISTRY_PASSWORD=<registry password>
+aircloud jobs submit \
+  --instance-type <INSTANCE_TYPE> \
+  --image myorg/train:latest --private \
+  --registry-username myorg --registry-password-env REGISTRY_PASSWORD \
+  --volume <VOLUME_ID>:/data \
+  --volume <VOLUME_ID>:/ckpt:checkpoints \
+  --shm-size-gb 8 \
+  --workdir /data \
+  --wait --follow \
+  -- python train.py --epochs 10
+```
+
+`--volume VOLUME_ID:/container/path[:subpath]` can be repeated, but a Job can use only one volume. The default `--registry-type` is `docker_hub`; `aws_ecr`, `github_container_registry`, and `gcp_artifact_registry` are also supported.
+
+In the API, add these fields to the request body:
+
+```json
+{
+  "registry_url": "myorg/train:latest",
+  "image_is_public": false,
+  "registry_username": "myorg",
+  "registry_password": "<registry password>",
+  "volume": {
+    "volume_id": "<VOLUME_ID>",
+    "mounts": [
+      {"container_path": "/data", "subpath": ""},
+      {"container_path": "/ckpt", "subpath": "checkpoints"}
+    ]
+  },
+  "shm_size_gb": 8,
+  "working_dir": "/data"
+}
+```
+
+## Submit from a job.yaml
+
+```yaml
+# job.yaml
+name: train-mnist
+instance_type: <INSTANCE_TYPE>
+image:
+  url: myorg/train:latest
+  public: false
+  username: myorg
+  password_env: REGISTRY_PASSWORD   # environment variable name, not the password
+command: ["python", "/data/train.py", "--epochs", "10"]
+env:
+  EPOCHS: "10"
+env_file: .env                      # relative to job.yaml
+volume:
+  id: <VOLUME_ID>
+  mounts:
+    - path: /data
+    - path: /ckpt
+      subpath: checkpoints
+shm_size_gb: 8
+working_dir: /data
+```
+
+```bash
+aircloud jobs submit -f job.yaml --wait --follow
+aircloud jobs submit -f job.yaml --name train-v2 -- python /data/train.py --epochs 20
+```
+
+Flags override values in the file.
+
+## Check status, logs, and cancel
+
+<Tabs>
+  <Tab title="CLI">
+    ```bash
+    aircloud jobs list --status RUNNING
+    aircloud jobs get <JOB_ID>
+    aircloud jobs logs <JOB_ID> --follow
+    aircloud jobs logs <JOB_ID> --source stderr --search Error
+    aircloud jobs wait <JOB_ID> --follow
+    aircloud jobs cancel <JOB_ID> -y
+    ```
+  </Tab>
+  <Tab title="curl">
+    ```bash
+    curl -s -H "$AUTH" "$BASE/jobs/<JOB_ID>"
+    curl -s -H "$AUTH" "$BASE/jobs?status=RUNNING"
+    curl -s -H "$AUTH" "$BASE/jobs/<JOB_ID>/logs?limit=1000&offset=0"
+    curl -s -X POST -H "$AUTH" "$BASE/jobs/<JOB_ID>/cancel"
+    ```
+
+    Cancel returns `202` when the request is accepted and `200` if the Job has already finished. Logs are returned newest first; when `has_more` is true, request the next page with `offset=<next_offset>`.
+  </Tab>
+</Tabs>
+
+### Exit codes with `--wait`
+
+| Code | Meaning |
+| --- | --- |
+| 0 | Succeeded. |
+| 1 to 255 | Your command's exit code (`USER_EXIT_NONZERO`). |
+| 137 | Out of memory. |
+| 130 | Cancelled, including Ctrl+C. |
+| 2 | Any other failure: platform error, capacity wait timeout, exhausted balance, or an invalid request. |
+
+## Check usage and cost
+
+```bash
+aircloud jobs usage <JOB_ID>
+aircloud usage --from 2026-09-01 --to 2026-09-30
+
+curl -s -H "$AUTH" "$BASE/jobs/<JOB_ID>/usage"
+curl -s -H "$AUTH" "$BASE/usage?start_date=2026-09-01T00:00:00%2B09:00&end_date=2026-10-01T00:00:00%2B09:00"
+```
+
+`pending_amount` is an estimate for intervals not yet charged. Dates need a timezone in the API (encode `+` as `%2B`), and the range can be at most 92 days.
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Air Job overview" icon="play" href="/docs/air-job/index" cta="Read more" arrow="true">
+    Status lifecycle, billing, and limits.
+  </Card>
+
+  <Card title="Job API reference" icon="code" href="/api-reference/job/submit-job" cta="View API" arrow="true">
+    Full request and response schemas.
+  </Card>
+</CardGroup>
