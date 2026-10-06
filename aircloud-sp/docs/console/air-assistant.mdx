@@ -1,0 +1,115 @@
+---
+title: "Air Assistant"
+icon: "bot-message-square"
+description: "Ask questions in the console and get answers from the docs and your own account"
+---
+
+Air Assistant is an AI assistant built into the AirCloud console. Ask how a feature works or what a concept means, or check your own account in plain language: which GPUs are available right now, which endpoints are running, how much you have used this month.
+
+Answers are grounded in the official AirCloud documentation and in the account and organization data the signed-in user is allowed to access.
+
+<Note>
+  Air Assistant is a **beta** feature. It is currently **read-only**: it does not change resources, such as deploying, stopping, or deleting a container.
+</Note>
+
+## Getting Started
+
+<Frame>
+  <img src="/docs/images/air-assistant/header-button.png" style={{ borderRadius: "0.5rem" }} />
+</Frame>
+
+1. Click the **Air Assistant** button in the console header.
+2. The first time, a data handling notice appears. Read it, tick **I have read the above and agree to use the Air Assistant beta**, and click **Agree and continue**.
+3. The Air Assistant panel opens on the right. Pick a suggested question or type your own.
+
+<Frame>
+  <img src="/docs/images/air-assistant/suggested-questions.png" style={{ borderRadius: "0.5rem" }} />
+</Frame>
+
+When you open the panel for the first time, you see suggested questions such as:
+
+- Show me the endpoints that are currently running
+- Which GPUs are available right now, and at what price?
+- Summarize this month's usage and credits
+- Explain how Autoscaling works
+
+## What It Can Do
+
+| Area | Example questions | Answered from |
+| :-- | :-- | :-- |
+| **Docs and how-tos** | "How does Autoscaling work?"<br />"Where do I create an Air API key?" | The official AirCloud docs. Links to the pages used in the answer are shown with it. |
+| **GPU lookups** | "Which GPUs are available right now, and at what price?"<br />"Is an RTX 5090 available now?" | GPU catalog, prices, and real-time availability |
+| **Endpoint and container lookups** | "Show me the endpoints that are currently running"<br />"How many replicas does my-api have?" | Endpoint lists, details, and replica status for projects you can access |
+| **Usage and credit lookups** | "Summarize this month's usage and credits"<br />"Show me the latest invoice" | Credit balance, usage summary, and invoice list |
+
+Below each answer, related follow-up questions appear as buttons. Clicking one sends that question right away.
+
+<Info>
+  List results show 10 items by default and up to 20.
+</Info>
+
+## Not Supported Yet
+
+During the beta, the following are not supported:
+
+- Creating, editing, stopping, or deleting resources (deploy, restart, change replicas, and so on). The assistant can explain how to do them, but you run them in the console yourself.
+- Monitoring metrics, log analysis, and root-cause diagnosis
+- Storage and template lookups
+- Detailed cost breakdowns by period or resource, and configuration change history
+- Connecting from external agents (Claude, Cursor, and others) over MCP
+
+## Using the Panel
+
+| Button | What it does |
+| :-- | :-- |
+| **New conversation** (+) | Clears the current conversation and starts a new one. |
+| **Export** (↓) | Downloads the current conversation as a file. |
+| **Expand / Collapse** | Widens the panel or returns it to the default size. |
+| **Close** (×) | Closes the panel. |
+
+<Info>
+  The beta does not yet reopen past conversations. If you want to keep a conversation, save it with **Export** (↓).
+</Info>
+
+## Data Handling and Permissions
+
+Review the following before using Air Assistant. It is the same information shown on the first-use consent screen.
+
+| Item | Details |
+| :-- | :-- |
+| **Access scope** | To answer your questions, it reads account and organization data you have permission to see. It does not access other organizations or projects you cannot see in the console, and it does not read secrets such as API keys. |
+| **Retention** | Prompts and answers are kept for **30 days** by default, to provide and improve the service. |
+| **Processing model** | Your input is sent to and processed by Air API models served by AirCloud. |
+| **Training use** | Your input may be used to train and improve the models and the service. |
+| **Opt-out and withdrawal** | You can decline or withdraw your consent to use the assistant and to optional data use. To withdraw, [contact us](/docs/support/contact-and-feedback). |
+
+<Warning>
+  AI answers can be inaccurate or wrong. Double-check anything important, such as costs, payments, and resource status, on the corresponding console screen.
+</Warning>
+
+<Tip>
+  Do not enter sensitive information such as passwords, API keys, or personal data.
+</Tip>
+
+## Getting Better Answers
+
+- **Be specific about the target.** "The endpoints in project bs-proj" works better than "my endpoints". Include the project or endpoint name.
+- **Ask one thing at a time.** Split several questions into separate messages rather than combining them in one sentence.
+- **Start a new conversation when the topic changes.** Earlier context can affect the answer to a new question.
+- **If no answer arrives,** resend after a moment or ask again in a new conversation.
+
+## Related
+
+<Columns cols={3}>
+  <Card title="Autoscaling and Scheduling" icon="chart-line" href="/docs/air-container/autoscaling-and-scheduling" cta="Read the guide" arrow="true">
+    Learn what drives replicas up and down.
+  </Card>
+
+  <Card title="GPU Availability and Limits" icon="gauge" href="/docs/reference/gpu-availability-and-limits" cta="Read the reference" arrow="true">
+    Understand availability indicators, sold-out GPUs, and replica limits.
+  </Card>
+
+  <Card title="Billing and Credits" icon="credit-card" href="/docs/console/billing" cta="Read the guide" arrow="true">
+    Check credits, payments, and invoices in the console.
+  </Card>
+</Columns>
