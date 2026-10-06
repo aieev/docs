@@ -43,12 +43,31 @@ Use the metric selector in the upper-right corner to customize the dashboard and
 | **Memory Usage** | System memory usage (GB). |
 | **Network Traffic** | Total inbound and outbound network traffic (GB). |
 | **Network Throughput** | Real-time network throughput (KB/s). |
-| **Active Replicas** | Number of currently running Replicas. |
+| **Healthy Replicas Count** | Number of currently running Replicas. |
 | **HTTP Requests per Second (QPS)** | Number of HTTP requests processed per second. |
 | **HTTP P90 Latency** | 90th percentile HTTP response latency. |
 | **HTTP Errors per Second** | Number of HTTP error responses per second. |
 | **Request Count** | Number of requests over time. |
 | **Total Requests** | Cumulative request count. |
+
+### Replica Timeline
+
+The **Healthy Replicas Count** card at the top of the container's monitoring page shows when Autoscaling added or removed Replicas, alongside your other metrics.
+
+![Replica Timeline Eng](/images/replica-timeline-eng.png)
+
+- **Replica count and runtime**: One card shows how the Replica count changed over the selected range and when each Replica was running. Replicas that ran only briefly appear as dots.
+- **Min and max guides**: The Autoscaling minimum and maximum Replica counts are drawn as dashed lines, so you can see how close you are to the limit. If Autoscaling is off, the card shows the fixed Replica count instead.
+- **How Replicas are scaled**: Hover the ⓘ icon on the card to see the scaling rule. With Autoscaling on, a Replica is added when each Replica is handling more than the target number of concurrent requests on average, and removed when the load drops. With Autoscaling off, a change in the Replica count may mean a restart or a failure.
+- **Scale markers**: Every metric chart marks the moments the Replica count changed with a vertical dashed line, so you can compare how requests, latency, GPU utilization, and other metrics changed before and after each scale event.
+
+<Note>
+  Autoscaling decides only from the number of concurrent requests per Replica. The scale markers help you compare metrics before and after a scale event; they do not mean that the metric on that chart caused it.
+</Note>
+
+### Drag to Zoom
+
+Drag across any chart to zoom every chart on the page into that range. The data is re-queried at a finer interval for the zoomed range. Click **Reset zoom** to return to the previous range.
 
 ## Container Runtime Logs
 
