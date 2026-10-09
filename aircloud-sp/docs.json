@@ -69,6 +69,13 @@
                 ]
               },
               {
+                "group": "Air Job",
+                "pages": [
+                  "docs/air-job/index",
+                  "docs/air-job/quickstart"
+                ]
+              },
+              {
                 "group": "Reference",
                 "pages": [
                   "docs/reference/infrastructure-and-resource-types",
@@ -158,6 +165,36 @@
                 "pages": [
                   "api-reference/endpoint/get-me"
                 ]
+              },
+              {
+                "group": "Jobs",
+                "pages": [
+                  "api-reference/job/submit-job",
+                  "api-reference/job/list-jobs",
+                  "api-reference/job/get-job",
+                  "api-reference/job/cancel-job",
+                  "api-reference/job/get-job-logs"
+                ]
+              },
+              {
+                "group": "Usage",
+                "pages": [
+                  "api-reference/usage/get-job-usage",
+                  "api-reference/usage/get-project-usage"
+                ]
+              },
+              {
+                "group": "Volumes",
+                "pages": [
+                  "api-reference/volume/list-volumes",
+                  "api-reference/volume/get-volume"
+                ]
+              },
+              {
+                "group": "Instance types",
+                "pages": [
+                  "api-reference/instance-type/list-instance-types"
+                ]
               }
             ]
           },
@@ -221,6 +258,13 @@
                     ]
                   },
                   "docs/ko/air-container/shared-storage"
+                ]
+              },
+              {
+                "group": "Air Job",
+                "pages": [
+                  "docs/ko/air-job/index",
+                  "docs/ko/air-job/quickstart"
                 ]
               },
               {
@@ -312,6 +356,36 @@
                 "group": "인증",
                 "pages": [
                   "api-reference/ko/endpoint/get-me"
+                ]
+              },
+              {
+                "group": "Job",
+                "pages": [
+                  "api-reference/ko/job/submit-job",
+                  "api-reference/ko/job/list-jobs",
+                  "api-reference/ko/job/get-job",
+                  "api-reference/ko/job/cancel-job",
+                  "api-reference/ko/job/get-job-logs"
+                ]
+              },
+              {
+                "group": "사용량",
+                "pages": [
+                  "api-reference/ko/usage/get-job-usage",
+                  "api-reference/ko/usage/get-project-usage"
+                ]
+              },
+              {
+                "group": "볼륨",
+                "pages": [
+                  "api-reference/ko/volume/list-volumes",
+                  "api-reference/ko/volume/get-volume"
+                ]
+              },
+              {
+                "group": "인스턴스 타입",
+                "pages": [
+                  "api-reference/ko/instance-type/list-instance-types"
                 ]
               }
             ]

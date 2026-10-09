@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "AirCloud External API",
-    "description": "Public REST API for managing AirCloud endpoints programmatically.",
+    "description": "Public REST API for managing AirCloud endpoints and Jobs programmatically.",
     "version": "1.0.0",
     "contact": {
       "name": "support",
@@ -36,6 +36,22 @@
     {
       "name": "Logs",
       "description": "Access endpoint log files."
+    },
+    {
+      "name": "Jobs",
+      "description": "Submit and manage run-to-completion jobs."
+    },
+    {
+      "name": "Usage",
+      "description": "Job usage and cost."
+    },
+    {
+      "name": "Volumes",
+      "description": "List volumes that Jobs can mount."
+    },
+    {
+      "name": "Instance Types",
+      "description": "List instance types available for Jobs."
     }
   ],
   "paths": {
@@ -543,6 +559,1115 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/LogContent"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/jobs": {
+      "post": {
+        "tags": [
+          "Jobs"
+        ],
+        "summary": "Submit Job",
+        "description": "Submit a Job that runs a container image and command to completion. The Job is queued and returns `202 Accepted` with the Job object. Send an `Idempotency-Key` header to make retries safe.\n\n`command` is an array of strings; use `[\"sh\", \"-c\", \"...\"]` when you need shell syntax. `env` is an array of `{key, value}` objects. A Job can mount at most one volume.",
+        "operationId": "submitJob",
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "description": "Recommended. A unique key (ASCII, no spaces, 1-255 characters) generated once per user submit action. Reuse the same key when retrying the same request. Keys are kept for 24 hours per project. Same key and same body returns the original Job (`202` with response header `Idempotent-Replayed: true`) without creating a new one; same key with a different body returns 422. Without a key, every request creates a new Job.",
+            "schema": {
+              "type": "string",
+              "pattern": "^[\\x21-\\x7E]{1,255}$",
+              "nullable": true
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Job definition.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExternalJobCreateRequest"
+              },
+              "example": {
+                "name": "hello",
+                "instance_type_id": "it-xxxxxxxx",
+                "registry_url": "python:3.11-slim",
+                "registry_type": "docker_hub",
+                "image_is_public": true,
+                "command": [
+                  "python",
+                  "-c",
+                  "import os; print('epochs', os.environ['EPOCHS'])"
+                ],
+                "env": [
+                  {
+                    "key": "EPOCHS",
+                    "value": "3"
+                  }
+                ],
+                "volume": {
+                  "volume_id": "vol-xxxxxxxx",
+                  "mounts": [
+                    {
+                      "container_path": "/data",
+                      "subpath": ""
+                    }
+                  ]
+                },
+                "shm_size_gb": 8,
+                "working_dir": "/data"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Job accepted and queued.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobResponse"
+                },
+                "example": {
+                  "id": "job-0a1b2c3d4e5f",
+                  "organization_id": "org-0I2GoSBhwODG",
+                  "project_id": "proj-sGF4ynUPbc8H",
+                  "name": "hello",
+                  "instance_type_id": "it-xxxxxxxx",
+                  "status": "QUEUED",
+                  "reason": null,
+                  "exit_code": null,
+                  "message": null,
+                  "created_at": "2026-09-30T05:00:00Z",
+                  "started_at": null,
+                  "finished_at": null,
+                  "cancel_requested_at": null,
+                  "status_unknown_since": null,
+                  "progress": null
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request rejected by the platform. Retrying with the same `Idempotency-Key` is safe.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "Failed to submit job",
+                  "detail": "Failed to submit job"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid API key.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "invalid api key"
+              }
+            }
+          },
+          "403": {
+            "description": "`project_id` does not match the API key's project.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error, or the `Idempotency-Key` was already used with a different request body.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/HTTPValidationError"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    }
+                  ]
+                },
+                "examples": {
+                  "validation_error": {
+                    "summary": "Validation error",
+                    "value": {
+                      "detail": [
+                        {
+                          "loc": [
+                            "body",
+                            "command"
+                          ],
+                          "msg": "Field required",
+                          "type": "missing"
+                        }
+                      ]
+                    }
+                  },
+                  "idempotency_key_mismatch": {
+                    "summary": "Idempotency-Key reused with a different body",
+                    "value": {
+                      "detail": "Idempotency-Key was already used with a different request body"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Jobs"
+        ],
+        "summary": "List Jobs",
+        "description": "Returns the Jobs of the API key's project, optionally filtered by status.",
+        "operationId": "listJobs",
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "query",
+            "description": "Project ID. Optional - it must match the API key's project; any other value returns 403.",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "example": "proj-sGF4ynUPbc8H"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Return only Jobs in this status.",
+            "schema": {
+              "$ref": "#/components/schemas/JobStatus"
+            },
+            "example": "RUNNING"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of Jobs.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/JobResponse"
+                  }
+                },
+                "example": [
+                  {
+                    "id": "job-0a1b2c3d4e5f",
+                    "organization_id": "org-0I2GoSBhwODG",
+                    "project_id": "proj-sGF4ynUPbc8H",
+                    "name": "hello",
+                    "instance_type_id": "it-xxxxxxxx",
+                    "status": "QUEUED",
+                    "reason": null,
+                    "exit_code": null,
+                    "message": null,
+                    "created_at": "2026-09-30T05:00:00Z",
+                    "started_at": null,
+                    "finished_at": null,
+                    "cancel_requested_at": null,
+                    "status_unknown_since": null,
+                    "progress": null
+                  }
+                ]
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid API key.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "invalid api key"
+              }
+            }
+          },
+          "403": {
+            "description": "`project_id` does not match the API key's project.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request. For POST /jobs this includes reusing an `Idempotency-Key` with a different request body.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/jobs/{job_id}": {
+      "get": {
+        "tags": [
+          "Jobs"
+        ],
+        "summary": "Get Job",
+        "description": "Returns the status of a Job, including `reason` and `exit_code` once it has finished.",
+        "operationId": "getJob",
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "description": "Unique Job ID.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "job-0a1b2c3d4e5f"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Job object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobResponse"
+                },
+                "example": {
+                  "id": "job-0a1b2c3d4e5f",
+                  "organization_id": "org-0I2GoSBhwODG",
+                  "project_id": "proj-sGF4ynUPbc8H",
+                  "name": "hello",
+                  "instance_type_id": "it-xxxxxxxx",
+                  "status": "SUCCEEDED",
+                  "reason": null,
+                  "exit_code": 0,
+                  "message": null,
+                  "created_at": "2026-09-30T05:00:00Z",
+                  "started_at": "2026-09-30T05:01:10Z",
+                  "finished_at": "2026-09-30T05:03:42Z",
+                  "cancel_requested_at": null,
+                  "status_unknown_since": null,
+                  "progress": null
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid API key.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "invalid api key"
+              }
+            }
+          },
+          "404": {
+            "description": "Job not found in this project.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "detail": "Job not found"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request. For POST /jobs this includes reusing an `Idempotency-Key` with a different request body.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/jobs/{job_id}/cancel": {
+      "post": {
+        "tags": [
+          "Jobs"
+        ],
+        "summary": "Cancel Job",
+        "description": "Request cancellation of a Job. Returns `202` when the cancel request is accepted (status becomes `CANCELLING`, then `CANCELLED`) and `200` when the Job has already finished.",
+        "operationId": "cancelJob",
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "description": "Unique Job ID.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "job-0a1b2c3d4e5f"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The Job has already finished; nothing to cancel.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobResponse"
+                },
+                "example": {
+                  "id": "job-0a1b2c3d4e5f",
+                  "organization_id": "org-0I2GoSBhwODG",
+                  "project_id": "proj-sGF4ynUPbc8H",
+                  "name": "hello",
+                  "instance_type_id": "it-xxxxxxxx",
+                  "status": "SUCCEEDED",
+                  "reason": null,
+                  "exit_code": 0,
+                  "message": null,
+                  "created_at": "2026-09-30T05:00:00Z",
+                  "started_at": "2026-09-30T05:01:10Z",
+                  "finished_at": "2026-09-30T05:03:42Z",
+                  "cancel_requested_at": null,
+                  "status_unknown_since": null,
+                  "progress": null
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Cancel request accepted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobResponse"
+                },
+                "example": {
+                  "id": "job-0a1b2c3d4e5f",
+                  "organization_id": "org-0I2GoSBhwODG",
+                  "project_id": "proj-sGF4ynUPbc8H",
+                  "name": "hello",
+                  "instance_type_id": "it-xxxxxxxx",
+                  "status": "CANCELLING",
+                  "reason": null,
+                  "exit_code": null,
+                  "message": null,
+                  "created_at": "2026-09-30T05:00:00Z",
+                  "started_at": null,
+                  "finished_at": null,
+                  "cancel_requested_at": "2026-09-30T05:02:00Z",
+                  "status_unknown_since": null,
+                  "progress": null
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request rejected by the platform.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "Failed to cancel job",
+                  "detail": "Failed to cancel job"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid API key.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "invalid api key"
+              }
+            }
+          },
+          "404": {
+            "description": "Job not found in this project.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "detail": "Job not found"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/jobs/{job_id}/logs": {
+      "get": {
+        "tags": [
+          "Jobs"
+        ],
+        "summary": "Get Job Logs",
+        "description": "Returns stdout/stderr log lines of a Job, newest first. When `has_more` is true, pass `next_offset` as `offset` to fetch the next page.",
+        "operationId": "getJobLogs",
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "description": "Unique Job ID.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "job-0a1b2c3d4e5f"
+          },
+          {
+            "name": "source",
+            "in": "query",
+            "description": "Filter by output stream.",
+            "schema": {
+              "enum": [
+                "stdout",
+                "stderr"
+              ],
+              "type": "string",
+              "nullable": true
+            },
+            "example": "stderr"
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "description": "Return only lines containing this text.",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "example": "Error"
+          },
+          {
+            "name": "start_time",
+            "in": "query",
+            "description": "Start of the time range (ISO 8601, timezone required).",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            }
+          },
+          {
+            "name": "end_time",
+            "in": "query",
+            "description": "End of the time range (ISO 8601, timezone required).",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of log lines per page. Min 1, max 5000.",
+            "schema": {
+              "type": "integer",
+              "maximum": 5000,
+              "minimum": 1,
+              "default": 1000
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Number of lines to skip.",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A page of log lines.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobLogPage"
+                },
+                "example": {
+                  "records": [
+                    {
+                      "id": "1",
+                      "timestamp": "2026-09-30T05:01:20Z",
+                      "source": "stdout",
+                      "body": "epochs 3"
+                    }
+                  ],
+                  "has_more": false,
+                  "next_offset": null
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid API key.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "invalid api key"
+              }
+            }
+          },
+          "404": {
+            "description": "Job not found in this project.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "detail": "Job not found"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request. For POST /jobs this includes reusing an `Idempotency-Key` with a different request body.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/jobs/{job_id}/usage": {
+      "get": {
+        "tags": [
+          "Usage"
+        ],
+        "summary": "Get Job Usage",
+        "description": "Returns billed minutes and cost of one Job, with a breakdown by 10-minute interval. Amounts are integer KRW. `amount` is the confirmed charge; `pending_amount` is an estimate for intervals not yet charged and can be higher than the final charge.",
+        "operationId": "getJobUsage",
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "description": "Unique Job ID.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "job-0a1b2c3d4e5f"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Job usage.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobUsageResponse"
+                },
+                "example": {
+                  "job_id": "job-0a1b2c3d4e5f",
+                  "currency": "KRW",
+                  "billed_minutes": 10,
+                  "amount": 500,
+                  "pending_amount": 0,
+                  "intervals": [
+                    {
+                      "start": "2026-09-30T05:01:10Z",
+                      "end": "2026-09-30T05:11:10Z",
+                      "instance_type_id": "it-xxxxxxxx",
+                      "price_per_hour": 3000,
+                      "minutes": 10,
+                      "amount": 500,
+                      "billed": true
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid API key.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "invalid api key"
+              }
+            }
+          },
+          "404": {
+            "description": "Job not found in this project.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "detail": "Job not found"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request. For POST /jobs this includes reusing an `Idempotency-Key` with a different request body.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Usage data is temporarily unavailable. Retry later.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "detail": "Usage data is temporarily unavailable. Please retry later."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/usage": {
+      "get": {
+        "tags": [
+          "Usage"
+        ],
+        "summary": "Get Project Usage",
+        "description": "Returns the per-Job usage totals of the project for a date range (default: last 30 days, max 92 days). Organization balance and transactions are not available with a project API key; view them in the console.",
+        "operationId": "getProjectUsage",
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "query",
+            "description": "Project ID. Optional - it must match the API key's project; any other value returns 403.",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "example": "proj-sGF4ynUPbc8H"
+          },
+          {
+            "name": "start_date",
+            "in": "query",
+            "description": "Start of the range (ISO 8601 with timezone; encode `+` as `%2B`). Defaults to 30 days before `end_date`.",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "example": "2026-09-01T00:00:00+09:00"
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "description": "End of the range (ISO 8601 with timezone). Defaults to now. The range may not exceed 92 days.",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "example": "2026-10-01T00:00:00+09:00"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Project usage.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectUsageResponse"
+                },
+                "example": {
+                  "project_id": "proj-sGF4ynUPbc8H",
+                  "start_date": "2026-09-01T00:00:00+09:00",
+                  "end_date": "2026-10-01T00:00:00+09:00",
+                  "currency": "KRW",
+                  "total_amount": 500,
+                  "total_pending_amount": 250,
+                  "items": [
+                    {
+                      "job_id": "job-0a1b2c3d4e5f",
+                      "name": "hello",
+                      "billed_minutes": 10,
+                      "amount": 500,
+                      "pending_amount": 250,
+                      "first_start": "2026-09-30T05:01:10Z",
+                      "last_end": "2026-09-30T05:11:10Z"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid API key.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "invalid api key"
+              }
+            }
+          },
+          "403": {
+            "description": "`project_id` does not match the API key's project.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid dates, or the range exceeds 92 days.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Usage data is temporarily unavailable. Retry later.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "detail": "Usage data is temporarily unavailable. Please retry later."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/volumes": {
+      "get": {
+        "tags": [
+          "Volumes"
+        ],
+        "summary": "List Volumes",
+        "description": "Returns the volumes of the project that a Job can mount. Volumes are read-only here; create and delete them in the console. Currently a Job mounts an existing volume attached to an Endpoint.",
+        "operationId": "listVolumes",
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "query",
+            "description": "Project ID. Optional - it must match the API key's project; any other value returns 403.",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "example": "proj-sGF4ynUPbc8H"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of volumes.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VolumeResponse"
+                  }
+                },
+                "example": [
+                  {
+                    "volume_id": "vol-xxxxxxxx",
+                    "name": "my-volume",
+                    "size_gb": 100,
+                    "status": "available",
+                    "organization_id": "org-0I2GoSBhwODG",
+                    "project_id": "proj-sGF4ynUPbc8H",
+                    "created_at": "2026-08-01T00:00:00Z",
+                    "attached_endpoints": [
+                      {
+                        "id": "51c910f7-ecde-4c6c-88f8-d8e37ca9d598",
+                        "name": "my-endpoint"
+                      }
+                    ],
+                    "attached_jobs": []
+                  }
+                ]
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid API key.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "invalid api key"
+              }
+            }
+          },
+          "403": {
+            "description": "`project_id` does not match the API key's project.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request. For POST /jobs this includes reusing an `Idempotency-Key` with a different request body.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/volumes/{volume_id}": {
+      "get": {
+        "tags": [
+          "Volumes"
+        ],
+        "summary": "Get Volume",
+        "description": "Returns a single volume, including the Endpoints and Jobs it is attached to.",
+        "operationId": "getVolume",
+        "parameters": [
+          {
+            "name": "volume_id",
+            "in": "path",
+            "required": true,
+            "description": "Unique volume ID.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "vol-xxxxxxxx"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Volume object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VolumeResponse"
+                },
+                "example": {
+                  "volume_id": "vol-xxxxxxxx",
+                  "name": "my-volume",
+                  "size_gb": 100,
+                  "status": "available",
+                  "organization_id": "org-0I2GoSBhwODG",
+                  "project_id": "proj-sGF4ynUPbc8H",
+                  "created_at": "2026-08-01T00:00:00Z",
+                  "attached_endpoints": [
+                    {
+                      "id": "51c910f7-ecde-4c6c-88f8-d8e37ca9d598",
+                      "name": "my-endpoint"
+                    }
+                  ],
+                  "attached_jobs": []
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid API key.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "invalid api key"
+              }
+            }
+          },
+          "404": {
+            "description": "Volume not found in this project.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "detail": "Volume not found"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request. For POST /jobs this includes reusing an `Idempotency-Key` with a different request body.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/instance-types": {
+      "get": {
+        "tags": [
+          "Instance Types"
+        ],
+        "summary": "List Instance Types",
+        "description": "Returns the instance types you can use for a Job. Use the `id` as `instance_type_id` when submitting. `price_per_hour` is the hourly price.",
+        "operationId": "listInstanceTypes",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number, starting from 1.",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Number of items per page. Min 1, max 2000.",
+            "schema": {
+              "type": "integer",
+              "maximum": 2000,
+              "minimum": 1,
+              "default": 50
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated list of instance types.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InstanceTypeListResponse"
+                },
+                "example": {
+                  "items": [
+                    {
+                      "id": "it-xxxxxxxx",
+                      "name": "gpu-a100-1x",
+                      "display_name": "A100 x1",
+                      "description": "1x A100 80GB",
+                      "is_available": true,
+                      "vcpu_count": 16,
+                      "memory_gb": 120,
+                      "storage_gb": 200,
+                      "gpu_name": "A100",
+                      "gpu_vram_gb": 80,
+                      "gpu_count": 1,
+                      "price_per_hour": 3000,
+                      "currency": "KRW",
+                      "availability_level": "available"
+                    }
+                  ],
+                  "total": 1,
+                  "page": 1,
+                  "size": 50,
+                  "pages": 1
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid API key.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "invalid api key"
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request. For POST /jobs this includes reusing an `Idempotency-Key` with a different request body.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
                 }
               }
             }
@@ -1090,9 +2215,13 @@
       "Error": {
         "type": "object",
         "properties": {
-          "detail": {
+          "message": {
             "type": "string",
             "description": "Error message."
+          },
+          "detail": {
+            "type": "string",
+            "description": "Error detail."
           }
         }
       },
@@ -1137,6 +2266,754 @@
             "description": "Additional context for the problem, when available."
           }
         }
+      },
+      "AttachedRef": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID."
+          },
+          "name": {
+            "type": "string",
+            "nullable": true,
+            "description": "Name."
+          }
+        },
+        "type": "object",
+        "required": [
+          "id"
+        ]
+      },
+      "EndpointEnvVars": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Variable name."
+          },
+          "value": {
+            "nullable": true,
+            "description": "Variable value."
+          }
+        },
+        "type": "object",
+        "required": [
+          "key"
+        ]
+      },
+      "ExternalJobCreateRequest": {
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "nullable": true,
+            "description": "Project ID. Optional - defaults to the API key's project."
+          },
+          "name": {
+            "type": "string",
+            "nullable": true,
+            "description": "Job name."
+          },
+          "instance_type_id": {
+            "type": "string",
+            "description": "Instance type ID from the instance types list."
+          },
+          "registry_url": {
+            "type": "string",
+            "description": "Container image URL, for example `python:3.11-slim`."
+          },
+          "registry_type": {
+            "type": "string",
+            "enum": [
+              "docker_hub",
+              "aws_ecr",
+              "github_container_registry",
+              "gcp_artifact_registry",
+              ""
+            ],
+            "nullable": true,
+            "description": "Registry type. Defaults to `docker_hub`."
+          },
+          "image_is_public": {
+            "type": "boolean",
+            "nullable": true,
+            "description": "Whether the image is public. Set `false` for a private image and provide registry credentials."
+          },
+          "registry_username": {
+            "type": "string",
+            "nullable": true,
+            "description": "Registry username for a private image."
+          },
+          "registry_password": {
+            "type": "string",
+            "nullable": true,
+            "description": "Registry password for a private image. Never returned in responses."
+          },
+          "registry_region": {
+            "type": "string",
+            "nullable": true,
+            "description": "Registry region (for example for AWS ECR)."
+          },
+          "command": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "minItems": 1,
+            "description": "Command to run in the container, as an array of strings. The image ENTRYPOINT cannot be overridden."
+          },
+          "env": {
+            "items": {
+              "$ref": "#/components/schemas/EndpointEnvVars"
+            },
+            "type": "array",
+            "nullable": true,
+            "description": "Environment variables as an array of `{key, value}` objects. A plain object is rejected with 422."
+          },
+          "volume": {
+            "$ref": "#/components/schemas/JobVolumeRequest",
+            "description": "Volume to mount. A Job can mount only one volume."
+          },
+          "shm_size_gb": {
+            "type": "integer",
+            "minimum": 1,
+            "nullable": true,
+            "description": "Shared memory (/dev/shm) size in GB."
+          },
+          "working_dir": {
+            "type": "string",
+            "maxLength": 4096,
+            "nullable": true,
+            "description": "Absolute working directory for the command. Defaults to the image's WORKDIR; created if missing."
+          }
+        },
+        "type": "object",
+        "required": [
+          "instance_type_id",
+          "registry_url",
+          "command"
+        ],
+        "description": "Job definition."
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "description": "Validation errors."
+          }
+        },
+        "type": "object"
+      },
+      "InstanceTypeResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Instance type ID. Use as `instance_type_id`."
+          },
+          "name": {
+            "type": "string",
+            "description": "Instance type name."
+          },
+          "display_name": {
+            "type": "string",
+            "nullable": true,
+            "description": "Display name."
+          },
+          "description": {
+            "type": "string",
+            "nullable": true,
+            "description": "Description."
+          },
+          "is_available": {
+            "type": "boolean",
+            "description": "Whether capacity is currently available."
+          },
+          "vcpu_count": {
+            "type": "integer",
+            "description": "vCPU count."
+          },
+          "memory_gb": {
+            "type": "integer",
+            "description": "Memory in GB."
+          },
+          "storage_gb": {
+            "type": "integer",
+            "description": "Storage in GB."
+          },
+          "gpu_name": {
+            "type": "string",
+            "description": "GPU model."
+          },
+          "gpu_vram_gb": {
+            "type": "integer",
+            "description": "GPU memory in GB."
+          },
+          "gpu_count": {
+            "type": "number",
+            "description": "Number of GPUs."
+          },
+          "price_per_hour": {
+            "type": "number",
+            "description": "Price per hour."
+          },
+          "currency": {
+            "type": "string",
+            "description": "Currency code."
+          },
+          "availability_level": {
+            "type": "string",
+            "enum": [
+              "available",
+              "limited",
+              "low",
+              "unavailable"
+            ],
+            "nullable": true,
+            "description": "Current capacity availability level."
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "description",
+          "is_available",
+          "vcpu_count",
+          "memory_gb",
+          "storage_gb",
+          "gpu_name",
+          "gpu_vram_gb",
+          "gpu_count",
+          "price_per_hour",
+          "currency"
+        ]
+      },
+      "JobLogLine": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Log line ID."
+          },
+          "timestamp": {
+            "type": "string",
+            "description": "Log timestamp."
+          },
+          "source": {
+            "type": "string",
+            "nullable": true,
+            "description": "`stdout` or `stderr`."
+          },
+          "body": {
+            "type": "string",
+            "description": "Log text."
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "timestamp",
+          "source",
+          "body"
+        ]
+      },
+      "JobLogPage": {
+        "properties": {
+          "records": {
+            "items": {
+              "$ref": "#/components/schemas/JobLogLine"
+            },
+            "type": "array",
+            "description": "Log lines, newest first."
+          },
+          "has_more": {
+            "type": "boolean",
+            "description": "Whether more lines are available."
+          },
+          "next_offset": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Offset for the next page. `null` when `has_more` is false."
+          }
+        },
+        "type": "object",
+        "required": [
+          "records",
+          "has_more",
+          "next_offset"
+        ]
+      },
+      "JobReason": {
+        "type": "string",
+        "enum": [
+          "OOM",
+          "USER_EXIT_NONZERO",
+          "IMAGE_PULL",
+          "PLATFORM_ERROR",
+          "PLATFORM_LOST",
+          "USER_CANCELLED",
+          "CAPACITY_TIMEOUT",
+          "BALANCE_EXHAUSTED"
+        ],
+        "description": "Reason for a failed or cancelled Job. `USER_EXIT_NONZERO`: command exited non-zero; `OOM`: out of memory; `IMAGE_PULL`: image pull failed; `CAPACITY_TIMEOUT`: waited more than 900 seconds for resources; `PLATFORM_ERROR` / `PLATFORM_LOST`: infrastructure failure (not restarted automatically; resubmit); `USER_CANCELLED`: cancelled by request; `BALANCE_EXHAUSTED`: cancelled because the prepaid balance ran out."
+      },
+      "JobResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Job ID."
+          },
+          "organization_id": {
+            "type": "string",
+            "description": "Organization ID."
+          },
+          "project_id": {
+            "type": "string",
+            "description": "Project ID."
+          },
+          "name": {
+            "type": "string",
+            "nullable": true,
+            "description": "Job name."
+          },
+          "instance_type_id": {
+            "type": "string",
+            "description": "Instance type ID."
+          },
+          "status": {
+            "$ref": "#/components/schemas/JobStatus",
+            "description": "Current status."
+          },
+          "reason": {
+            "$ref": "#/components/schemas/JobReason",
+            "description": "Reason for a failed or cancelled Job. `null` otherwise."
+          },
+          "exit_code": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Exit code of the user's command."
+          },
+          "message": {
+            "type": "string",
+            "nullable": true,
+            "description": "Human-readable explanation derived from `reason`. `null` while the Job is running or when there is no reason. Mapping:\n- `USER_EXIT_NONZERO`: \"The command exited with a non-zero exit code. Check exit_code and the logs.\"\n- `OOM`: \"The container ran out of memory. Choose an instance type with more memory or reduce memory usage.\"\n- `IMAGE_PULL`: \"The container image could not be pulled. Check the image URL and registry credentials.\"\n- `CAPACITY_TIMEOUT`: \"No GPU capacity became available within the queue wait limit. Submit again later or choose another instance type.\"\n- `PLATFORM_ERROR`: \"The Job failed because of a platform error. Submit it again.\"\n- `PLATFORM_LOST`: \"The node running this Job became unreachable. Submit it again.\"\n- `USER_CANCELLED`: \"The Job was cancelled on request.\"\n- `BALANCE_EXHAUSTED`: \"The Job was stopped because the prepaid credit balance ran out.\"\n- unknown state (no `reason`, `status_unknown_since` set): \"The platform cannot confirm this Job's state right now. It will be rechecked automatically.\""
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Submission time (UTC)."
+          },
+          "started_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "Start time (UTC)."
+          },
+          "finished_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "Finish time (UTC)."
+          },
+          "cancel_requested_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "Time the cancellation was requested (UTC)."
+          },
+          "status_unknown_since": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "Set when the platform temporarily cannot confirm the Job's state; null otherwise."
+          },
+          "progress": {
+            "type": "number",
+            "nullable": true,
+            "description": "Progress. Currently always `null`."
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "organization_id",
+          "project_id",
+          "name",
+          "instance_type_id",
+          "status",
+          "reason",
+          "exit_code",
+          "message",
+          "created_at",
+          "started_at",
+          "finished_at",
+          "cancel_requested_at",
+          "status_unknown_since"
+        ]
+      },
+      "JobStatus": {
+        "type": "string",
+        "enum": [
+          "QUEUED",
+          "PENDING",
+          "STARTING",
+          "RUNNING",
+          "SUCCEEDED",
+          "FAILED",
+          "CANCELLING",
+          "CANCELLED"
+        ],
+        "description": "Job status. Lifecycle: `QUEUED` -> `PENDING` (waiting for resources) -> `STARTING` -> `RUNNING` -> `SUCCEEDED` / `FAILED`; `CANCELLING` -> `CANCELLED` after a cancel request."
+      },
+      "JobUsageInterval": {
+        "properties": {
+          "start": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Interval start."
+          },
+          "end": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Interval end."
+          },
+          "instance_type_id": {
+            "type": "string",
+            "description": "Instance type ID."
+          },
+          "minutes": {
+            "type": "integer",
+            "description": "Minutes in this interval."
+          },
+          "amount": {
+            "type": "integer",
+            "description": "Amount for this interval."
+          },
+          "price_per_hour": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Hourly price applied."
+          },
+          "billed": {
+            "type": "boolean",
+            "description": "Whether this interval has been charged."
+          }
+        },
+        "type": "object",
+        "required": [
+          "start",
+          "end",
+          "instance_type_id",
+          "minutes",
+          "amount",
+          "billed"
+        ]
+      },
+      "JobUsageItem": {
+        "properties": {
+          "job_id": {
+            "type": "string",
+            "description": "Job ID."
+          },
+          "name": {
+            "type": "string",
+            "nullable": true,
+            "description": "Job name."
+          },
+          "billed_minutes": {
+            "type": "integer",
+            "description": "Billed minutes."
+          },
+          "amount": {
+            "type": "integer",
+            "description": "Confirmed amount."
+          },
+          "pending_amount": {
+            "type": "integer",
+            "description": "Estimated amount not yet charged."
+          },
+          "first_start": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "Start of the first interval."
+          },
+          "last_end": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "End of the last interval."
+          }
+        },
+        "type": "object",
+        "required": [
+          "job_id",
+          "name",
+          "billed_minutes",
+          "amount",
+          "pending_amount",
+          "first_start",
+          "last_end"
+        ]
+      },
+      "JobUsageResponse": {
+        "properties": {
+          "job_id": {
+            "type": "string",
+            "description": "Job ID."
+          },
+          "currency": {
+            "type": "string",
+            "description": "Currency code."
+          },
+          "billed_minutes": {
+            "type": "integer",
+            "description": "Billed minutes (10-minute units, minimum 10)."
+          },
+          "amount": {
+            "type": "integer",
+            "description": "Confirmed (charged) amount."
+          },
+          "pending_amount": {
+            "type": "integer",
+            "description": "Estimated amount for intervals not yet charged. Can be higher than the final charge."
+          },
+          "intervals": {
+            "items": {
+              "$ref": "#/components/schemas/JobUsageInterval"
+            },
+            "type": "array",
+            "description": "Usage per 10-minute interval."
+          }
+        },
+        "type": "object",
+        "required": [
+          "job_id",
+          "currency",
+          "billed_minutes",
+          "amount",
+          "pending_amount",
+          "intervals"
+        ]
+      },
+      "JobVolumeRequest": {
+        "properties": {
+          "volume_id": {
+            "type": "string",
+            "description": "Volume ID."
+          },
+          "mounts": {
+            "items": {
+              "$ref": "#/components/schemas/VolumeMountSpec"
+            },
+            "type": "array",
+            "minItems": 1,
+            "description": "Mount points. At least one."
+          }
+        },
+        "type": "object",
+        "required": [
+          "volume_id",
+          "mounts"
+        ],
+        "description": "Volume mount for a Job."
+      },
+      "InstanceTypeListResponse": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/InstanceTypeResponse"
+            },
+            "type": "array",
+            "description": "Instance types on this page."
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 0,
+            "nullable": true,
+            "description": "Total number of items."
+          },
+          "page": {
+            "type": "integer",
+            "minimum": 1,
+            "nullable": true,
+            "description": "Current page."
+          },
+          "size": {
+            "type": "integer",
+            "minimum": 1,
+            "nullable": true,
+            "description": "Page size."
+          },
+          "pages": {
+            "type": "integer",
+            "minimum": 0,
+            "nullable": true,
+            "description": "Total pages."
+          }
+        },
+        "type": "object",
+        "required": [
+          "items",
+          "page",
+          "size"
+        ]
+      },
+      "ProjectUsageResponse": {
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "description": "Project ID."
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Start of the range."
+          },
+          "end_date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "End of the range."
+          },
+          "currency": {
+            "type": "string",
+            "description": "Currency code."
+          },
+          "total_amount": {
+            "type": "integer",
+            "description": "Total confirmed amount."
+          },
+          "total_pending_amount": {
+            "type": "integer",
+            "description": "Total estimated amount not yet charged."
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/JobUsageItem"
+            },
+            "type": "array",
+            "description": "Usage per Job."
+          }
+        },
+        "type": "object",
+        "required": [
+          "project_id",
+          "start_date",
+          "end_date",
+          "currency",
+          "total_amount",
+          "total_pending_amount",
+          "items"
+        ]
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "description": "Location of the error."
+          },
+          "msg": {
+            "type": "string",
+            "description": "Error message."
+          },
+          "type": {
+            "type": "string",
+            "description": "Error type."
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ]
+      },
+      "VolumeMountSpec": {
+        "properties": {
+          "subpath": {
+            "type": "string",
+            "default": "",
+            "description": "Subpath inside the volume. Empty string mounts the volume root."
+          },
+          "container_path": {
+            "type": "string",
+            "description": "Absolute mount path in the container."
+          }
+        },
+        "type": "object",
+        "required": [
+          "container_path"
+        ],
+        "description": "Binds a subpath of the volume to a path in the container."
+      },
+      "VolumeResponse": {
+        "properties": {
+          "volume_id": {
+            "type": "string",
+            "description": "Volume ID."
+          },
+          "name": {
+            "type": "string",
+            "nullable": true,
+            "description": "Volume name."
+          },
+          "size_gb": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Size in GB."
+          },
+          "status": {
+            "type": "string",
+            "description": "Volume status."
+          },
+          "organization_id": {
+            "type": "string",
+            "nullable": true,
+            "description": "Organization ID."
+          },
+          "project_id": {
+            "type": "string",
+            "nullable": true,
+            "description": "Project ID."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "Creation time."
+          },
+          "attached_endpoints": {
+            "items": {
+              "$ref": "#/components/schemas/AttachedRef"
+            },
+            "type": "array",
+            "default": [],
+            "description": "Endpoints this volume is attached to."
+          },
+          "attached_jobs": {
+            "items": {
+              "$ref": "#/components/schemas/AttachedRef"
+            },
+            "type": "array",
+            "default": [],
+            "description": "Jobs this volume is attached to."
+          }
+        },
+        "type": "object",
+        "required": [
+          "volume_id",
+          "status"
+        ]
       }
     }
   }

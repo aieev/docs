@@ -1,0 +1,99 @@
+---
+title: "Air Job"
+description: "컨테이너 이미지와 명령을 끝날 때까지 실행하는 방법"
+icon: "play"
+---
+
+<Note>
+  Air Job은 비공개 프리뷰입니다. 정식 출시 전에 동작, 제한, 엔드포인트가 바뀔 수 있습니다. 프리뷰 Base URL은 [퀵스타트](/docs/ko/air-job/quickstart)를 참고하세요.
+</Note>
+
+Job은 컨테이너 이미지와 명령을 명령이 끝날 때까지 실행한 뒤 GPU를 반납하는 워크로드입니다. 학습, 배치 추론, 데이터 처리, 평가처럼 끝이 있는 작업에 적합합니다. [Air Container](/docs/ko/air-container/index)와 달리 Replica, 포트, 오토스케일링이 없고 실행되는 동안에만 비용이 발생합니다.
+
+## 동작 방식
+
+1. CLI, API, 또는 `job.yaml`로 이미지, 명령, 인스턴스 타입을 지정해 Job을 제출합니다.
+2. AirCloud가 Job을 대기열에 등록하고 GPU 자원을 기다립니다.
+3. 컨테이너가 시작되고 명령이 실행됩니다. 실행 중에 `stdout`과 `stderr`를 실시간으로 볼 수 있습니다.
+4. 명령이 종료되면 Job이 `SUCCEEDED` 또는 `FAILED`로 끝나고 exit code가 기록됩니다.
+
+## 사전 준비
+
+- 프로젝트의 API Key. [인증](/docs/ko/get-started/authentication)을 참고하세요.
+- 영구 데이터를 읽고 써야 한다면 볼륨. 현재는 같은 프로젝트의 Endpoint에 붙어 있는 기존 볼륨을 Job이 마운트합니다.
+- 조직에 충분한 크레딧. 선불 조직은 잔액이 소진되면 Job이 취소됩니다.
+- CLI를 사용한다면 `aircloud` CLI 0.3.0 이상
+
+## 상태 흐름
+
+```text
+QUEUED -> PENDING -> STARTING -> RUNNING -> SUCCEEDED
+                                         -> FAILED
+진행 중인 모든 상태 -> CANCELLING -> CANCELLED
+```
+
+| 상태 | 의미 |
+| --- | --- |
+| `QUEUED` | Job이 접수되었습니다. |
+| `PENDING` | GPU 자원을 기다리는 중입니다. |
+| `STARTING` | 이미지를 가져오고 컨테이너를 시작하는 중입니다. |
+| `RUNNING` | 명령이 실행 중입니다. |
+| `SUCCEEDED` | 명령이 exit code 0으로 종료되었습니다. |
+| `FAILED` | Job이 실패했습니다. `reason`을 확인하세요. |
+| `CANCELLING` / `CANCELLED` | 취소 요청이 접수된 뒤 완료되었습니다. |
+
+`FAILED`와 `CANCELLED` Job은 `reason`으로 사유를 확인할 수 있습니다.
+
+`message`는 `reason`에서 파생된 사람이 읽을 수 있는 설명이며(영어 문자열), Job이 실행 중이거나 `reason`이 없으면 `null`입니다. 플랫폼이 Job 상태를 일시적으로 확인하지 못하면 `status_unknown_since`가 설정되고 `message`에 자동으로 다시 확인한다는 안내가 표시됩니다.
+
+| Reason | 의미 |
+| --- | --- |
+| `USER_EXIT_NONZERO` | 명령이 0이 아닌 코드로 종료되었습니다. `exit_code`를 확인하세요. |
+| `OOM` | 컨테이너 메모리가 부족했습니다. |
+| `IMAGE_PULL` | 이미지를 가져오지 못했습니다. 이미지 URL과 레지스트리 자격 증명을 확인하세요. |
+| `CAPACITY_TIMEOUT` | 자원을 900초 넘게 기다렸습니다. 나중에 다시 제출하거나 다른 인스턴스 타입을 선택하세요. |
+| `PLATFORM_ERROR` / `PLATFORM_LOST` | 인프라 장애입니다. 자동 재시작되지 않으므로 다시 제출하세요. |
+| `USER_CANCELLED` | 사용자가 취소했습니다. |
+| `BALANCE_EXHAUSTED` | 선불 잔액이 소진되어 Job이 취소되었습니다. |
+
+## 로그
+
+Job이 실행되는 동안이나 끝난 뒤에 `stdout`과 `stderr`를 조회할 수 있습니다. 출력 스트림, 검색어, 시간 범위로 필터링하고 페이지 단위로 가져올 수 있습니다. CLI의 `--follow`는 Job이 끝날 때까지 로그를 스트리밍합니다.
+
+## 사용량과 비용
+
+Job별로 10분 단위로 과금하며 최소 10분입니다. 금액 단위는 KRW입니다.
+
+- `amount`는 청구가 확정된 금액입니다.
+- `pending_amount`는 아직 청구되지 않은 구간의 예상 금액이며 실제 청구액보다 클 수 있습니다.
+
+Job 한 건은 Job 사용량 엔드포인트에서 10분 구간별 내역과 함께, 프로젝트 전체는 프로젝트 사용량 엔드포인트에서 Job별 합계를 기간별로(기본 최근 30일, 최대 92일) 조회합니다. 조직 잔액과 거래 내역은 프로젝트 API Key로 조회할 수 없으며 콘솔에서 확인합니다.
+
+## 중복 제출 방지
+
+제출 요청마다 `Idempotency-Key` 헤더를 보내세요.
+
+- 사용자가 제출할 때마다 새 키(UUID 권장)를 만들고, 타임아웃이나 네트워크 오류로 같은 요청을 재시도할 때는 같은 키를 사용합니다.
+- 같은 키와 같은 본문이면 새 Job을 만들지 않고 처음 Job을 반환합니다. 응답에 `Idempotent-Replayed: true` 헤더가 포함됩니다.
+- 같은 키에 다른 본문이면 `422`를 반환합니다.
+- 키는 프로젝트 단위로 24시간 유지됩니다. 키가 없으면 요청마다 새 Job이 생성됩니다.
+
+CLI는 제출마다 키를 자동으로 붙이고, 재시도할 때도 같은 키를 사용합니다.
+
+## 제한 사항
+
+- 최대 실행 시간이 없습니다. 명령이 끝나거나, 직접 취소하거나, 선불 잔액이 소진될 때까지 실행됩니다.
+- Job당 볼륨은 1개만 마운트할 수 있습니다.
+- 이미지의 `ENTRYPOINT`는 변경할 수 없습니다. `command`로 지정하세요.
+- 인프라 장애가 발생해도 자동으로 재시작되지 않습니다. 다시 제출하세요.
+- API로 결과 파일을 내려받는 기능은 아직 없습니다. 결과는 마운트한 볼륨에 저장하세요.
+
+<CardGroup cols={2}>
+  <Card title="퀵스타트" icon="rocket" href="/docs/ko/air-job/quickstart" cta="첫 Job 실행하기" arrow="true">
+    CLI 또는 curl로 Job을 제출하고 로그를 확인합니다.
+  </Card>
+
+  <Card title="Job API 레퍼런스" icon="code" href="/api-reference/ko/job/submit-job" cta="API 보기" arrow="true">
+    모든 Job 엔드포인트의 요청과 응답 상세
+  </Card>
+</CardGroup>

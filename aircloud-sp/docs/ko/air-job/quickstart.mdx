@@ -1,0 +1,227 @@
+---
+title: "Job 퀵스타트"
+description: "CLI 또는 API로 첫 Job 제출하기"
+icon: "rocket"
+---
+
+<Note>
+  Air Job은 비공개 프리뷰입니다. 정식 출시 전에 동작, 제한, 엔드포인트가 바뀔 수 있습니다.
+</Note>
+
+{/* TODO(before merge): remove preview URL */}
+## 프리뷰 Base URL
+
+프리뷰 기간에는 운영 URL 대신 아래 Base URL을 사용합니다.
+
+```text
+https://preview.aieev.cloud:2011/external/api/v1
+```
+
+한 번만 설정하면 됩니다.
+
+```bash
+export AIRCLOUD_API_BASE_URL=https://preview.aieev.cloud:2011
+export AIRCLOUD_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+```
+
+## 인스턴스 타입과 볼륨 확인
+
+<Tabs>
+  <Tab title="CLI">
+    Job 명령은 `aircloud-cli` 0.3.0 이상이 필요합니다.
+
+    ```bash
+    pip install aircloud-cli
+    aircloud --version
+    aircloud config set api-base-url $AIRCLOUD_API_BASE_URL
+    aircloud config set api-key $AIRCLOUD_API_KEY
+
+    aircloud instance-types list
+    aircloud volumes list
+    ```
+  </Tab>
+  <Tab title="curl">
+    ```bash
+    BASE=$AIRCLOUD_API_BASE_URL/external/api/v1
+    AUTH="Authorization: Bearer $AIRCLOUD_API_KEY"
+
+    curl -s -H "$AUTH" "$BASE/instance-types?size=2000"
+    curl -s -H "$AUTH" "$BASE/volumes"
+    ```
+  </Tab>
+</Tabs>
+
+제출할 때 인스턴스 타입의 `id`(CLI에서는 이름도 가능)를 사용합니다.
+
+## Job 제출
+
+<Tabs>
+  <Tab title="CLI">
+    `--` 뒤가 컨테이너에서 실행할 명령입니다.
+
+    ```bash
+    aircloud jobs submit \
+      --name hello \
+      --instance-type <INSTANCE_TYPE> \
+      --image python:3.11-slim \
+      --env EPOCHS=3 \
+      --wait --follow \
+      -- python -c "import os; print('epochs', os.environ['EPOCHS'])"
+    ```
+
+    - `--wait`: 끝날 때까지 기다리고 Job 결과를 종료 코드로 돌려줍니다.
+    - `--follow`: 기다리는 동안 로그를 실시간으로 출력합니다. `--wait`가 필요합니다.
+  </Tab>
+  <Tab title="curl">
+    ```bash
+    curl -s -X POST "$BASE/jobs" \
+      -H "$AUTH" \
+      -H "Content-Type: application/json" \
+      -H "Idempotency-Key: $(uuidgen)" \
+      -d '{
+        "name": "hello",
+        "instance_type_id": "<INSTANCE_TYPE_ID>",
+        "registry_url": "python:3.11-slim",
+        "registry_type": "docker_hub",
+        "image_is_public": true,
+        "command": ["python", "-c", "import os; print(\"epochs\", os.environ[\"EPOCHS\"])"],
+        "env": [{"key": "EPOCHS", "value": "3"}]
+      }'
+    ```
+
+    응답은 `202 Accepted`이며 본문은 Job 객체입니다. `command`는 문자열 배열입니다(셸 문법이 필요하면 `["sh", "-c", "..."]`). `env`는 `{key, value}` 객체의 배열입니다.
+  </Tab>
+</Tabs>
+
+<Warning>
+  `Idempotency-Key`는 사용자 제출 1회마다 새로 만들고, 같은 요청을 재시도할 때만 같은 키를 사용하세요. 다른 요청에 키를 재사용하면 안 됩니다.
+</Warning>
+
+## 볼륨, shm, 비공개 이미지 사용
+
+```bash
+export REGISTRY_PASSWORD=<레지스트리 비밀번호>
+aircloud jobs submit \
+  --instance-type <INSTANCE_TYPE> \
+  --image myorg/train:latest --private \
+  --registry-username myorg --registry-password-env REGISTRY_PASSWORD \
+  --volume <VOLUME_ID>:/data \
+  --volume <VOLUME_ID>:/ckpt:checkpoints \
+  --shm-size-gb 8 \
+  --workdir /data \
+  --wait --follow \
+  -- python train.py --epochs 10
+```
+
+`--volume VOLUME_ID:/컨테이너경로[:하위경로]`는 여러 번 지정할 수 있지만 Job당 볼륨은 1개만 사용할 수 있습니다. `--registry-type` 기본값은 `docker_hub`이며 `aws_ecr`, `github_container_registry`, `gcp_artifact_registry`도 지원합니다.
+
+API에서는 요청 본문에 다음 필드를 추가합니다.
+
+```json
+{
+  "registry_url": "myorg/train:latest",
+  "image_is_public": false,
+  "registry_username": "myorg",
+  "registry_password": "<레지스트리 비밀번호>",
+  "volume": {
+    "volume_id": "<VOLUME_ID>",
+    "mounts": [
+      {"container_path": "/data", "subpath": ""},
+      {"container_path": "/ckpt", "subpath": "checkpoints"}
+    ]
+  },
+  "shm_size_gb": 8,
+  "working_dir": "/data"
+}
+```
+
+## job.yaml로 제출
+
+```yaml
+# job.yaml
+name: train-mnist
+instance_type: <INSTANCE_TYPE>
+image:
+  url: myorg/train:latest
+  public: false
+  username: myorg
+  password_env: REGISTRY_PASSWORD   # 비밀번호가 아니라 환경 변수 이름
+command: ["python", "/data/train.py", "--epochs", "10"]
+env:
+  EPOCHS: "10"
+env_file: .env                      # job.yaml 기준 상대 경로
+volume:
+  id: <VOLUME_ID>
+  mounts:
+    - path: /data
+    - path: /ckpt
+      subpath: checkpoints
+shm_size_gb: 8
+working_dir: /data
+```
+
+```bash
+aircloud jobs submit -f job.yaml --wait --follow
+aircloud jobs submit -f job.yaml --name train-v2 -- python /data/train.py --epochs 20
+```
+
+플래그가 파일의 값보다 우선합니다.
+
+## 상태 확인, 로그, 취소
+
+<Tabs>
+  <Tab title="CLI">
+    ```bash
+    aircloud jobs list --status RUNNING
+    aircloud jobs get <JOB_ID>
+    aircloud jobs logs <JOB_ID> --follow
+    aircloud jobs logs <JOB_ID> --source stderr --search Error
+    aircloud jobs wait <JOB_ID> --follow
+    aircloud jobs cancel <JOB_ID> -y
+    ```
+  </Tab>
+  <Tab title="curl">
+    ```bash
+    curl -s -H "$AUTH" "$BASE/jobs/<JOB_ID>"
+    curl -s -H "$AUTH" "$BASE/jobs?status=RUNNING"
+    curl -s -H "$AUTH" "$BASE/jobs/<JOB_ID>/logs?limit=1000&offset=0"
+    curl -s -X POST -H "$AUTH" "$BASE/jobs/<JOB_ID>/cancel"
+    ```
+
+    취소는 요청이 접수되면 `202`, 이미 종료된 Job이면 `200`을 반환합니다. 로그는 최신순이며 `has_more`가 true이면 `offset=<next_offset>`으로 다음 페이지를 조회합니다.
+  </Tab>
+</Tabs>
+
+### `--wait` 종료 코드
+
+| 코드 | 의미 |
+| --- | --- |
+| 0 | 성공 |
+| 1~255 | 사용자 명령의 exit code (`USER_EXIT_NONZERO`) |
+| 137 | OOM |
+| 130 | 취소 (Ctrl+C 포함) |
+| 2 | 그 밖의 실패 (플랫폼 오류, 자원 대기 초과, 잔액 소진, 요청 오류) |
+
+## 사용량과 비용 확인
+
+```bash
+aircloud jobs usage <JOB_ID>
+aircloud usage --from 2026-09-01 --to 2026-09-30
+
+curl -s -H "$AUTH" "$BASE/jobs/<JOB_ID>/usage"
+curl -s -H "$AUTH" "$BASE/usage?start_date=2026-09-01T00:00:00%2B09:00&end_date=2026-10-01T00:00:00%2B09:00"
+```
+
+`pending_amount`는 아직 청구되지 않은 구간의 예상 금액입니다. API의 날짜에는 타임존이 필요하며(`+`는 `%2B`로 인코딩) 기간은 최대 92일입니다.
+
+## 다음 단계
+
+<CardGroup cols={2}>
+  <Card title="Air Job 개요" icon="play" href="/docs/ko/air-job/index" cta="자세히 보기" arrow="true">
+    상태 흐름, 과금, 제한 사항
+  </Card>
+
+  <Card title="Job API 레퍼런스" icon="code" href="/api-reference/ko/job/submit-job" cta="API 보기" arrow="true">
+    전체 요청·응답 스키마
+  </Card>
+</CardGroup>
