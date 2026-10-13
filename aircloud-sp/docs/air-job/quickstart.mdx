@@ -89,7 +89,7 @@ Use the instance type `id` (or name in the CLI) when you submit.
       }'
     ```
 
-    The response is `202 Accepted` with the Job object. `command` is an array of strings (use `["sh", "-c", "..."]` for shell syntax), and `env` is an array of `{key, value}` objects.
+    The response is `202 Accepted` with the Job object. `command` is an array of strings that replaces the image ENTRYPOINT (use `["sh", "-c", "..."]` for shell syntax; use `args` instead only if you need the ENTRYPOINT's setup), and `env` is an array of `{key, value}` objects.
   </Tab>
 </Tabs>
 
@@ -200,7 +200,7 @@ Flags override values in the file.
 | 1 to 255 | Your command's exit code (`USER_EXIT_NONZERO`). |
 | 137 | Out of memory. |
 | 130 | Cancelled, including Ctrl+C. |
-| 2 | Any other failure: platform error, capacity wait timeout, exhausted balance, or an invalid request. |
+| 2 | Any other failure: platform error, `TIMEOUT`, capacity wait timeout, exhausted balance, or an invalid request. |
 
 ## Check usage and cost
 

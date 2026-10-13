@@ -51,14 +51,39 @@ QUEUED -> PENDING -> STARTING -> RUNNING -> SUCCEEDED
 | `USER_EXIT_NONZERO` | 명령이 0이 아닌 코드로 종료되었습니다. `exit_code`를 확인하세요. |
 | `OOM` | 컨테이너 메모리가 부족했습니다. |
 | `IMAGE_PULL` | 이미지를 가져오지 못했습니다. 이미지 URL과 레지스트리 자격 증명을 확인하세요. |
-| `CAPACITY_TIMEOUT` | 자원을 900초 넘게 기다렸습니다. 나중에 다시 제출하거나 다른 인스턴스 타입을 선택하세요. |
-| `PLATFORM_ERROR` / `PLATFORM_LOST` | 인프라 장애입니다. 자동 재시작되지 않으므로 다시 제출하세요. |
+| `COMMAND_INVALID` | 명령을 시작할 수 없습니다. 잘못된 명령, 없는 실행 파일, 노드와 맞지 않는 이미지 아키텍처 등이 원인입니다. 컨테이너가 시작되지 않았으며 재시도하지 않습니다. |
+| `TIMEOUT` | `timeout_seconds`를 넘겨 Job이 중지되었습니다. 재시도하지 않습니다. |
+| `CAPACITY_TIMEOUT` | 자원을 900초 넘게 기다렸습니다. `timeout_seconds`와는 무관합니다. 나중에 다시 제출하거나 다른 인스턴스 타입을 선택하세요. |
+| `PLATFORM_ERROR` / `PLATFORM_LOST` | 인프라 장애입니다. 플랫폼이 자동으로 재시도하며([자동 재시도](#자동-재시도) 참고), 그래도 실패하면 다시 제출하세요. |
 | `USER_CANCELLED` | 사용자가 취소했습니다. |
 | `BALANCE_EXHAUSTED` | 선불 잔액이 소진되어 Job이 취소되었습니다. |
 
+## command와 args
+
+`command`와 `args` 중 하나는 반드시 지정해야 하며, 둘 다 없으면 `422`를 반환합니다.
+
+- `command`는 이미지의 `ENTRYPOINT`를 대체합니다. 지정한 명령이 PID 1이 되고 `ENTRYPOINT`의 초기 설정은 건너뜁니다. NGC와 공식 PyTorch 이미지는 `command`로 문제없이 동작합니다.
+- `args`는 이미지의 `CMD`를 대체하며 이미지 `ENTRYPOINT`에 전달됩니다. conda 환경 활성화나 사용자 전환처럼 `ENTRYPOINT`가 필요한 초기 설정을 수행할 때만 사용하세요.
+
+## 타임아웃
+
+`timeout_seconds`는 선택 항목이며 attempt마다 적용되는 실행 시간 제한입니다. 60초 이상 2147483647초 이하로 지정하고(실질적 상한 없음), 기본값 `null`은 제한 없음입니다.
+
+- 컨테이너가 시작된 시점부터 측정합니다. 이미지 pull과 대기열 대기 시간은 포함하지 않습니다.
+- 제한 시간이 지나면 `SIGTERM`을 보내고 30초 뒤 `SIGKILL`로 종료합니다. Job은 reason `TIMEOUT`으로 `FAILED`가 되며 재시도하지 않습니다.
+- 중지된 시점까지 과금됩니다.
+
+## 자동 재시도
+
+인프라 사유(`PLATFORM_LOST`, `PLATFORM_ERROR`)로 실패한 Job은 플랫폼이 최대 2회까지 자동으로 다시 실행합니다. 재실행 사이에는 Job이 `QUEUED` 상태로 돌아갑니다. 사용자 원인 실패(0이 아닌 종료 코드, `OOM`, `IMAGE_PULL`, `COMMAND_INVALID`, `TIMEOUT`)와 취소는 재시도하지 않습니다.
+
+- `attempt`는 현재 attempt 번호입니다(1부터 시작).
+- `attempts`는 종료된 attempt의 `status`, `reason`, `exit_code`, `started_at`, `finished_at` 이력입니다.
+- 컨테이너에는 `AIRCLOUD_JOB_ID`, `AIRCLOUD_ATTEMPT` 환경 변수가 주입됩니다.
+
 ## 로그
 
-Job이 실행되는 동안이나 끝난 뒤에 `stdout`과 `stderr`를 조회할 수 있습니다. 출력 스트림, 검색어, 시간 범위로 필터링하고 페이지 단위로 가져올 수 있습니다. CLI의 `--follow`는 Job이 끝날 때까지 로그를 스트리밍합니다.
+Job이 실행되는 동안이나 끝난 뒤에 `stdout`과 `stderr`를 조회할 수 있습니다. 출력 스트림, 검색어, 시간 범위로 필터링하고 페이지 단위로 가져올 수 있습니다. 기본값은 시작된 가장 최근 attempt이며, 이전 attempt는 `attempt`로 지정하세요. CLI의 `--follow`는 Job이 끝날 때까지 로그를 스트리밍합니다.
 
 ## 사용량과 비용
 
@@ -82,10 +107,10 @@ CLI는 제출마다 키를 자동으로 붙이고, 재시도할 때도 같은 �
 
 ## 제한 사항
 
-- 최대 실행 시간이 없습니다. 명령이 끝나거나, 직접 취소하거나, 선불 잔액이 소진될 때까지 실행됩니다.
+- 기본적으로 최대 실행 시간이 없습니다. `timeout_seconds`로 attempt별 제한을 걸 수 있으며, 지정하지 않으면 명령이 끝나거나, 직접 취소하거나, 선불 잔액이 소진될 때까지 실행됩니다.
 - Job당 볼륨은 1개만 마운트할 수 있습니다.
-- 이미지의 `ENTRYPOINT`는 변경할 수 없습니다. `command`로 지정하세요.
-- 인프라 장애가 발생해도 자동으로 재시작되지 않습니다. 다시 제출하세요.
+- `command`는 이미지의 `ENTRYPOINT`를, `args`는 이미지의 `CMD`를 대체합니다. [command와 args](#command와-args)를 참고하세요.
+- 인프라 사유로 실패한 Job은 최대 2회까지 자동으로 다시 실행됩니다.
 - API로 결과 파일을 내려받는 기능은 아직 없습니다. 결과는 마운트한 볼륨에 저장하세요.
 
 <CardGroup cols={2}>

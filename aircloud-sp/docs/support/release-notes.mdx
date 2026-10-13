@@ -4,6 +4,16 @@ description: "AirCloud documentation update history"
 icon: "newspaper"
 ---
 
+## 2026-10
+
+### API Reference
+
+- **Job API**: Documented `args` alongside `command` (`command` replaces the image ENTRYPOINT, `args` replaces the image CMD; at least one is required), the optional `timeout_seconds` run time limit, the `COMMAND_INVALID` and `TIMEOUT` reasons, the `attempt` and `attempts` response fields with automatic retries after infrastructure failures, and the `attempt` query parameter on Job logs.
+
+### Updated pages
+
+- **Air Job**: New sections on command and args, timeout, and automatic retries, plus the `AIRCLOUD_JOB_ID` and `AIRCLOUD_ATTEMPT` environment variables.
+
 ## 2026-09
 
 ### Corrections

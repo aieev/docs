@@ -89,7 +89,7 @@ export AIRCLOUD_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
       }'
     ```
 
-    응답은 `202 Accepted`이며 본문은 Job 객체입니다. `command`는 문자열 배열입니다(셸 문법이 필요하면 `["sh", "-c", "..."]`). `env`는 `{key, value}` 객체의 배열입니다.
+    응답은 `202 Accepted`이며 본문은 Job 객체입니다. `command`는 이미지의 ENTRYPOINT를 대체하는 문자열 배열입니다(셸 문법이 필요하면 `["sh", "-c", "..."]`. ENTRYPOINT의 초기 설정이 필요할 때만 `args`를 대신 사용하세요). `env`는 `{key, value}` 객체의 배열입니다.
   </Tab>
 </Tabs>
 
@@ -200,7 +200,7 @@ aircloud jobs submit -f job.yaml --name train-v2 -- python /data/train.py --epoc
 | 1~255 | 사용자 명령의 exit code (`USER_EXIT_NONZERO`) |
 | 137 | OOM |
 | 130 | 취소 (Ctrl+C 포함) |
-| 2 | 그 밖의 실패 (플랫폼 오류, 자원 대기 초과, 잔액 소진, 요청 오류) |
+| 2 | 그 밖의 실패 (플랫폼 오류, `TIMEOUT`, 자원 대기 초과, 잔액 소진, 요청 오류) |
 
 ## 사용량과 비용 확인
 

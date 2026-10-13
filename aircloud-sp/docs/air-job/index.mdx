@@ -12,7 +12,7 @@ A Job runs a container image with a command until the command exits, then releas
 
 ## How it works
 
-1. You submit a Job with an image, a command, and an instance type, using the CLI, the API, or a `job.yaml` file.
+1. You submit a Job with an image, a command (or args), and an instance type, using the CLI, the API, or a `job.yaml` file.
 2. AirCloud queues the Job and waits for GPU capacity.
 3. The container starts and runs your command. You can stream `stdout` and `stderr` while it runs.
 4. When the command exits, the Job ends with `SUCCEEDED` or `FAILED`, and its exit code is recorded.
@@ -51,14 +51,39 @@ For `FAILED` and `CANCELLED` Jobs, `reason` tells you why.
 | `USER_EXIT_NONZERO` | Your command exited with a non-zero code. See `exit_code`. |
 | `OOM` | The container ran out of memory. |
 | `IMAGE_PULL` | The image could not be pulled. Check the image URL and registry credentials. |
-| `CAPACITY_TIMEOUT` | The Job waited more than 900 seconds for capacity. Submit again later or choose another instance type. |
-| `PLATFORM_ERROR` / `PLATFORM_LOST` | Infrastructure failure. The Job is not restarted automatically; submit it again. |
+| `COMMAND_INVALID` | The command could not be started: a bad command, a missing executable, or an image that does not match the node architecture. The container never started, and the Job is not retried. |
+| `TIMEOUT` | The Job exceeded `timeout_seconds` and was stopped. It is not retried. |
+| `CAPACITY_TIMEOUT` | The Job waited more than 900 seconds for capacity. This is unrelated to `timeout_seconds`. Submit again later or choose another instance type. |
+| `PLATFORM_ERROR` / `PLATFORM_LOST` | Infrastructure failure. The platform retries the Job automatically (see [Automatic retries](#automatic-retries)); if it still fails, submit it again. |
 | `USER_CANCELLED` | You cancelled the Job. |
 | `BALANCE_EXHAUSTED` | The prepaid balance ran out and the Job was cancelled. |
 
+## Command and args
+
+Set at least one of `command` and `args`; a request with neither returns `422`.
+
+- `command` replaces the image `ENTRYPOINT`. Your command becomes PID 1 and any setup the `ENTRYPOINT` performs is skipped. NGC and official PyTorch images work fine with `command`.
+- `args` replaces the image `CMD` and is passed to the image `ENTRYPOINT`. Use it only when the `ENTRYPOINT` does setup you need, such as activating a conda environment or switching users.
+
+## Timeout
+
+`timeout_seconds` is optional. It is the run time limit for each attempt, from 60 up to 2147483647 seconds (no practical cap). `null`, the default, means no limit.
+
+- The clock starts when the container starts. Image pull and queue wait are not counted.
+- On expiry the platform sends `SIGTERM`, then `SIGKILL` after 30 seconds. The Job ends `FAILED` with reason `TIMEOUT` and is not retried.
+- You are billed up to the time the Job stops.
+
+## Automatic retries
+
+If a Job fails for an infrastructure reason (`PLATFORM_LOST` or `PLATFORM_ERROR`), the platform retries it automatically, up to 2 more times. The Job goes back to `QUEUED` between attempts. Failures you cause (non-zero exit, `OOM`, `IMAGE_PULL`, `COMMAND_INVALID`, `TIMEOUT`) and cancellations are not retried.
+
+- `attempt` is the current attempt number, starting at 1.
+- `attempts` lists the finished attempts with their `status`, `reason`, `exit_code`, `started_at`, and `finished_at`.
+- Your container receives the environment variables `AIRCLOUD_JOB_ID` and `AIRCLOUD_ATTEMPT`.
+
 ## Logs
 
-Read `stdout` and `stderr` while the Job runs or after it ends. You can filter by source, search text, or time range, and page through results. With the CLI, `--follow` streams logs until the Job finishes.
+Read `stdout` and `stderr` while the Job runs or after it ends. You can filter by source, search text, or time range, and page through results. By default you get the latest attempt that started; pass `attempt` to read an earlier one. With the CLI, `--follow` streams logs until the Job finishes.
 
 ## Usage and cost
 
@@ -82,10 +107,10 @@ The CLI adds a key to every submission and retries with the same key automatical
 
 ## Limits and behavior
 
-- There is no maximum run time. A Job runs until its command exits, you cancel it, or the prepaid balance is exhausted.
+- By default there is no maximum run time. Set `timeout_seconds` to limit each attempt; otherwise a Job runs until its command exits, you cancel it, or the prepaid balance is exhausted.
 - A Job can mount one volume.
-- The image `ENTRYPOINT` cannot be overridden. Set `command` instead.
-- A Job is not restarted automatically after an infrastructure failure. Submit it again.
+- `command` replaces the image `ENTRYPOINT` and `args` replaces the image `CMD`. See [Command and args](#command-and-args).
+- A Job that fails for an infrastructure reason is retried automatically up to 2 more times.
 - Downloading result files through the API is not available yet. Write results to a mounted volume.
 
 <CardGroup cols={2}>
