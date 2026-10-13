@@ -572,7 +572,7 @@
           "Jobs"
         ],
         "summary": "Submit Job",
-        "description": "Submit a Job that runs a container image and command to completion. The Job is queued and returns `202 Accepted` with the Job object. Send an `Idempotency-Key` header to make retries safe.\n\n`env` is an array of `{key, value}` objects. A Job can mount at most one volume.\n\nSet `command` to replace the image ENTRYPOINT (your command becomes PID 1) and/or `args` to replace the image CMD (passed to the image ENTRYPOINT). At least one of the two is required; otherwise the request returns 422. Use `args` only when the image ENTRYPOINT does setup you need (for example conda activation or a user switch); `command` skips it. `timeout_seconds` sets an optional per-attempt run time limit.\n\nIf a Job fails for an infrastructure reason (`PLATFORM_LOST`, `PLATFORM_ERROR`), it is retried automatically up to 2 more times; the Job stays `QUEUED` between attempts. User-caused failures are not retried. The container receives `AIRCLOUD_JOB_ID` and `AIRCLOUD_ATTEMPT` environment variables.",
+        "description": "Submit a Job that runs a container image and command to completion. The Job is queued and returns `202 Accepted` with the Job object. Send an `Idempotency-Key` header to make retries safe.\n\n`env` is an array of `{key, value}` objects. A Job can mount at most one volume.\n\nSet `command` to replace the image ENTRYPOINT (your command becomes PID 1) and/or `args` to replace the image CMD (passed to the image ENTRYPOINT). At least one of the two is required; otherwise the request returns 422. Use `args` only when the image ENTRYPOINT does setup you need (for example conda activation or a user switch); `command` skips it. `timeout_seconds` sets an optional per-attempt run time limit.\n\nSet `max_retries` (0-10, default 0) to retry a failed Job; the Job returns to `QUEUED` between attempts. The container receives `AIRCLOUD_JOB_ID` and `AIRCLOUD_ATTEMPT` environment variables.",
         "operationId": "submitJob",
         "parameters": [
           {
@@ -622,7 +622,8 @@
                 },
                 "shm_size_gb": 8,
                 "working_dir": "/data",
-                "timeout_seconds": 3600
+                "timeout_seconds": 3600,
+                "max_retries": 2
               }
             }
           }
@@ -2439,7 +2440,14 @@
             "minimum": 60,
             "maximum": 2147483647,
             "nullable": true,
-            "description": "Execution time limit per attempt in seconds, measured from container start (image pull and queue wait excluded). On expiry the platform sends SIGTERM, then SIGKILL after 30 seconds; the Job ends `FAILED` with reason `TIMEOUT` and is not retried. Billed up to the stop time. Min 60, max 2147483647 (database limit; no practical upper limit). `null` = unlimited."
+            "description": "Execution time limit per attempt in seconds, measured from container start (image pull and queue wait excluded). On expiry the platform sends SIGTERM, then SIGKILL after 30 seconds; the Job ends `FAILED` with reason `TIMEOUT`. Billed up to the stop time. Min 60, max 2147483647 (database limit; no practical upper limit). `null` = unlimited."
+          },
+          "max_retries": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10,
+            "default": 0,
+            "description": "Number of additional attempts after a failed one. Default 0 (no retry), min 0, max 10. When greater than 0, any `FAILED` outcome is retried regardless of reason; cancelled Jobs are not. Between attempts the Job returns to `QUEUED`. Failures with an exit code are resubmitted immediately; `PLATFORM_LOST` and failures without an exit code wait about 3 minutes so the previous container can stop. Each attempt gets a fresh `timeout_seconds`, and all attempts are billed."
           }
         },
         "type": "object",
@@ -2656,7 +2664,7 @@
           "CAPACITY_TIMEOUT",
           "BALANCE_EXHAUSTED"
         ],
-        "description": "Reason for a failed or cancelled Job. `USER_EXIT_NONZERO`: command exited non-zero; `OOM`: out of memory; `IMAGE_PULL`: image pull failed; `COMMAND_INVALID`: the command could not be started (bad command, missing executable, or image architecture mismatch; the container never started and the Job is not retried); `TIMEOUT`: exceeded `timeout_seconds` (not retried); `PLATFORM_ERROR` / `PLATFORM_LOST`: infrastructure failure (retried automatically up to 2 more times; if it still fails, resubmit); `CAPACITY_TIMEOUT`: waited more than 900 seconds for resources (unrelated to `timeout_seconds`); `USER_CANCELLED`: cancelled by request; `BALANCE_EXHAUSTED`: cancelled because the prepaid balance ran out."
+        "description": "Reason for a failed or cancelled Job. `USER_EXIT_NONZERO`: command exited non-zero; `OOM`: out of memory; `IMAGE_PULL`: image pull failed; `COMMAND_INVALID`: the command could not be started (bad command, missing executable, or image architecture mismatch; the container never started); `TIMEOUT`: exceeded `timeout_seconds`; `PLATFORM_ERROR` / `PLATFORM_LOST`: infrastructure failure; `CAPACITY_TIMEOUT`: waited more than 900 seconds for resources (unrelated to `timeout_seconds`); `USER_CANCELLED`: cancelled by request; `BALANCE_EXHAUSTED`: cancelled because the prepaid balance ran out."
       },
       "JobResponse": {
         "properties": {
@@ -2683,7 +2691,7 @@
           },
           "attempt": {
             "type": "integer",
-            "description": "Current attempt number, starting at 1. Increases when the platform automatically retries the Job after an infrastructure failure (`PLATFORM_LOST`, `PLATFORM_ERROR`); at most 2 retries."
+            "description": "Current attempt number, starting at 1. Increases each time the Job is retried (see `max_retries` on the create request)."
           },
           "attempts": {
             "items": {
