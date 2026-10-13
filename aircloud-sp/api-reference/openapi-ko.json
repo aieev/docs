@@ -572,7 +572,7 @@
           "Jobs"
         ],
         "summary": "Job 제출",
-        "description": "컨테이너 이미지와 명령을 완료될 때까지 실행하는 Job을 제출합니다. Job은 대기열에 등록되고 `202 Accepted`와 Job 객체를 반환합니다. 재시도를 안전하게 하려면 `Idempotency-Key` 헤더를 함께 보내세요.\n\n`command`는 문자열 배열입니다. 셸 문법이 필요하면 `[\"sh\", \"-c\", \"...\"]` 형태로 넣으세요. `env`는 `{key, value}` 객체의 배열입니다. Job에는 볼륨을 1개까지만 마운트할 수 있습니다.",
+        "description": "컨테이너 이미지와 명령을 완료될 때까지 실행하는 Job을 제출합니다. Job은 대기열에 등록되고 `202 Accepted`와 Job 객체를 반환합니다. 재시도를 안전하게 하려면 `Idempotency-Key` 헤더를 함께 보내세요.\n\n`env`는 `{key, value}` 객체의 배열입니다. Job에는 볼륨을 1개까지만 마운트할 수 있습니다.\n\n`command`는 이미지의 ENTRYPOINT를 대체하며(지정한 명령이 PID 1이 됩니다), `args`는 이미지의 CMD를 대체해 이미지 ENTRYPOINT에 전달됩니다. 둘 중 하나는 반드시 필요하며, 둘 다 없으면 422를 반환합니다. 이미지 ENTRYPOINT가 필요한 초기 설정(conda activate, 사용자 전환 등)을 수행할 때만 `args`를 쓰고, `command`는 그 설정을 건너뜁니다. `timeout_seconds`로 attempt당 실행 시간 제한을 지정할 수 있습니다(선택).\n\n인프라 사유(`PLATFORM_LOST`, `PLATFORM_ERROR`)로 실패한 Job은 최대 2회까지 자동으로 다시 실행되며, 재실행 사이에는 `QUEUED` 상태로 유지됩니다. 사용자 원인 실패는 재시도하지 않습니다. 컨테이너에는 `AIRCLOUD_JOB_ID`, `AIRCLOUD_ATTEMPT` 환경 변수가 주입됩니다.",
         "operationId": "submitJob",
         "parameters": [
           {
@@ -621,7 +621,8 @@
                   ]
                 },
                 "shm_size_gb": 8,
-                "working_dir": "/data"
+                "working_dir": "/data",
+                "timeout_seconds": 3600
               }
             }
           }
@@ -640,6 +641,8 @@
                   "project_id": "proj-sGF4ynUPbc8H",
                   "name": "hello",
                   "instance_type_id": "it-xxxxxxxx",
+                  "attempt": 1,
+                  "attempts": [],
                   "status": "QUEUED",
                   "reason": null,
                   "exit_code": null,
@@ -777,6 +780,8 @@
                     "project_id": "proj-sGF4ynUPbc8H",
                     "name": "hello",
                     "instance_type_id": "it-xxxxxxxx",
+                    "attempt": 1,
+                    "attempts": [],
                     "status": "QUEUED",
                     "reason": null,
                     "exit_code": null,
@@ -860,6 +865,17 @@
                   "project_id": "proj-sGF4ynUPbc8H",
                   "name": "hello",
                   "instance_type_id": "it-xxxxxxxx",
+                  "attempt": 1,
+                  "attempts": [
+                    {
+                      "attempt": 1,
+                      "status": "SUCCEEDED",
+                      "reason": null,
+                      "exit_code": 0,
+                      "started_at": "2026-09-30T05:01:10Z",
+                      "finished_at": "2026-09-30T05:03:42Z"
+                    }
+                  ],
                   "status": "SUCCEEDED",
                   "reason": null,
                   "exit_code": 0,
@@ -950,6 +966,17 @@
                   "project_id": "proj-sGF4ynUPbc8H",
                   "name": "hello",
                   "instance_type_id": "it-xxxxxxxx",
+                  "attempt": 1,
+                  "attempts": [
+                    {
+                      "attempt": 1,
+                      "status": "SUCCEEDED",
+                      "reason": null,
+                      "exit_code": 0,
+                      "started_at": "2026-09-30T05:01:10Z",
+                      "finished_at": "2026-09-30T05:03:42Z"
+                    }
+                  ],
                   "status": "SUCCEEDED",
                   "reason": null,
                   "exit_code": 0,
@@ -977,6 +1004,8 @@
                   "project_id": "proj-sGF4ynUPbc8H",
                   "name": "hello",
                   "instance_type_id": "it-xxxxxxxx",
+                  "attempt": 1,
+                  "attempts": [],
                   "status": "CANCELLING",
                   "reason": null,
                   "exit_code": null,
@@ -1043,7 +1072,7 @@
           "Jobs"
         ],
         "summary": "Job 로그 조회",
-        "description": "Job의 stdout/stderr 로그를 최신순으로 반환합니다. `has_more`가 true이면 `next_offset`을 `offset`으로 넘겨 다음 페이지를 조회하세요.",
+        "description": "Job의 stdout/stderr 로그를 최신순으로 반환합니다. `has_more`가 true이면 `next_offset`을 `offset`으로 넘겨 다음 페이지를 조회하세요. 기본값은 시작된 가장 최근 attempt의 로그이며, 이전 attempt의 로그는 `attempt`로 지정하세요.",
         "operationId": "getJobLogs",
         "parameters": [
           {
@@ -1120,6 +1149,17 @@
               "minimum": 0,
               "default": 0
             }
+          },
+          {
+            "name": "attempt",
+            "in": "query",
+            "description": "로그를 조회할 attempt 번호(최소 1, Job의 현재 `attempt` 이하). 생략하면 시작된 가장 최근 attempt입니다. 범위를 벗어나면 422를 반환합니다.",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "nullable": true
+            },
+            "example": 1
           }
         ],
         "responses": {
@@ -2358,7 +2398,17 @@
             },
             "type": "array",
             "minItems": 1,
-            "description": "컨테이너에서 실행할 명령(문자열 배열). 이미지의 ENTRYPOINT는 변경할 수 없습니다"
+            "nullable": true,
+            "description": "이미지의 ENTRYPOINT를 대체하는 명령(문자열 배열). 지정한 명령이 PID 1이 됩니다. 셸 문법이 필요하면 `[\"sh\", \"-c\", \"...\"]` 형태로 넣으세요. 이미지 ENTRYPOINT의 초기 설정은 건너뜁니다. `command`와 `args` 중 하나는 반드시 필요합니다(없으면 422)."
+          },
+          "args": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "minItems": 1,
+            "nullable": true,
+            "description": "이미지의 CMD를 대체하는 인자(문자열 배열). 이미지 ENTRYPOINT에 전달됩니다. ENTRYPOINT가 필요한 초기 설정(conda activate, 사용자 전환 등)을 수행할 때만 사용하세요. `command`와 `args` 중 하나는 반드시 필요합니다(없으면 422)."
           },
           "env": {
             "items": {
@@ -2383,13 +2433,19 @@
             "maxLength": 4096,
             "nullable": true,
             "description": "명령을 실행할 작업 디렉터리(절대 경로). 생략하면 이미지의 WORKDIR. 없으면 생성됩니다"
+          },
+          "timeout_seconds": {
+            "type": "integer",
+            "minimum": 60,
+            "maximum": 2147483647,
+            "nullable": true,
+            "description": "attempt당 실행 시간 제한(초). 컨테이너 시작 시점부터 측정하며 이미지 pull과 대기열 대기 시간은 제외합니다. 초과하면 SIGTERM을 보내고 30초 뒤 SIGKILL로 종료하며, Job은 reason `TIMEOUT`으로 `FAILED`가 되고 재시도하지 않습니다. 중지 시점까지 과금됩니다. 최소 60, 최대 2147483647(DB 한계, 실질적 상한 없음). `null`이면 무제한."
           }
         },
         "type": "object",
         "required": [
           "instance_type_id",
-          "registry_url",
-          "command"
+          "registry_url"
         ],
         "description": "Job 정의"
       },
@@ -2489,6 +2545,49 @@
           "currency"
         ]
       },
+      "JobAttemptResponse": {
+        "properties": {
+          "attempt": {
+            "type": "integer",
+            "description": "attempt 번호(1부터 시작)"
+          },
+          "status": {
+            "$ref": "#/components/schemas/JobStatus",
+            "description": "이 attempt의 최종 상태"
+          },
+          "reason": {
+            "$ref": "#/components/schemas/JobReason",
+            "description": "이 attempt가 끝난 사유. 없으면 `null`"
+          },
+          "exit_code": {
+            "type": "integer",
+            "nullable": true,
+            "description": "이 attempt에서 사용자 명령의 종료 코드"
+          },
+          "started_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "이 attempt 시작 시각(UTC)"
+          },
+          "finished_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "이 attempt 종료 시각(UTC)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "attempt",
+          "status",
+          "reason",
+          "exit_code",
+          "started_at",
+          "finished_at"
+        ],
+        "description": "Job의 종료된 실행(attempt) 1건"
+      },
       "JobLogLine": {
         "properties": {
           "id": {
@@ -2549,13 +2648,15 @@
           "OOM",
           "USER_EXIT_NONZERO",
           "IMAGE_PULL",
+          "COMMAND_INVALID",
+          "TIMEOUT",
           "PLATFORM_ERROR",
           "PLATFORM_LOST",
           "USER_CANCELLED",
           "CAPACITY_TIMEOUT",
           "BALANCE_EXHAUSTED"
         ],
-        "description": "실패 또는 취소된 Job의 사유. `USER_EXIT_NONZERO`: 명령이 0이 아닌 코드로 종료, `OOM`: 메모리 부족, `IMAGE_PULL`: 이미지 가져오기 실패, `CAPACITY_TIMEOUT`: 자원 대기 900초 초과, `PLATFORM_ERROR` / `PLATFORM_LOST`: 인프라 장애(자동 재시작 없음, 다시 제출), `USER_CANCELLED`: 사용자 취소, `BALANCE_EXHAUSTED`: 선불 잔액 소진으로 취소"
+        "description": "실패 또는 취소된 Job의 사유. `USER_EXIT_NONZERO`: 명령이 0이 아닌 코드로 종료, `OOM`: 메모리 부족, `IMAGE_PULL`: 이미지 가져오기 실패, `COMMAND_INVALID`: 명령을 시작할 수 없음(잘못된 명령, 없는 실행 파일, 이미지 아키텍처 불일치. 컨테이너가 시작되지 않았으며 재시도하지 않음), `TIMEOUT`: `timeout_seconds` 초과(재시도하지 않음). `PLATFORM_ERROR` / `PLATFORM_LOST`는 최대 2회 자동 재시도하며 그래도 실패하면 다시 제출하세요. `CAPACITY_TIMEOUT`은 자원 대기 시간 초과로 `timeout_seconds`와 무관합니다. `USER_CANCELLED`: 사용자 취소, `BALANCE_EXHAUSTED`: 선불 잔액 소진으로 취소"
       },
       "JobResponse": {
         "properties": {
@@ -2580,6 +2681,17 @@
             "type": "string",
             "description": "인스턴스 타입 ID"
           },
+          "attempt": {
+            "type": "integer",
+            "description": "현재 attempt 번호(1부터 시작). 인프라 장애(`PLATFORM_LOST`, `PLATFORM_ERROR`)로 플랫폼이 Job을 자동 재시도하면 증가하며, 재시도는 최대 2회입니다."
+          },
+          "attempts": {
+            "items": {
+              "$ref": "#/components/schemas/JobAttemptResponse"
+            },
+            "type": "array",
+            "description": "종료된 attempt 이력. Job이 끝났다면 마지막 attempt도 포함합니다. 진행 중인 attempt는 최상위 필드가 나타냅니다."
+          },
           "status": {
             "$ref": "#/components/schemas/JobStatus",
             "description": "현재 상태"
@@ -2596,7 +2708,7 @@
           "message": {
             "type": "string",
             "nullable": true,
-            "description": "`reason`에서 파생된 사람이 읽을 수 있는 설명입니다. Job이 실행 중이거나 reason이 없으면 `null`입니다. 매핑(문자열은 영어로 제공됩니다):\n- `USER_EXIT_NONZERO`: \"The command exited with a non-zero exit code. Check exit_code and the logs.\"\n- `OOM`: \"The container ran out of memory. Choose an instance type with more memory or reduce memory usage.\"\n- `IMAGE_PULL`: \"The container image could not be pulled. Check the image URL and registry credentials.\"\n- `CAPACITY_TIMEOUT`: \"No GPU capacity became available within the queue wait limit. Submit again later or choose another instance type.\"\n- `PLATFORM_ERROR`: \"The Job failed because of a platform error. Submit it again.\"\n- `PLATFORM_LOST`: \"The node running this Job became unreachable. Submit it again.\"\n- `USER_CANCELLED`: \"The Job was cancelled on request.\"\n- `BALANCE_EXHAUSTED`: \"The Job was stopped because the prepaid credit balance ran out.\"\n- 상태 불명(`reason` 없음, `status_unknown_since` 설정됨): \"The platform cannot confirm this Job's state right now. It will be rechecked automatically.\""
+            "description": "`reason`에서 파생된 사람이 읽을 수 있는 설명입니다. Job이 실행 중이거나 reason이 없으면 `null`입니다. 매핑(문자열은 영어로 제공됩니다):\n- `USER_EXIT_NONZERO`: \"The command exited with a non-zero exit code. Check exit_code and the logs.\"\n- `OOM`: \"The container ran out of memory. Choose an instance type with more memory or reduce memory usage.\"\n- `IMAGE_PULL`: \"The container image could not be pulled. Check the image URL and registry credentials.\"\n- `COMMAND_INVALID`: \"The container could not start the command. Check the command, that the executable exists in the image, and that the image matches the node architecture.\"\n- `TIMEOUT`: \"The Job exceeded its timeout_seconds limit and was stopped. Increase timeout_seconds or shorten the workload.\"\n- `CAPACITY_TIMEOUT`: \"No GPU capacity became available within the queue wait limit. Submit again later or choose another instance type.\"\n- `PLATFORM_ERROR`: \"The Job failed because of a platform error. Submit it again.\"\n- `PLATFORM_LOST`: \"The node running this Job became unreachable. Submit it again.\"\n- `USER_CANCELLED`: \"The Job was cancelled on request.\"\n- `BALANCE_EXHAUSTED`: \"The Job was stopped because the prepaid credit balance ran out.\"\n- 상태 불명(`reason` 없음, `status_unknown_since` 설정됨): \"The platform cannot confirm this Job's state right now. It will be rechecked automatically.\""
           },
           "created_at": {
             "type": "string",
@@ -2640,6 +2752,8 @@
           "project_id",
           "name",
           "instance_type_id",
+          "attempt",
+          "attempts",
           "status",
           "reason",
           "exit_code",

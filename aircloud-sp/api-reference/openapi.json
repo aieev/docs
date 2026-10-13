@@ -572,7 +572,7 @@
           "Jobs"
         ],
         "summary": "Submit Job",
-        "description": "Submit a Job that runs a container image and command to completion. The Job is queued and returns `202 Accepted` with the Job object. Send an `Idempotency-Key` header to make retries safe.\n\n`command` is an array of strings; use `[\"sh\", \"-c\", \"...\"]` when you need shell syntax. `env` is an array of `{key, value}` objects. A Job can mount at most one volume.",
+        "description": "Submit a Job that runs a container image and command to completion. The Job is queued and returns `202 Accepted` with the Job object. Send an `Idempotency-Key` header to make retries safe.\n\n`env` is an array of `{key, value}` objects. A Job can mount at most one volume.\n\nSet `command` to replace the image ENTRYPOINT (your command becomes PID 1) and/or `args` to replace the image CMD (passed to the image ENTRYPOINT). At least one of the two is required; otherwise the request returns 422. Use `args` only when the image ENTRYPOINT does setup you need (for example conda activation or a user switch); `command` skips it. `timeout_seconds` sets an optional per-attempt run time limit.\n\nIf a Job fails for an infrastructure reason (`PLATFORM_LOST`, `PLATFORM_ERROR`), it is retried automatically up to 2 more times; the Job stays `QUEUED` between attempts. User-caused failures are not retried. The container receives `AIRCLOUD_JOB_ID` and `AIRCLOUD_ATTEMPT` environment variables.",
         "operationId": "submitJob",
         "parameters": [
           {
@@ -621,7 +621,8 @@
                   ]
                 },
                 "shm_size_gb": 8,
-                "working_dir": "/data"
+                "working_dir": "/data",
+                "timeout_seconds": 3600
               }
             }
           }
@@ -640,6 +641,8 @@
                   "project_id": "proj-sGF4ynUPbc8H",
                   "name": "hello",
                   "instance_type_id": "it-xxxxxxxx",
+                  "attempt": 1,
+                  "attempts": [],
                   "status": "QUEUED",
                   "reason": null,
                   "exit_code": null,
@@ -777,6 +780,8 @@
                     "project_id": "proj-sGF4ynUPbc8H",
                     "name": "hello",
                     "instance_type_id": "it-xxxxxxxx",
+                    "attempt": 1,
+                    "attempts": [],
                     "status": "QUEUED",
                     "reason": null,
                     "exit_code": null,
@@ -860,6 +865,17 @@
                   "project_id": "proj-sGF4ynUPbc8H",
                   "name": "hello",
                   "instance_type_id": "it-xxxxxxxx",
+                  "attempt": 1,
+                  "attempts": [
+                    {
+                      "attempt": 1,
+                      "status": "SUCCEEDED",
+                      "reason": null,
+                      "exit_code": 0,
+                      "started_at": "2026-09-30T05:01:10Z",
+                      "finished_at": "2026-09-30T05:03:42Z"
+                    }
+                  ],
                   "status": "SUCCEEDED",
                   "reason": null,
                   "exit_code": 0,
@@ -950,6 +966,17 @@
                   "project_id": "proj-sGF4ynUPbc8H",
                   "name": "hello",
                   "instance_type_id": "it-xxxxxxxx",
+                  "attempt": 1,
+                  "attempts": [
+                    {
+                      "attempt": 1,
+                      "status": "SUCCEEDED",
+                      "reason": null,
+                      "exit_code": 0,
+                      "started_at": "2026-09-30T05:01:10Z",
+                      "finished_at": "2026-09-30T05:03:42Z"
+                    }
+                  ],
                   "status": "SUCCEEDED",
                   "reason": null,
                   "exit_code": 0,
@@ -977,6 +1004,8 @@
                   "project_id": "proj-sGF4ynUPbc8H",
                   "name": "hello",
                   "instance_type_id": "it-xxxxxxxx",
+                  "attempt": 1,
+                  "attempts": [],
                   "status": "CANCELLING",
                   "reason": null,
                   "exit_code": null,
@@ -1043,7 +1072,7 @@
           "Jobs"
         ],
         "summary": "Get Job Logs",
-        "description": "Returns stdout/stderr log lines of a Job, newest first. When `has_more` is true, pass `next_offset` as `offset` to fetch the next page.",
+        "description": "Returns stdout/stderr log lines of a Job, newest first. When `has_more` is true, pass `next_offset` as `offset` to fetch the next page. By default the logs of the latest attempt that started are returned; use `attempt` to read an earlier attempt.",
         "operationId": "getJobLogs",
         "parameters": [
           {
@@ -1120,6 +1149,17 @@
               "minimum": 0,
               "default": 0
             }
+          },
+          {
+            "name": "attempt",
+            "in": "query",
+            "description": "Attempt number whose logs to read (min 1, at most the Job's current `attempt`). Defaults to the latest attempt that has started. Returns 422 if out of range.",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "nullable": true
+            },
+            "example": 1
           }
         ],
         "responses": {
@@ -2358,7 +2398,17 @@
             },
             "type": "array",
             "minItems": 1,
-            "description": "Command to run in the container, as an array of strings. The image ENTRYPOINT cannot be overridden."
+            "nullable": true,
+            "description": "Replaces the image ENTRYPOINT, as an array of strings; your command becomes PID 1. Use `[\"sh\", \"-c\", \"...\"]` for shell syntax. Skips any setup the image ENTRYPOINT performs. At least one of `command` or `args` is required (422 otherwise)."
+          },
+          "args": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "minItems": 1,
+            "nullable": true,
+            "description": "Replaces the image CMD, as an array of strings; it is passed to the image ENTRYPOINT. Use it only when the ENTRYPOINT does setup you need (for example conda activation or a user switch). At least one of `command` or `args` is required (422 otherwise)."
           },
           "env": {
             "items": {
@@ -2383,13 +2433,19 @@
             "maxLength": 4096,
             "nullable": true,
             "description": "Absolute working directory for the command. Defaults to the image's WORKDIR; created if missing."
+          },
+          "timeout_seconds": {
+            "type": "integer",
+            "minimum": 60,
+            "maximum": 2147483647,
+            "nullable": true,
+            "description": "Execution time limit per attempt in seconds, measured from container start (image pull and queue wait excluded). On expiry the platform sends SIGTERM, then SIGKILL after 30 seconds; the Job ends `FAILED` with reason `TIMEOUT` and is not retried. Billed up to the stop time. Min 60, max 2147483647 (database limit; no practical upper limit). `null` = unlimited."
           }
         },
         "type": "object",
         "required": [
           "instance_type_id",
-          "registry_url",
-          "command"
+          "registry_url"
         ],
         "description": "Job definition."
       },
@@ -2489,6 +2545,49 @@
           "currency"
         ]
       },
+      "JobAttemptResponse": {
+        "properties": {
+          "attempt": {
+            "type": "integer",
+            "description": "Attempt number, starting at 1."
+          },
+          "status": {
+            "$ref": "#/components/schemas/JobStatus",
+            "description": "Final status of this attempt."
+          },
+          "reason": {
+            "$ref": "#/components/schemas/JobReason",
+            "description": "Reason this attempt ended. `null` if none."
+          },
+          "exit_code": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Exit code of the user's command in this attempt."
+          },
+          "started_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "Start time of this attempt (UTC)."
+          },
+          "finished_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "Finish time of this attempt (UTC)."
+          }
+        },
+        "type": "object",
+        "required": [
+          "attempt",
+          "status",
+          "reason",
+          "exit_code",
+          "started_at",
+          "finished_at"
+        ],
+        "description": "One finished attempt (run) of a Job."
+      },
       "JobLogLine": {
         "properties": {
           "id": {
@@ -2549,13 +2648,15 @@
           "OOM",
           "USER_EXIT_NONZERO",
           "IMAGE_PULL",
+          "COMMAND_INVALID",
+          "TIMEOUT",
           "PLATFORM_ERROR",
           "PLATFORM_LOST",
           "USER_CANCELLED",
           "CAPACITY_TIMEOUT",
           "BALANCE_EXHAUSTED"
         ],
-        "description": "Reason for a failed or cancelled Job. `USER_EXIT_NONZERO`: command exited non-zero; `OOM`: out of memory; `IMAGE_PULL`: image pull failed; `CAPACITY_TIMEOUT`: waited more than 900 seconds for resources; `PLATFORM_ERROR` / `PLATFORM_LOST`: infrastructure failure (not restarted automatically; resubmit); `USER_CANCELLED`: cancelled by request; `BALANCE_EXHAUSTED`: cancelled because the prepaid balance ran out."
+        "description": "Reason for a failed or cancelled Job. `USER_EXIT_NONZERO`: command exited non-zero; `OOM`: out of memory; `IMAGE_PULL`: image pull failed; `COMMAND_INVALID`: the command could not be started (bad command, missing executable, or image architecture mismatch; the container never started and the Job is not retried); `TIMEOUT`: exceeded `timeout_seconds` (not retried); `PLATFORM_ERROR` / `PLATFORM_LOST`: infrastructure failure (retried automatically up to 2 more times; if it still fails, resubmit); `CAPACITY_TIMEOUT`: waited more than 900 seconds for resources (unrelated to `timeout_seconds`); `USER_CANCELLED`: cancelled by request; `BALANCE_EXHAUSTED`: cancelled because the prepaid balance ran out."
       },
       "JobResponse": {
         "properties": {
@@ -2580,6 +2681,17 @@
             "type": "string",
             "description": "Instance type ID."
           },
+          "attempt": {
+            "type": "integer",
+            "description": "Current attempt number, starting at 1. Increases when the platform automatically retries the Job after an infrastructure failure (`PLATFORM_LOST`, `PLATFORM_ERROR`); at most 2 retries."
+          },
+          "attempts": {
+            "items": {
+              "$ref": "#/components/schemas/JobAttemptResponse"
+            },
+            "type": "array",
+            "description": "History of finished attempts, including the final one when the Job has ended. The attempt in progress is described by the top-level fields."
+          },
           "status": {
             "$ref": "#/components/schemas/JobStatus",
             "description": "Current status."
@@ -2596,7 +2708,7 @@
           "message": {
             "type": "string",
             "nullable": true,
-            "description": "Human-readable explanation derived from `reason`. `null` while the Job is running or when there is no reason. Mapping:\n- `USER_EXIT_NONZERO`: \"The command exited with a non-zero exit code. Check exit_code and the logs.\"\n- `OOM`: \"The container ran out of memory. Choose an instance type with more memory or reduce memory usage.\"\n- `IMAGE_PULL`: \"The container image could not be pulled. Check the image URL and registry credentials.\"\n- `CAPACITY_TIMEOUT`: \"No GPU capacity became available within the queue wait limit. Submit again later or choose another instance type.\"\n- `PLATFORM_ERROR`: \"The Job failed because of a platform error. Submit it again.\"\n- `PLATFORM_LOST`: \"The node running this Job became unreachable. Submit it again.\"\n- `USER_CANCELLED`: \"The Job was cancelled on request.\"\n- `BALANCE_EXHAUSTED`: \"The Job was stopped because the prepaid credit balance ran out.\"\n- unknown state (no `reason`, `status_unknown_since` set): \"The platform cannot confirm this Job's state right now. It will be rechecked automatically.\""
+            "description": "Human-readable explanation derived from `reason`. `null` while the Job is running or when there is no reason. Mapping:\n- `USER_EXIT_NONZERO`: \"The command exited with a non-zero exit code. Check exit_code and the logs.\"\n- `OOM`: \"The container ran out of memory. Choose an instance type with more memory or reduce memory usage.\"\n- `IMAGE_PULL`: \"The container image could not be pulled. Check the image URL and registry credentials.\"\n- `COMMAND_INVALID`: \"The container could not start the command. Check the command, that the executable exists in the image, and that the image matches the node architecture.\"\n- `TIMEOUT`: \"The Job exceeded its timeout_seconds limit and was stopped. Increase timeout_seconds or shorten the workload.\"\n- `CAPACITY_TIMEOUT`: \"No GPU capacity became available within the queue wait limit. Submit again later or choose another instance type.\"\n- `PLATFORM_ERROR`: \"The Job failed because of a platform error. Submit it again.\"\n- `PLATFORM_LOST`: \"The node running this Job became unreachable. Submit it again.\"\n- `USER_CANCELLED`: \"The Job was cancelled on request.\"\n- `BALANCE_EXHAUSTED`: \"The Job was stopped because the prepaid credit balance ran out.\"\n- unknown state (no `reason`, `status_unknown_since` set): \"The platform cannot confirm this Job's state right now. It will be rechecked automatically.\""
           },
           "created_at": {
             "type": "string",
@@ -2640,6 +2752,8 @@
           "project_id",
           "name",
           "instance_type_id",
+          "attempt",
+          "attempts",
           "status",
           "reason",
           "exit_code",
