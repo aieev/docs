@@ -57,7 +57,8 @@ The **Healthy Replicas Count** card at the top of the container's monitoring pag
 ![Replica Timeline Eng](/images/replica-timeline-eng.png)
 
 - **Replica count and runtime**: The line shows how the Replica count changed over the selected range, and the rows below it show when each Replica was running. Hover a bar to see the Replica ID and when it started and stopped.
-- **Slots**: Each row is a slot, not a single Replica. When a Replica stops and another starts, the new one takes over the free row, so the number of rows matches the most Replicas that ran at the same time, however many were created. A row used by only one Replica is labeled with its ID; a row shared by several is labeled **Slot N**, and **×N** at the right shows how many Replicas used it. If there are more than 8 slots, click **Show N more slots** to see the rest.
+- **Slots**: Each row is a slot that Replicas take turns using, not a single Replica. When a Replica stops and a new one starts, the new one reuses the free row, so the number of rows equals the most Replicas that ran at the same time.
+- **Slot labels**: A row used by only one Replica shows its ID. A row used by several shows **Slot N**, with **×N** on the right for how many Replicas ran in it. If there are more than 8 slots, click **Show N more slots** to see the rest.
 - **Summary**: The line above the rows shows how many Replicas ran in the range, how many are still running or have terminated, and the median lifetime of the terminated ones.
 - **Short-lived Replicas**: A Replica that ran only briefly appears as a dot. Dots that sit close together are grouped into a striped band.
 - **Min and max guides**: The Autoscaling minimum and maximum Replica counts are drawn as dashed lines, so you can see how close you are to the limit. If Autoscaling is off, the card shows the fixed Replica count instead.
@@ -68,7 +69,7 @@ The **Healthy Replicas Count** card at the top of the container's monitoring pag
   Autoscaling decides only from the number of concurrent requests per Replica. The scale markers help you compare metrics before and after a scale event; they do not mean that the metric on that chart caused it.
 </Note>
 
-#### Expanding a band
+#### Expanding a Band
 
 Click a striped band to list the Replicas grouped in it.
 
@@ -78,15 +79,15 @@ Click a striped band to list the Replicas grouped in it.
 - Each row shows a Replica's ID, start and end time, and lifetime. Hover a row to mark that Replica on the band.
 - Click **Zoom into this range** to narrow every chart on the page to the band, with a little margin on each side. Click **Reset zoom** to go back.
 
-#### Replica list
+#### Replica List
 
-Click **List** at the upper right of the rows (outlined in red below) to open a table of every Replica in the range, with its status, start and end time, and lifetime. Once the table is open, the button reads **Hide list**; click it again to close the table.
+Click **List** in the upper-right corner of the rows (outlined in red below) to open a table of every Replica in the range, with its status, start and end time, and lifetime. Once the table is open, the button reads **Hide list**; click it again to close the table.
 
 ![Replica Timeline List Eng](/images/replica-timeline-list-eng.png)
 
 - Search by Replica ID, and sort by **Most recent** or **Longest lived**.
-- The table shows 10 Replicas per page. Use the arrows at the bottom right to move between pages.
-- Hover a row to highlight that Replica in the timeline above. This is the easiest way to tell apart the Replicas that shared a slot (a row marked **×N**).
+- The table shows 10 Replicas per page. Use the arrows in the lower-right corner to move between pages.
+- Hover a row to highlight that Replica in the timeline above. This is useful for telling apart the Replicas that ran in the same slot (a row marked **×N**).
 
 ### Drag to Zoom
 
