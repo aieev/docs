@@ -108,14 +108,36 @@ The left panel lists the Replicas, each marked **running** or **stopped**, with 
 | **Keyword Search** | Search log contents using plain text or regular expressions. |
 | **Log Level** | Filter by Debug, Info, Warning, or Error. |
 | **Log Source** | Filter by standard output (`stdout`) or standard error (`stderr`). |
-| **View Options** | Show timestamps, show raw data, hide health-check lines, and toggle word wrap. |
+| **View Options** | Follow latest logs, show timestamps, show raw data, hide health checks and metrics, and word wrap. |
 
 - Logs from both **running** and **stopped** Replicas remain viewable.
-- **Jump to latest** returns to the newest lines after scrolling back.
 - **Download** saves the selected Replica's logs, and **Download all** saves every Replica's logs at once.
 
+### Live Logs
+
+Logs from running Replicas are appended to the bottom of the view as they arrive, with no refresh needed. They usually appear within a few seconds.
+
+- **Follow latest logs**: On by default, so the view scrolls to the bottom with every new line. Turn it off and your position stays put; a **{count} new** button appears at the bottom and jumps to the newest line.
+- **Pause live updates**: Click the **Live** button in the log view to stop showing new lines for a while. Click it again to load what you missed and resume.
+- **If the connection drops**: The view reconnects automatically and fills in the lines from while it was disconnected. A browser tab left in the background for more than 5 minutes disconnects, then fills in the gap when you come back.
+- **Stopped Replicas**: Show their past logs only, with no live updates.
+
+### Long Logs
+
+- The newest 5,000 lines appear first, and older lines load in the background 10,000 at a time and are added above. Progress is shown at the top while they load.
+- The view holds up to **50,000 lines**. Older lines are not loaded, and search only looks through the loaded lines.
+- **Download** saves the loaded lines with the current filters applied. If you download while older lines are still loading, only the lines loaded so far are saved.
+
+### Hide Health Checks and Metrics
+
+Turn on **Hide Health Checks & Metrics** under **View Options** to hide health-check and metrics-scrape request lines (`GET …/health`, `GET …/metrics`) and see only your application's logs.
+
+### Log Alerts
+
+Get notified when something shows up in the logs, or when logs stop. Create rules from the **Log alerts** button above the left panel, or from the bell icon in the search box. See [Log Alerts](/docs/air-container/log-alerts) for details.
+
 <Note>
-  If a deployment fails or behaves unexpectedly, checking the runtime logs is usually the fastest way to identify the cause. Very long logs are truncated in the viewer to the most recent lines — download the file to read the whole thing.
+  If a deployment fails or behaves unexpectedly, checking the runtime logs is usually the fastest way to identify the cause.
 </Note>
 
 ## Related Documentation

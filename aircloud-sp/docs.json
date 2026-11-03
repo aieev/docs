@@ -54,6 +54,7 @@
                   "docs/air-container/container-management",
                   "docs/air-container/autoscaling-and-scheduling",
                   "docs/air-container/monitoring",
+                  "docs/air-container/log-alerts",
                   "docs/air-container/troubleshooting",
                   {
                     "group": "Access and Connect",
@@ -86,6 +87,7 @@
                   "docs/console/requests",
                   "docs/console/air-assistant",
                   "docs/console/notifications",
+                  "docs/console/external-channels",
                   "docs/console/desktop-notifications",
                   "docs/console/account",
                   "docs/console/organization-deletion"
@@ -209,6 +211,7 @@
                   "docs/ko/air-container/container-management",
                   "docs/ko/air-container/autoscaling-and-scheduling",
                   "docs/ko/air-container/monitoring",
+                  "docs/ko/air-container/log-alerts",
                   "docs/ko/air-container/troubleshooting",
                   {
                     "group": "접속 및 연결",
@@ -241,6 +244,7 @@
                   "docs/ko/console/requests",
                   "docs/ko/console/air-assistant",
                   "docs/ko/console/notifications",
+                  "docs/ko/console/external-channels",
                   "docs/ko/console/desktop-notifications",
                   "docs/ko/console/account",
                   "docs/ko/console/organization-deletion"

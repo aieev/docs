@@ -6,18 +6,20 @@ description: "Choose what you get notified about, and where"
 
 AirCloud delivers notifications in real time, so you do not have to refresh the page to notice that a deployment finished or that your balance is running low.
 
-Open **Notifications** in the console. It has two tabs:
+Open **Notifications** in the console. It has three tabs:
 
 - **History** — everything you have received, newest first, with unread items highlighted.
 - **Settings** — a matrix of events by channel, where you choose what reaches you and how.
+- **External channels** — send notifications to Slack or Discord channels and webhooks. See [External Channels](/docs/console/external-channels).
 
 ## Channels
 
 | Channel | Description |
 | --- | --- |
-| **Console** | The in-app notification list, opened from the bell in the console header. Notifications are kept for **30 days** and then disappear automatically. |
+| **Console** | The in-app notification list, opened from the bell in the console header. Notifications are kept for **30 days** and then disappear automatically. They are shown in the language you are using the console in. |
 | **Desktop** | Native OS notifications delivered by your browser. Requires browser permission and is stored per browser, per device. See [Desktop Notifications](/docs/console/desktop-notifications). |
-| **Email** | Sent to the Organization Owner by default. Waitlist and request emails go to the requester, and invitations go to the invitee. |
+| **Email** | Container, long-term rental, and credit status emails go to every member of the organization; payment emails go to the Organization Owner. Waitlist and request emails go to the requester, and invitations go to the invitee. Emails are sent in Korean or English based on the organization's region. |
+| **External channels** | Slack, Discord, and webhook channels connected to the organization. Each channel picks its own notifications. See [External Channels](/docs/console/external-channels). |
 
 <Note>
   Turning the Console channel off for an event also stops its Desktop notification — the desktop popup is driven by the same in-app notification.
@@ -32,8 +34,9 @@ Turning a channel off applies to notifications that arrive afterward. Notificati
 | Event | Console | Email | Notes |
 | :-- | :-: | :-: | :-- |
 | Container deployed | ✅ | — | Only for a first successful deploy, or a previously failed deploy succeeding. Restarts and self-recovery are not notified. |
-| Container deploy failed | ✅ | Owner | |
-| Container unhealthy | ✅ | Owner | |
+| Container deploy failed | ✅ | All members | |
+| Container unhealthy | ✅ | All members | |
+| Log alert rules | ✅ | Rule recipients | Sent when a [log alert](/docs/air-container/log-alerts) rule's condition is met. Each rule chooses its recipients: me, specific members, or the whole organization. |
 | Autoscaling applied | ✅ | — | Sent once replicas actually reach the target count. Repeated adjustments in a short window are collapsed into one — the window is configurable. |
 | Waitlisted GPU capacity available | ✅ | Requester | |
 | Replica limit increase approved | ✅ | Requester | |
@@ -43,9 +46,9 @@ Turning a channel off applies to notifications that arrive afterward. Notificati
 | Event | Console | Email | Notes |
 | :-- | :-: | :-: | :-- |
 | Rental completed | ✅ | — | |
-| Rented resource started | ✅ | Owner | |
-| Rented resource expiring soon | ✅ | Owner | How many days ahead to notify is configurable. |
-| Rented resource expired | ✅ | Owner | |
+| Rented resource started | ✅ | All members | |
+| Rented resource expiring soon | ✅ | All members | How many days ahead to notify is configurable. |
+| Rented resource expired | ✅ | All members | |
 
 ### Credit and Billing
 
@@ -56,8 +59,9 @@ Turning a channel off applies to notifications that arrive afterward. Notificati
 | Recurring payment credited | ✅ | Owner | |
 | Auto top-up failed | ✅ | Owner | |
 | Payment failed | ✅ | — | |
-| Low balance warning | ✅ | Owner | Sent only when low balance alerts are enabled with a threshold in organization settings. |
-| Containers suspended (out of credit) | ✅ | Owner | |
+| Credits expiring soon | ✅ | All members | Sent only for credits that have an expiry date, once at 7 days and once at 3 days before expiry. |
+| Low balance warning | ✅ | All members | Sent only when low balance alerts are enabled with a threshold in organization settings. |
+| Containers suspended (out of credit) | ✅ | All members | |
 | Postpaid invoice issued | — | Owner | An email with the PDF statement is sent. No console notification is created. |
 | Invoice overdue | ✅ | — | |
 
@@ -68,6 +72,12 @@ Turning a channel off applies to notifications that arrive afterward. Notificati
 | Member joined | ✅ | — | |
 | Member left | ✅ | — | |
 | Organization invitation | — | Invitee | The invitation link is emailed to the invitee. No console notification is created. |
+
+### External Channels
+
+| Event | Console | Email | Notes |
+| :-- | :-: | :-: | :-- |
+| External channel turned off | ✅ | Owner | Sent when AirCloud turns off a channel because the Slack or Discord channel or webhook was deleted, or deliveries failed for more than a day. |
 
 ### Announcements and Requests
 

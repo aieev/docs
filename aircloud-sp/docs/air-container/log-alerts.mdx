@@ -1,0 +1,134 @@
+---
+title: "Log Alerts"
+icon: "bell-ring"
+description: "Get notified when your container logs meet a condition"
+---
+
+Log alerts tell you when something shows up in a container's logs, or when logs that should keep coming stop. You create rules per container, receive alerts in the console, by email, and on the desktop, and can also send them to [external channels](/docs/console/external-channels) (Slack, Discord, and webhooks).
+
+<Note>
+  Rules count **only log lines that arrive after you save them**. Lines that appeared before the rule was saved never trigger it.
+</Note>
+
+## Create a Rule
+
+1. Open the container's **Runtime Logs** page.
+2. Click **Log alerts** above the left panel. The rule list opens on the right.
+3. Click **Add rule**, set the pattern, the condition, and the notification frequency, then click **Create**.
+
+You can also start from what you are looking at. Type a search in the log search box and click the bell icon at its right end (**Create an alert from this search**). The rule dialog opens with your search text and search mode already filled in.
+
+A new or edited rule can take up to about 15 seconds to take effect.
+
+## Pattern
+
+| Mode | Behavior |
+| :-- | :-- |
+| **Text** | A line matches when it contains the text you entered. |
+| **Regex** | A line matches when any part of it matches the regular expression. [RE2](https://github.com/google/re2/wiki/Syntax) syntax is used, so lookahead, lookbehind, and backreferences are not supported. |
+
+- **Length**: Patterns can be up to 500 characters.
+- **Case**: Rules created with **Add rule** ignore case. Rules created from the search-box bell are case-sensitive, like the log search. Start a regex with `(?i)` to ignore case.
+- **Scope**: Lines from every replica of the container are counted together.
+- **Excluded lines**: Health-check and metrics request lines (`GET …/health`, `GET …/metrics`) are not counted. ANSI color codes are stripped before matching.
+
+## Conditions
+
+| Condition | Settings | When it alerts |
+| :-- | :-- | :-- |
+| **It appears** | — | As soon as a matching line arrives |
+| **It appears often** | **at least M times in N minutes** — 1–60 minutes, 2–10,000 times | As soon as the M-th matching line arrives. It does not wait for the window to end. |
+| **It stops appearing** | **no matching line for N minutes** — 5–60 minutes | When N minutes pass without a matching line |
+
+### How "It stops appearing" is evaluated
+
+Because this condition watches for lines that **do not** arrive, a few rules apply.
+
+- **Only while running**: It is evaluated only while the container is running or unhealthy. It never fires while the container is stopped or deploying.
+- **After one full window**: It alerts only after watching for at least N minutes since the rule was created, edited, or turned back on, or since the container started running. Checks run every minute, so an alert can arrive 1–2 minutes late.
+- **Only when logs are arriving**: If not a single line from the container has been collected since watching started, it does not alert — a broken collection path should not be reported as "logs stopped." Health-check and metrics lines count as proof that logs are being collected.
+
+<Warning>
+  Health-check and metrics lines are excluded from pattern matching, so an "It stops appearing" rule on a server with no traffic can fire even when the server is healthy.
+</Warning>
+
+## Notification Frequency
+
+This sets how often to notify again while the condition keeps matching. A rule alerts at most once per interval.
+
+| Option | Behavior |
+| :-- | :-- |
+| **At most once every 30 minutes** (default) | If the condition keeps matching, you are alerted again every 30 minutes. |
+| **At most once an hour** · **At most once every 4 hours** · **At most once a day** | Same, at the chosen interval. |
+| **Only once** | Alerts the first time only, then the rule turns off. Turn it back on to be alerted again. |
+
+Turning a rule back on, or changing its pattern or condition, starts counting from scratch regardless of when it last alerted.
+
+## Common Patterns
+
+The rule dialog offers common patterns you can start from. All of them ignore case.
+
+| Pattern | What it catches | Default condition |
+| :-- | :-- | :-- |
+| **GPU out of memory** | `CUDA out of memory`, `OutOfMemoryError` | It appears |
+| **CUDA/NCCL errors** | `CUDA error`, `NCCL error`, `device-side assert` | It appears |
+| **Accelerator not found** | `No CUDA GPUs are available`, `Failed to initialize NVML`, and similar | It appears |
+| **vLLM engine died** | `EngineDeadError`, `Engine core initialization failed`, and similar | It appears |
+| **Process killed** | `Killed`, `was sent SIGKILL`, `died unexpectedly`, and similar | It appears |
+| **Segmentation fault** | `Segmentation fault`, `core dumped`, `SIGSEGV` | It appears |
+| **HTTP 5xx responses** | Request lines with a 5xx status code | 5 times in 5 minutes |
+| **Python exception** | `Traceback (most recent call last)` | It appears |
+| **ERROR logs** | Uppercase `ERROR`, `CRITICAL`, `FATAL`, `level=error`, `[error]`, and similar | 5 times in 5 minutes |
+| **Prompt too long** | `maximum context length` | 10 times in 15 minutes |
+| **Logs stopped** | Any line | No line for 15 minutes |
+
+- **Combine patterns**: Patterns with the same default condition can be picked together and combined into one rule. The combined pattern becomes a regex and cannot exceed 500 characters. **Logs stopped** cannot be combined with other patterns.
+- **Suggested rules**: Above the rule list, patterns that actually appeared in the last 24 hours of logs are shown with their counts. Click **Create** to turn one into a rule.
+
+## Recipients
+
+| Option | Who receives it |
+| :-- | :-- |
+| **Me** | The person who created the rule |
+| **Specific members** | The members you pick (up to 20) |
+| **Whole organization** | Every active member of the organization |
+
+- Only Organization Owners and admins can choose recipients. Rules created by members always notify **Me**.
+- Email follows each recipient's own [notification settings](/docs/console/notifications), where it can be turned off under **Log alert rules**.
+- Under **Also send to external channels**, each rule can pick up to 10 of the organization's Slack, Discord, and webhook channels. Each alert is sent once to every selected channel.
+
+## What an Alert Looks Like
+
+- **Console notification**: Titled "Log alert fired in container '{name}'", with the rule name, the condition, and up to 5 matching lines.
+- **Email**: Contains the container, rule, condition, and matching lines, sent in Korean or English based on the organization's region.
+- **View logs**: **View logs** on an alert opens the logs of the replica that matched last, already searched with the rule's pattern. "It stops appearing" alerts open the log view without a search.
+- **History**: On the Notifications page, filter **History** to **Log alerts**. **View alert history** in the rule list shows log alerts for that container only.
+
+## Manage Rules
+
+The rule list shows each rule's condition, frequency, recipients, number of external channels, and when it last alerted and last matched.
+
+- **On/off**: Use the switch to pause a rule. Rules that are off are marked **Off**.
+- **Edit and delete**: Use the **⋯** menu on a rule. Deleted rules cannot be restored.
+- **Permissions**: Only the rule's creator, or an Organization Owner or admin, can change or delete a rule.
+
+## Limits
+
+| Item | Limit |
+| :-- | :-- |
+| Rules per container | 20 |
+| Log alerts per organization | 30 in the past hour. Beyond that, the rest of that hour's alerts are grouped into one notification and no email is sent. |
+| Pattern / name | 500 / 100 characters |
+| Members / external channels per rule | 20 / 10 |
+
+## Related Documentation
+
+<Columns cols={2}>
+  <Card title="Monitoring" icon="chart-line" href="/docs/air-container/monitoring" cta="View runtime logs" arrow="true">
+    Watch live logs and logs per replica.
+  </Card>
+
+  <Card title="External Channels" icon="webhook" href="/docs/console/external-channels" cta="Connect a channel" arrow="true">
+    Send log alerts to Slack, Discord, and webhooks.
+  </Card>
+</Columns>

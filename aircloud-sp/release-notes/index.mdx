@@ -5,6 +5,51 @@ description: "New features, fixes, and improvements for the AirCloud platform."
 mode: "wide"
 ---
 
+<Update label="October 2026">
+
+## Live logs and log alerts, Slack, Discord, and webhook channels, and payments for US organizations
+
+**Watch container logs live, and get alerted when a log line shows up**
+
+Watch logs live without refreshing, and get notified when a log line you care about shows up. See the [Log Alerts](/docs/air-container/log-alerts) guide for details.
+
+- **Live logs**: Logs from running replicas appear as they arrive, and you can scroll back through up to 50,000 lines.
+- **Hide health checks and metrics**: Hide health-check and metrics-scrape request lines to see only your application's logs.
+- **Log alert rules**: Get alerted when a text or regex pattern appears, appears often, or stops appearing. You can also create a rule straight from your current log search.
+- **Common patterns**: Start a rule from ready-made patterns such as GPU out of memory, vLLM engine died, Python exceptions, and HTTP 5xx responses.
+
+**Send notifications to Slack, Discord, and webhooks**
+
+Send console notifications to the channels your team already uses. Connect them from the **External channels** tab on the Notifications page. See the [External Channels](/docs/console/external-channels) guide for details.
+
+- **Easy setup**: Paste a channel URL and the type is detected for you. Send a test message before saving.
+- **Choose what to send**: Errors and warnings only (default), everything, or just the notifications you pick. Each log alert rule can also choose the channels it notifies.
+- **Signed webhooks**: Generic webhooks are signed the Standard Webhooks way.
+- **Handling failed deliveries**: Resend failed deliveries, and if a channel is deleted or keeps failing for more than a day, it is turned off and you are told.
+
+**Better notification emails**
+
+- **Service status emails go to every member**: Deploy failures, unhealthy containers, long-term rental start and expiry, low balance, and credit expiry warnings now reach every member of the organization, not just the owner. Payment emails still go to the owner.
+- **Email language and shortcuts**: Deploy failure, unhealthy, and log alert emails are sent in Korean or English based on the organization's region, and include a button that takes you straight to the container.
+- **Notifications in your language**: Console notifications are shown in the language you are using the console in.
+
+**Payments**
+
+- **Choose the payment currency**: Pick the currency on the top-up screen, and the Organization Owner can change the organization's country and currency in organization settings.
+- **Card payments for US organizations**: US organizations can pay in USD with a saved card, and see the exact amount and currency their card will be charged.
+- **More payment failure reasons**: Failed Toss checkout and PayPal payments now explain the specific reason, such as an exceeded payment limit or a card issuer decline.
+- **Externally paid long-term rentals**: Long-term rentals paid under a separate contract now appear in the console's rental list and usage view with their contract amount.
+
+**Other improvements**
+
+- **Console speed**: Console pages now load about 2–3× faster.
+- **Attach keys at creation**: Choose SSH keys and API keys on the container creation screen and attach them right away.
+- **Organization-specific prices**: When your organization has its own rates, the GPU selection cards show those prices too.
+- **Reasoning models in the playground**: Fixed reasoning (thinking) models leaking their thought process into the answer body.
+- **Korean promotion codes**: Promotion codes written in Korean can now be redeemed.
+
+</Update>
+
 <Update label="September 2026">
 
 ## Air Assistant, credit breakdown and expiry, payment improvements, GPU auto-upgrade, and replica timeline
