@@ -648,10 +648,6 @@
                   "instance_type_id": "it-xxxxxxxx",
                   "attempt": 1,
                   "attempts": [],
-                  "retry_on": [
-                    "PLATFORM_ERROR",
-                    "PLATFORM_LOST"
-                  ],
                   "status": "QUEUED",
                   "reason": null,
                   "exit_code": null,
@@ -662,7 +658,41 @@
                   "finished_at": null,
                   "cancel_requested_at": null,
                   "status_unknown_since": null,
-                  "progress": null
+                  "progress": null,
+                  "spec": {
+                    "registry_url": "python:3.11-slim",
+                    "registry_type": "docker_hub",
+                    "image_is_public": true,
+                    "registry_username": null,
+                    "registry_region": null,
+                    "command": [
+                      "python",
+                      "-c",
+                      "import os; print('epochs', os.environ['EPOCHS'])"
+                    ],
+                    "args": null,
+                    "env_keys": [
+                      "EPOCHS"
+                    ],
+                    "volume": {
+                      "volume_id": "vol-xxxxxxxx",
+                      "volume_name": "my-volume",
+                      "mounts": [
+                        {
+                          "container_path": "/data",
+                          "subpath": ""
+                        }
+                      ]
+                    },
+                    "working_dir": "/data",
+                    "shm_size_gb": 8,
+                    "timeout_seconds": 3600,
+                    "max_retries": 2,
+                    "retry_on": [
+                      "PLATFORM_ERROR",
+                      "PLATFORM_LOST"
+                    ]
+                  }
                 }
               }
             }
@@ -792,10 +822,6 @@
                     "instance_type_id": "it-xxxxxxxx",
                     "attempt": 1,
                     "attempts": [],
-                    "retry_on": [
-                      "PLATFORM_ERROR",
-                      "PLATFORM_LOST"
-                    ],
                     "status": "QUEUED",
                     "reason": null,
                     "exit_code": null,
@@ -806,7 +832,41 @@
                     "finished_at": null,
                     "cancel_requested_at": null,
                     "status_unknown_since": null,
-                    "progress": null
+                    "progress": null,
+                    "spec": {
+                      "registry_url": "python:3.11-slim",
+                      "registry_type": "docker_hub",
+                      "image_is_public": true,
+                      "registry_username": null,
+                      "registry_region": null,
+                      "command": [
+                        "python",
+                        "-c",
+                        "import os; print('epochs', os.environ['EPOCHS'])"
+                      ],
+                      "args": null,
+                      "env_keys": [
+                        "EPOCHS"
+                      ],
+                      "volume": {
+                        "volume_id": "vol-xxxxxxxx",
+                        "volume_name": "my-volume",
+                        "mounts": [
+                          {
+                            "container_path": "/data",
+                            "subpath": ""
+                          }
+                        ]
+                      },
+                      "working_dir": "/data",
+                      "shm_size_gb": 8,
+                      "timeout_seconds": 3600,
+                      "max_retries": 2,
+                      "retry_on": [
+                        "PLATFORM_ERROR",
+                        "PLATFORM_LOST"
+                      ]
+                    }
                   }
                 ]
               }
@@ -892,10 +952,6 @@
                       "finished_at": "2026-09-30T05:03:42Z"
                     }
                   ],
-                  "retry_on": [
-                    "PLATFORM_ERROR",
-                    "PLATFORM_LOST"
-                  ],
                   "status": "SUCCEEDED",
                   "reason": null,
                   "exit_code": 0,
@@ -906,7 +962,41 @@
                   "finished_at": "2026-09-30T05:03:42Z",
                   "cancel_requested_at": null,
                   "status_unknown_since": null,
-                  "progress": null
+                  "progress": null,
+                  "spec": {
+                    "registry_url": "python:3.11-slim",
+                    "registry_type": "docker_hub",
+                    "image_is_public": true,
+                    "registry_username": null,
+                    "registry_region": null,
+                    "command": [
+                      "python",
+                      "-c",
+                      "import os; print('epochs', os.environ['EPOCHS'])"
+                    ],
+                    "args": null,
+                    "env_keys": [
+                      "EPOCHS"
+                    ],
+                    "volume": {
+                      "volume_id": "vol-xxxxxxxx",
+                      "volume_name": "my-volume",
+                      "mounts": [
+                        {
+                          "container_path": "/data",
+                          "subpath": ""
+                        }
+                      ]
+                    },
+                    "working_dir": "/data",
+                    "shm_size_gb": 8,
+                    "timeout_seconds": 3600,
+                    "max_retries": 2,
+                    "retry_on": [
+                      "PLATFORM_ERROR",
+                      "PLATFORM_LOST"
+                    ]
+                  }
                 }
               }
             }
@@ -999,10 +1089,6 @@
                       "finished_at": "2026-09-30T05:03:42Z"
                     }
                   ],
-                  "retry_on": [
-                    "PLATFORM_ERROR",
-                    "PLATFORM_LOST"
-                  ],
                   "status": "SUCCEEDED",
                   "reason": null,
                   "exit_code": 0,
@@ -1013,7 +1099,41 @@
                   "finished_at": "2026-09-30T05:03:42Z",
                   "cancel_requested_at": null,
                   "status_unknown_since": null,
-                  "progress": null
+                  "progress": null,
+                  "spec": {
+                    "registry_url": "python:3.11-slim",
+                    "registry_type": "docker_hub",
+                    "image_is_public": true,
+                    "registry_username": null,
+                    "registry_region": null,
+                    "command": [
+                      "python",
+                      "-c",
+                      "import os; print('epochs', os.environ['EPOCHS'])"
+                    ],
+                    "args": null,
+                    "env_keys": [
+                      "EPOCHS"
+                    ],
+                    "volume": {
+                      "volume_id": "vol-xxxxxxxx",
+                      "volume_name": "my-volume",
+                      "mounts": [
+                        {
+                          "container_path": "/data",
+                          "subpath": ""
+                        }
+                      ]
+                    },
+                    "working_dir": "/data",
+                    "shm_size_gb": 8,
+                    "timeout_seconds": 3600,
+                    "max_retries": 2,
+                    "retry_on": [
+                      "PLATFORM_ERROR",
+                      "PLATFORM_LOST"
+                    ]
+                  }
                 }
               }
             }
@@ -1033,10 +1153,6 @@
                   "instance_type_id": "it-xxxxxxxx",
                   "attempt": 1,
                   "attempts": [],
-                  "retry_on": [
-                    "PLATFORM_ERROR",
-                    "PLATFORM_LOST"
-                  ],
                   "status": "CANCELLING",
                   "reason": null,
                   "exit_code": null,
@@ -1047,7 +1163,41 @@
                   "finished_at": null,
                   "cancel_requested_at": "2026-09-30T05:02:00Z",
                   "status_unknown_since": null,
-                  "progress": null
+                  "progress": null,
+                  "spec": {
+                    "registry_url": "python:3.11-slim",
+                    "registry_type": "docker_hub",
+                    "image_is_public": true,
+                    "registry_username": null,
+                    "registry_region": null,
+                    "command": [
+                      "python",
+                      "-c",
+                      "import os; print('epochs', os.environ['EPOCHS'])"
+                    ],
+                    "args": null,
+                    "env_keys": [
+                      "EPOCHS"
+                    ],
+                    "volume": {
+                      "volume_id": "vol-xxxxxxxx",
+                      "volume_name": "my-volume",
+                      "mounts": [
+                        {
+                          "container_path": "/data",
+                          "subpath": ""
+                        }
+                      ]
+                    },
+                    "working_dir": "/data",
+                    "shm_size_gb": 8,
+                    "timeout_seconds": 3600,
+                    "max_retries": 2,
+                    "retry_on": [
+                      "PLATFORM_ERROR",
+                      "PLATFORM_LOST"
+                    ]
+                  }
                 }
               }
             }
@@ -2500,7 +2650,7 @@
               "PLATFORM_ERROR",
               "PLATFORM_LOST"
             ],
-            "description": "Failure reasons that trigger a retry. Allowed: `USER_EXIT_NONZERO`, `OOM`, `IMAGE_PULL`, `COMMAND_INVALID`, `TIMEOUT`, `CAPACITY_TIMEOUT`, `PLATFORM_ERROR`, `PLATFORM_LOST`, `VOLUME_ERROR`. Default `[\"PLATFORM_ERROR\", \"PLATFORM_LOST\"]`. A failed attempt is retried only if its `reason` is in this list and attempts remain under `max_retries`. To retry code failures such as `USER_EXIT_NONZERO` or `OOM`, add them explicitly."
+            "description": "Failure reasons that trigger a retry. Allowed: `USER_EXIT_NONZERO`, `OOM`, `IMAGE_PULL`, `COMMAND_INVALID`, `TIMEOUT`, `CAPACITY_TIMEOUT`, `PLATFORM_ERROR`, `PLATFORM_LOST`, `VOLUME_ERROR`. Default `[\"PLATFORM_ERROR\", \"PLATFORM_LOST\"]`. A failed attempt is retried only if its `reason` is in this list and attempts remain under `max_retries`. To retry code failures such as `USER_EXIT_NONZERO` or `OOM`, add them explicitly. Omit the field or send `null` to use the default. A list containing a value other than the failure reasons above (for example `USER_CANCELLED`) is rejected with 422."
           }
         },
         "type": "object",
@@ -2760,24 +2910,6 @@
             "type": "array",
             "description": "History of finished attempts, including the final one when the Job has ended. The attempt in progress is described by the top-level fields."
           },
-          "retry_on": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "enum": [
-                "USER_EXIT_NONZERO",
-                "OOM",
-                "IMAGE_PULL",
-                "COMMAND_INVALID",
-                "TIMEOUT",
-                "CAPACITY_TIMEOUT",
-                "PLATFORM_ERROR",
-                "PLATFORM_LOST",
-                "VOLUME_ERROR"
-              ]
-            },
-            "description": "Failure reasons that trigger a retry for this Job."
-          },
           "status": {
             "$ref": "#/components/schemas/JobStatus",
             "description": "Current status."
@@ -2834,6 +2966,10 @@
             "type": "number",
             "nullable": true,
             "description": "Progress. Currently always `null`."
+          },
+          "spec": {
+            "$ref": "#/components/schemas/JobSpecResponse",
+            "description": "Submitted specification, including `max_retries` and `retry_on`."
           }
         },
         "type": "object",
@@ -2845,7 +2981,6 @@
           "instance_type_id",
           "attempt",
           "attempts",
-          "retry_on",
           "status",
           "reason",
           "exit_code",
@@ -2855,7 +2990,8 @@
           "started_at",
           "finished_at",
           "cancel_requested_at",
-          "status_unknown_since"
+          "status_unknown_since",
+          "spec"
         ]
       },
       "JobStatus": {
@@ -3221,6 +3357,142 @@
           "volume_id",
           "status"
         ]
+      },
+      "JobVolumeResponse": {
+        "properties": {
+          "volume_id": {
+            "type": "string",
+            "description": "Volume ID."
+          },
+          "volume_name": {
+            "type": "string",
+            "nullable": true,
+            "description": "Volume name. `null` if the volume was deleted or cannot be looked up."
+          },
+          "mounts": {
+            "items": {
+              "$ref": "#/components/schemas/VolumeMountSpec"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object",
+        "required": [
+          "volume_id",
+          "volume_name",
+          "mounts"
+        ]
+      },
+      "JobSpecResponse": {
+        "properties": {
+          "registry_url": {
+            "type": "string",
+            "description": "Container image URL."
+          },
+          "registry_type": {
+            "type": "string",
+            "enum": [
+              "docker_hub",
+              "aws_ecr",
+              "github_container_registry",
+              "gcp_artifact_registry",
+              ""
+            ],
+            "nullable": true,
+            "description": "Registry type. `null` if not set."
+          },
+          "image_is_public": {
+            "type": "boolean",
+            "nullable": true,
+            "description": "Whether the image is public."
+          },
+          "registry_username": {
+            "type": "string",
+            "nullable": true,
+            "description": "Registry username."
+          },
+          "registry_region": {
+            "type": "string",
+            "nullable": true,
+            "description": "Registry region."
+          },
+          "command": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true,
+            "description": "Command that replaces the image ENTRYPOINT."
+          },
+          "args": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true,
+            "description": "Arguments that replace the image CMD."
+          },
+          "env_keys": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Names of the environment variables. Values are never returned."
+          },
+          "volume": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/JobVolumeResponse"
+              }
+            ],
+            "nullable": true,
+            "description": "Mounted volume. `null` if none."
+          },
+          "working_dir": {
+            "type": "string",
+            "nullable": true,
+            "description": "Working directory."
+          },
+          "shm_size_gb": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Shared memory (/dev/shm) size in GB."
+          },
+          "timeout_seconds": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Execution time limit per attempt in seconds. `null` = unlimited."
+          },
+          "max_retries": {
+            "type": "integer",
+            "description": "Number of additional attempts after a failed one."
+          },
+          "retry_on": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/JobReason"
+            },
+            "description": "Failure reasons that trigger a retry for this Job. Always present; a Job submitted without `retry_on` returns the default `[\"PLATFORM_ERROR\", \"PLATFORM_LOST\"]`."
+          }
+        },
+        "type": "object",
+        "required": [
+          "registry_url",
+          "registry_type",
+          "image_is_public",
+          "registry_username",
+          "registry_region",
+          "command",
+          "args",
+          "env_keys",
+          "volume",
+          "working_dir",
+          "shm_size_gb",
+          "timeout_seconds",
+          "max_retries",
+          "retry_on"
+        ],
+        "description": "Submitted specification of the Job. Never includes `registry_password` or environment variable values."
       }
     }
   }

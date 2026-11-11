@@ -90,7 +90,7 @@ Jobs are not retried by default. Set `max_retries` (an integer from 0 to 10, def
 - A failed attempt is retried only if its `reason` is in `retry_on` and attempts remain under `max_retries`. Cancelled Jobs are not retried.
 - `retry_on` defaults to `["PLATFORM_ERROR", "PLATFORM_LOST"]`, so by default only infrastructure failures are retried. Allowed values: `USER_EXIT_NONZERO`, `OOM`, `IMAGE_PULL`, `COMMAND_INVALID`, `TIMEOUT`, `CAPACITY_TIMEOUT`, `PLATFORM_ERROR`, `PLATFORM_LOST`, `VOLUME_ERROR`.
 - To retry failures caused by your code, such as `USER_EXIT_NONZERO` or `OOM`, list them explicitly, for example `"max_retries": 2, "retry_on": ["PLATFORM_ERROR", "PLATFORM_LOST", "OOM"]`. With the CLI, use `--retries 2 --retry-on PLATFORM_ERROR,PLATFORM_LOST,OOM`. The value replaces the default, so include the platform reasons if you still want them retried.
-- The response returns the `retry_on` in effect.
+- The response returns the `retry_on` in effect as `spec.retry_on`.
 - The Job returns to `QUEUED` between attempts.
 - Failures with an exit code are resubmitted immediately. `PLATFORM_LOST` and failures without an exit code wait about 3 minutes so the previous container can stop.
 - Each attempt gets a fresh `timeout_seconds`.

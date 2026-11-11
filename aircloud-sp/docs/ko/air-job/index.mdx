@@ -92,7 +92,7 @@ QUEUED -> PENDING -> STARTING -> RUNNING -> SUCCEEDED
 - 실패한 attempt의 `reason`이 `retry_on`에 있고 `max_retries` 횟수가 남아 있을 때만 다시 실행합니다. 취소된 Job은 재시도하지 않습니다.
 - `retry_on`의 기본값은 `["PLATFORM_ERROR", "PLATFORM_LOST"]`이므로 기본적으로는 인프라 장애만 재시도합니다. 사용할 수 있는 값은 `USER_EXIT_NONZERO`, `OOM`, `IMAGE_PULL`, `COMMAND_INVALID`, `TIMEOUT`, `CAPACITY_TIMEOUT`, `PLATFORM_ERROR`, `PLATFORM_LOST`, `VOLUME_ERROR`입니다.
 - `USER_EXIT_NONZERO`, `OOM`처럼 코드 때문에 생긴 실패도 재시도하려면 직접 지정하세요. 예: `"max_retries": 2, "retry_on": ["PLATFORM_ERROR", "PLATFORM_LOST", "OOM"]`. CLI에서는 `--retries 2 --retry-on PLATFORM_ERROR,PLATFORM_LOST,OOM`을 사용합니다. 지정한 값이 기본값을 대체하므로 인프라 장애도 계속 재시도하려면 함께 넣어야 합니다.
-- 응답에는 실제로 적용된 `retry_on`이 포함됩니다.
+- 응답에는 실제로 적용된 값이 `spec.retry_on`으로 포함됩니다.
 - 재실행 사이에는 Job이 `QUEUED` 상태로 돌아갑니다.
 - 종료 코드가 있는 실패는 바로 다시 제출합니다. `PLATFORM_LOST`와 종료 코드가 없는 실패는 이전 컨테이너가 중지될 수 있도록 약 3분 기다립니다.
 - attempt마다 `timeout_seconds`가 새로 적용됩니다.
