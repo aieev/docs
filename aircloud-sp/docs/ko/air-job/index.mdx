@@ -44,17 +44,20 @@ QUEUED -> PENDING -> STARTING -> RUNNING -> SUCCEEDED
 
 `FAILED`와 `CANCELLED` Job은 `reason`으로 사유를 확인할 수 있습니다.
 
-`message`는 `reason`에서 파생된 사람이 읽을 수 있는 설명이며(영어 문자열), Job이 실행 중이거나 `reason`이 없으면 `null`입니다. 플랫폼이 Job 상태를 일시적으로 확인하지 못하면 `status_unknown_since`가 설정되고 `message`에 자동으로 다시 확인한다는 안내가 표시됩니다.
+`message`는 `reason`에서 파생된 사람이 읽을 수 있는 고정 설명이며(영어 문자열), Job이 실행 중이거나 `reason`이 없으면 `null`입니다. 플랫폼이 Job 상태를 일시적으로 확인하지 못하면 `status_unknown_since`가 설정되고 `message`에 자동으로 다시 확인한다는 안내가 표시됩니다.
+
+`IMAGE_PULL`, `COMMAND_INVALID`, `VOLUME_ERROR`일 때는 Job과 `attempts`의 각 항목에 있는 `detail`이 실제 오류를 정제한 발췌(최대 500자)를 보여 줍니다. 다른 reason에서는 `null`입니다.
 
 | Reason | 의미 |
 | --- | --- |
-| `USER_EXIT_NONZERO` | 명령이 0이 아닌 코드로 종료되었습니다. `exit_code`를 확인하세요. 프로세스가 시그널로 종료된 경우(`137` = `SIGKILL`, `143` = `SIGTERM`)도 여기에 포함됩니다. |
+| `USER_EXIT_NONZERO` | 명령이 0이 아닌 코드로 종료되었습니다. `exit_code`를 확인하세요. 종료 코드 129~159는 프로세스가 시그널로 종료되었음을 뜻하며(코드 − 128), 예를 들어 `137`은 `SIGKILL`, `143`은 `SIGTERM`입니다. |
 | `OOM` | 컨테이너 메모리가 부족했습니다. |
 | `IMAGE_PULL` | 이미지를 가져오지 못했습니다. 이미지 URL과 레지스트리 자격 증명을 확인하세요. |
 | `COMMAND_INVALID` | 명령을 시작할 수 없습니다. 잘못된 명령, 없는 실행 파일, 노드와 맞지 않는 이미지 아키텍처 등이 원인입니다. 컨테이너가 시작되지 않았습니다. |
 | `TIMEOUT` | `timeout_seconds`를 넘겨 Job이 중지되었습니다. |
 | `CAPACITY_TIMEOUT` | 자원을 900초 넘게 기다렸습니다. `timeout_seconds`와는 무관합니다. 나중에 다시 제출하거나 다른 인스턴스 타입을 선택하세요. |
 | `PLATFORM_ERROR` / `PLATFORM_LOST` | 인프라 장애입니다. `max_retries`를 지정하면 자동으로 다시 실행하며([재시도](#재시도) 참고), 지정하지 않았다면 다시 제출하세요. |
+| `VOLUME_ERROR` | Job에 볼륨을 연결하지 못했습니다. 볼륨 상태를 확인하고, 계속되면 지원팀에 문의하세요. 기본적으로 재시도하지 않습니다. |
 | `USER_CANCELLED` | 사용자가 취소했습니다. |
 | `BALANCE_EXHAUSTED` | 선불 잔액이 소진되어 Job이 취소되었습니다. |
 
@@ -86,7 +89,10 @@ QUEUED -> PENDING -> STARTING -> RUNNING -> SUCCEEDED
 
 기본적으로 Job은 재시도하지 않습니다. `max_retries`(0~10의 정수, 기본 0)를 지정하면 실패한 뒤 그 횟수만큼 추가로 다시 실행합니다.
 
-- `max_retries`가 0보다 크면 `reason`과 관계없이 `FAILED`가 된 모든 경우를 다시 실행합니다(`PLATFORM_LOST`, `PLATFORM_ERROR`, `OOM`, `USER_EXIT_NONZERO`, `IMAGE_PULL`, `COMMAND_INVALID`, `TIMEOUT`, `CAPACITY_TIMEOUT`). 취소된 Job은 재시도하지 않습니다.
+- 실패한 attempt의 `reason`이 `retry_on`에 있고 `max_retries` 횟수가 남아 있을 때만 다시 실행합니다. 취소된 Job은 재시도하지 않습니다.
+- `retry_on`의 기본값은 `["PLATFORM_ERROR", "PLATFORM_LOST"]`이므로 기본적으로는 인프라 장애만 재시도합니다. 사용할 수 있는 값은 `USER_EXIT_NONZERO`, `OOM`, `IMAGE_PULL`, `COMMAND_INVALID`, `TIMEOUT`, `CAPACITY_TIMEOUT`, `PLATFORM_ERROR`, `PLATFORM_LOST`, `VOLUME_ERROR`입니다.
+- `USER_EXIT_NONZERO`, `OOM`처럼 코드 때문에 생긴 실패도 재시도하려면 직접 지정하세요. 예: `"max_retries": 2, "retry_on": ["PLATFORM_ERROR", "PLATFORM_LOST", "OOM"]`. CLI에서는 `--retries 2 --retry-on PLATFORM_ERROR,PLATFORM_LOST,OOM`을 사용합니다. 지정한 값이 기본값을 대체하므로 인프라 장애도 계속 재시도하려면 함께 넣어야 합니다.
+- 응답에는 실제로 적용된 `retry_on`이 포함됩니다.
 - 재실행 사이에는 Job이 `QUEUED` 상태로 돌아갑니다.
 - 종료 코드가 있는 실패는 바로 다시 제출합니다. `PLATFORM_LOST`와 종료 코드가 없는 실패는 이전 컨테이너가 중지될 수 있도록 약 3분 기다립니다.
 - attempt마다 `timeout_seconds`가 새로 적용됩니다.
@@ -143,7 +149,7 @@ CLI는 제출마다 키를 자동으로 붙이고, 재시도할 때도 같은 �
 - Job당 볼륨은 1개만 마운트할 수 있습니다. 마운트 경로는 `/`가 아닌 절대 경로여야 하며 서로 겹칠 수 없습니다.
 - 이름은 100자, 환경 변수는 100개(키와 값 합계 32KB), `command`와 `args`는 합계 64KB까지 지정할 수 있습니다.
 - `command`는 이미지의 `ENTRYPOINT`를, `args`는 이미지의 `CMD`를 대체합니다. [command와 args](#command와-args)를 참고하세요.
-- 실패한 Job은 `max_retries`(최대 10)를 지정하지 않으면 재시도하지 않습니다. [재시도](#재시도)를 참고하세요.
+- 실패한 Job은 `max_retries`(최대 10)를 지정하지 않으면 재시도하지 않으며, 재시도 대상은 `retry_on`에 있는 reason(기본값은 인프라 장애)뿐입니다. [재시도](#재시도)를 참고하세요.
 - API로 결과 파일을 내려받는 기능은 아직 없습니다. 결과는 마운트한 볼륨에 저장하세요.
 
 <CardGroup cols={2}>

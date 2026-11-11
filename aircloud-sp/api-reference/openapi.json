@@ -623,7 +623,11 @@
                 "shm_size_gb": 8,
                 "working_dir": "/data",
                 "timeout_seconds": 3600,
-                "max_retries": 2
+                "max_retries": 2,
+                "retry_on": [
+                  "PLATFORM_ERROR",
+                  "PLATFORM_LOST"
+                ]
               }
             }
           }
@@ -644,10 +648,15 @@
                   "instance_type_id": "it-xxxxxxxx",
                   "attempt": 1,
                   "attempts": [],
+                  "retry_on": [
+                    "PLATFORM_ERROR",
+                    "PLATFORM_LOST"
+                  ],
                   "status": "QUEUED",
                   "reason": null,
                   "exit_code": null,
                   "message": null,
+                  "detail": null,
                   "created_at": "2026-09-30T05:00:00Z",
                   "started_at": null,
                   "finished_at": null,
@@ -783,10 +792,15 @@
                     "instance_type_id": "it-xxxxxxxx",
                     "attempt": 1,
                     "attempts": [],
+                    "retry_on": [
+                      "PLATFORM_ERROR",
+                      "PLATFORM_LOST"
+                    ],
                     "status": "QUEUED",
                     "reason": null,
                     "exit_code": null,
                     "message": null,
+                    "detail": null,
                     "created_at": "2026-09-30T05:00:00Z",
                     "started_at": null,
                     "finished_at": null,
@@ -873,14 +887,20 @@
                       "status": "SUCCEEDED",
                       "reason": null,
                       "exit_code": 0,
+                      "detail": null,
                       "started_at": "2026-09-30T05:01:10Z",
                       "finished_at": "2026-09-30T05:03:42Z"
                     }
+                  ],
+                  "retry_on": [
+                    "PLATFORM_ERROR",
+                    "PLATFORM_LOST"
                   ],
                   "status": "SUCCEEDED",
                   "reason": null,
                   "exit_code": 0,
                   "message": null,
+                  "detail": null,
                   "created_at": "2026-09-30T05:00:00Z",
                   "started_at": "2026-09-30T05:01:10Z",
                   "finished_at": "2026-09-30T05:03:42Z",
@@ -974,14 +994,20 @@
                       "status": "SUCCEEDED",
                       "reason": null,
                       "exit_code": 0,
+                      "detail": null,
                       "started_at": "2026-09-30T05:01:10Z",
                       "finished_at": "2026-09-30T05:03:42Z"
                     }
+                  ],
+                  "retry_on": [
+                    "PLATFORM_ERROR",
+                    "PLATFORM_LOST"
                   ],
                   "status": "SUCCEEDED",
                   "reason": null,
                   "exit_code": 0,
                   "message": null,
+                  "detail": null,
                   "created_at": "2026-09-30T05:00:00Z",
                   "started_at": "2026-09-30T05:01:10Z",
                   "finished_at": "2026-09-30T05:03:42Z",
@@ -1007,10 +1033,15 @@
                   "instance_type_id": "it-xxxxxxxx",
                   "attempt": 1,
                   "attempts": [],
+                  "retry_on": [
+                    "PLATFORM_ERROR",
+                    "PLATFORM_LOST"
+                  ],
                   "status": "CANCELLING",
                   "reason": null,
                   "exit_code": null,
                   "message": null,
+                  "detail": null,
                   "created_at": "2026-09-30T05:00:00Z",
                   "started_at": null,
                   "finished_at": null,
@@ -2447,7 +2478,29 @@
             "minimum": 0,
             "maximum": 10,
             "default": 0,
-            "description": "Number of additional attempts after a failed one. Default 0 (no retry), min 0, max 10. When greater than 0, any `FAILED` outcome is retried regardless of reason; cancelled Jobs are not. Between attempts the Job returns to `QUEUED`. Failures with an exit code are resubmitted immediately; `PLATFORM_LOST` and failures without an exit code wait about 3 minutes so the previous container can stop. Each attempt gets a fresh `timeout_seconds`, and all attempts are billed."
+            "description": "Number of additional attempts after a failed one. Default 0 (no retry), min 0, max 10. A failed attempt is retried only if its `reason` is in `retry_on` (default: `PLATFORM_ERROR`, `PLATFORM_LOST`) and attempts remain; cancelled Jobs are not retried. Between attempts the Job returns to `QUEUED`. Failures with an exit code are resubmitted immediately; `PLATFORM_LOST` and failures without an exit code wait about 3 minutes so the previous container can stop. Each attempt gets a fresh `timeout_seconds`, and all attempts are billed."
+          },
+          "retry_on": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "USER_EXIT_NONZERO",
+                "OOM",
+                "IMAGE_PULL",
+                "COMMAND_INVALID",
+                "TIMEOUT",
+                "CAPACITY_TIMEOUT",
+                "PLATFORM_ERROR",
+                "PLATFORM_LOST",
+                "VOLUME_ERROR"
+              ]
+            },
+            "default": [
+              "PLATFORM_ERROR",
+              "PLATFORM_LOST"
+            ],
+            "description": "Failure reasons that trigger a retry. Allowed: `USER_EXIT_NONZERO`, `OOM`, `IMAGE_PULL`, `COMMAND_INVALID`, `TIMEOUT`, `CAPACITY_TIMEOUT`, `PLATFORM_ERROR`, `PLATFORM_LOST`, `VOLUME_ERROR`. Default `[\"PLATFORM_ERROR\", \"PLATFORM_LOST\"]`. A failed attempt is retried only if its `reason` is in this list and attempts remain under `max_retries`. To retry code failures such as `USER_EXIT_NONZERO` or `OOM`, add them explicitly."
           }
         },
         "type": "object",
@@ -2570,7 +2623,12 @@
           "exit_code": {
             "type": "integer",
             "nullable": true,
-            "description": "Exit code of the user's command in this attempt."
+            "description": "Exit code of the user's command in this attempt. Codes 129-159 mean the process was killed by a signal (code minus 128), e.g. `137` = `SIGKILL`, `143` = `SIGTERM`."
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true,
+            "description": "Sanitized excerpt (up to 500 characters) of the underlying error for this attempt. Only for `IMAGE_PULL`, `COMMAND_INVALID` and `VOLUME_ERROR`; `null` otherwise."
           },
           "started_at": {
             "type": "string",
@@ -2591,6 +2649,7 @@
           "status",
           "reason",
           "exit_code",
+          "detail",
           "started_at",
           "finished_at"
         ],
@@ -2660,11 +2719,12 @@
           "TIMEOUT",
           "PLATFORM_ERROR",
           "PLATFORM_LOST",
+          "VOLUME_ERROR",
           "USER_CANCELLED",
           "CAPACITY_TIMEOUT",
           "BALANCE_EXHAUSTED"
         ],
-        "description": "Reason for a failed or cancelled Job. `USER_EXIT_NONZERO`: command exited non-zero; `OOM`: out of memory; `IMAGE_PULL`: image pull failed; `COMMAND_INVALID`: the command could not be started (bad command, missing executable, or image architecture mismatch; the container never started); `TIMEOUT`: exceeded `timeout_seconds`; `PLATFORM_ERROR` / `PLATFORM_LOST`: infrastructure failure; `CAPACITY_TIMEOUT`: waited more than 900 seconds for resources (unrelated to `timeout_seconds`); `USER_CANCELLED`: cancelled by request; `BALANCE_EXHAUSTED`: cancelled because the prepaid balance ran out."
+        "description": "Reason for a failed or cancelled Job. `USER_EXIT_NONZERO`: command exited non-zero; `OOM`: out of memory; `IMAGE_PULL`: image pull failed; `COMMAND_INVALID`: the command could not be started (bad command, missing executable, or image architecture mismatch; the container never started); `TIMEOUT`: exceeded `timeout_seconds`; `PLATFORM_ERROR` / `PLATFORM_LOST`: infrastructure failure; `VOLUME_ERROR`: the Job's volume could not be attached; `CAPACITY_TIMEOUT`: waited more than 900 seconds for resources (unrelated to `timeout_seconds`); `USER_CANCELLED`: cancelled by request; `BALANCE_EXHAUSTED`: cancelled because the prepaid balance ran out."
       },
       "JobResponse": {
         "properties": {
@@ -2700,6 +2760,24 @@
             "type": "array",
             "description": "History of finished attempts, including the final one when the Job has ended. The attempt in progress is described by the top-level fields."
           },
+          "retry_on": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "USER_EXIT_NONZERO",
+                "OOM",
+                "IMAGE_PULL",
+                "COMMAND_INVALID",
+                "TIMEOUT",
+                "CAPACITY_TIMEOUT",
+                "PLATFORM_ERROR",
+                "PLATFORM_LOST",
+                "VOLUME_ERROR"
+              ]
+            },
+            "description": "Failure reasons that trigger a retry for this Job."
+          },
           "status": {
             "$ref": "#/components/schemas/JobStatus",
             "description": "Current status."
@@ -2711,12 +2789,17 @@
           "exit_code": {
             "type": "integer",
             "nullable": true,
-            "description": "Exit code of the user's command."
+            "description": "Exit code of the user's command. Codes 129-159 mean the process was killed by a signal (code minus 128), e.g. `137` = `SIGKILL`, `143` = `SIGTERM`."
           },
           "message": {
             "type": "string",
             "nullable": true,
-            "description": "Human-readable explanation derived from `reason`. `null` while the Job is running or when there is no reason. Mapping:\n- `USER_EXIT_NONZERO`: \"The command exited with a non-zero exit code. Check exit_code and the logs.\"\n- `OOM`: \"The container ran out of memory. Choose an instance type with more memory or reduce memory usage.\"\n- `IMAGE_PULL`: \"The container image could not be pulled. Check the image URL and registry credentials.\"\n- `COMMAND_INVALID`: \"The container could not start the command. Check the command, that the executable exists in the image, and that the image matches the node architecture.\"\n- `TIMEOUT`: \"The Job exceeded its timeout_seconds limit and was stopped. Increase timeout_seconds or shorten the workload.\"\n- `CAPACITY_TIMEOUT`: \"No GPU capacity became available within the queue wait limit. Submit again later or choose another instance type.\"\n- `PLATFORM_ERROR`: \"The Job failed because of a platform error. Submit it again.\"\n- `PLATFORM_LOST`: \"The node running this Job became unreachable. Submit it again.\"\n- `USER_CANCELLED`: \"The Job was cancelled on request.\"\n- `BALANCE_EXHAUSTED`: \"The Job was stopped because the prepaid credit balance ran out.\"\n- unknown state (no `reason`, `status_unknown_since` set): \"The platform cannot confirm this Job's state right now. It will be rechecked automatically.\""
+            "description": "Human-readable explanation derived from `reason`. `null` while the Job is running or when there is no reason. Mapping:\n- `USER_EXIT_NONZERO`: \"The command exited with a non-zero exit code. Check exit_code and the logs.\"\n- `OOM`: \"The container ran out of memory. Choose an instance type with more memory or reduce memory usage.\"\n- `IMAGE_PULL`: \"The container image could not be pulled. Check the image URL and registry credentials.\"\n- `COMMAND_INVALID`: \"The container could not start the command. Check the command, that the executable exists in the image, and that the image matches the node architecture.\"\n- `TIMEOUT`: \"The Job exceeded its timeout_seconds limit and was stopped. Increase timeout_seconds or shorten the workload.\"\n- `CAPACITY_TIMEOUT`: \"No GPU capacity became available within the queue wait limit. Submit again later or choose another instance type.\"\n- `PLATFORM_ERROR`: \"The Job failed because of a platform error. Submit it again.\"\n- `PLATFORM_LOST`: \"The node running this Job became unreachable. Submit it again.\"\n- `VOLUME_ERROR`: \"The volume could not be attached to this Job. Check the volume's state, or contact support if it keeps happening.\"\n- `USER_CANCELLED`: \"The Job was cancelled on request.\"\n- `BALANCE_EXHAUSTED`: \"The Job was stopped because the prepaid credit balance ran out.\"\n- unknown state (no `reason`, `status_unknown_since` set): \"The platform cannot confirm this Job's state right now. It will be rechecked automatically.\""
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true,
+            "description": "Sanitized excerpt (up to 500 characters) of the underlying error. Returned only for `IMAGE_PULL`, `COMMAND_INVALID` and `VOLUME_ERROR`; `null` otherwise. `message` stays a fixed text per `reason`."
           },
           "created_at": {
             "type": "string",
@@ -2762,10 +2845,12 @@
           "instance_type_id",
           "attempt",
           "attempts",
+          "retry_on",
           "status",
           "reason",
           "exit_code",
           "message",
+          "detail",
           "created_at",
           "started_at",
           "finished_at",

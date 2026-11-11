@@ -623,7 +623,11 @@
                 "shm_size_gb": 8,
                 "working_dir": "/data",
                 "timeout_seconds": 3600,
-                "max_retries": 2
+                "max_retries": 2,
+                "retry_on": [
+                  "PLATFORM_ERROR",
+                  "PLATFORM_LOST"
+                ]
               }
             }
           }
@@ -644,10 +648,15 @@
                   "instance_type_id": "it-xxxxxxxx",
                   "attempt": 1,
                   "attempts": [],
+                  "retry_on": [
+                    "PLATFORM_ERROR",
+                    "PLATFORM_LOST"
+                  ],
                   "status": "QUEUED",
                   "reason": null,
                   "exit_code": null,
                   "message": null,
+                  "detail": null,
                   "created_at": "2026-09-30T05:00:00Z",
                   "started_at": null,
                   "finished_at": null,
@@ -783,10 +792,15 @@
                     "instance_type_id": "it-xxxxxxxx",
                     "attempt": 1,
                     "attempts": [],
+                    "retry_on": [
+                      "PLATFORM_ERROR",
+                      "PLATFORM_LOST"
+                    ],
                     "status": "QUEUED",
                     "reason": null,
                     "exit_code": null,
                     "message": null,
+                    "detail": null,
                     "created_at": "2026-09-30T05:00:00Z",
                     "started_at": null,
                     "finished_at": null,
@@ -873,14 +887,20 @@
                       "status": "SUCCEEDED",
                       "reason": null,
                       "exit_code": 0,
+                      "detail": null,
                       "started_at": "2026-09-30T05:01:10Z",
                       "finished_at": "2026-09-30T05:03:42Z"
                     }
+                  ],
+                  "retry_on": [
+                    "PLATFORM_ERROR",
+                    "PLATFORM_LOST"
                   ],
                   "status": "SUCCEEDED",
                   "reason": null,
                   "exit_code": 0,
                   "message": null,
+                  "detail": null,
                   "created_at": "2026-09-30T05:00:00Z",
                   "started_at": "2026-09-30T05:01:10Z",
                   "finished_at": "2026-09-30T05:03:42Z",
@@ -974,14 +994,20 @@
                       "status": "SUCCEEDED",
                       "reason": null,
                       "exit_code": 0,
+                      "detail": null,
                       "started_at": "2026-09-30T05:01:10Z",
                       "finished_at": "2026-09-30T05:03:42Z"
                     }
+                  ],
+                  "retry_on": [
+                    "PLATFORM_ERROR",
+                    "PLATFORM_LOST"
                   ],
                   "status": "SUCCEEDED",
                   "reason": null,
                   "exit_code": 0,
                   "message": null,
+                  "detail": null,
                   "created_at": "2026-09-30T05:00:00Z",
                   "started_at": "2026-09-30T05:01:10Z",
                   "finished_at": "2026-09-30T05:03:42Z",
@@ -1007,10 +1033,15 @@
                   "instance_type_id": "it-xxxxxxxx",
                   "attempt": 1,
                   "attempts": [],
+                  "retry_on": [
+                    "PLATFORM_ERROR",
+                    "PLATFORM_LOST"
+                  ],
                   "status": "CANCELLING",
                   "reason": null,
                   "exit_code": null,
                   "message": null,
+                  "detail": null,
                   "created_at": "2026-09-30T05:00:00Z",
                   "started_at": null,
                   "finished_at": null,
@@ -2447,7 +2478,29 @@
             "minimum": 0,
             "maximum": 10,
             "default": 0,
-            "description": "실패한 뒤 추가로 시도할 횟수. 기본값 0(재시도 안 함), 최소 0, 최대 10. 0보다 크면 실패 사유와 관계없이 `FAILED`가 된 모든 경우를 다시 실행하며, 취소된 Job은 재시도하지 않습니다. 재시도 사이에는 Job이 `QUEUED`로 돌아갑니다. 종료 코드가 있는 실패는 바로 다시 제출하고, `PLATFORM_LOST`와 종료 코드가 없는 실패는 이전 컨테이너가 중지될 수 있도록 약 3분 기다립니다. attempt마다 `timeout_seconds`가 새로 적용되고 모든 attempt가 과금됩니다."
+            "description": "실패한 뒤 추가로 시도할 횟수. 기본값 0(재시도 안 함), 최소 0, 최대 10. 실패한 attempt의 `reason`이 `retry_on`(기본값 `PLATFORM_ERROR`, `PLATFORM_LOST`)에 있고 횟수가 남아 있을 때만 다시 실행하며, 취소된 Job은 재시도하지 않습니다. 재시도 사이에는 Job이 `QUEUED`로 돌아갑니다. 종료 코드가 있는 실패는 바로 다시 제출하고, `PLATFORM_LOST`와 종료 코드가 없는 실패는 이전 컨테이너가 중지될 수 있도록 약 3분 기다립니다. attempt마다 `timeout_seconds`가 새로 적용되고 모든 attempt가 과금됩니다."
+          },
+          "retry_on": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "USER_EXIT_NONZERO",
+                "OOM",
+                "IMAGE_PULL",
+                "COMMAND_INVALID",
+                "TIMEOUT",
+                "CAPACITY_TIMEOUT",
+                "PLATFORM_ERROR",
+                "PLATFORM_LOST",
+                "VOLUME_ERROR"
+              ]
+            },
+            "default": [
+              "PLATFORM_ERROR",
+              "PLATFORM_LOST"
+            ],
+            "description": "재시도를 일으킬 실패 사유 목록. 허용 값: `USER_EXIT_NONZERO`, `OOM`, `IMAGE_PULL`, `COMMAND_INVALID`, `TIMEOUT`, `CAPACITY_TIMEOUT`, `PLATFORM_ERROR`, `PLATFORM_LOST`, `VOLUME_ERROR`. 기본값 `[\"PLATFORM_ERROR\", \"PLATFORM_LOST\"]`. 실패한 attempt의 `reason`이 이 목록에 있고 `max_retries`가 남아 있을 때만 재시도합니다. `USER_EXIT_NONZERO`, `OOM` 같은 코드 실패를 재시도하려면 직접 추가하세요."
           }
         },
         "type": "object",
@@ -2570,7 +2623,12 @@
           "exit_code": {
             "type": "integer",
             "nullable": true,
-            "description": "이 attempt에서 사용자 명령의 종료 코드"
+            "description": "이 attempt에서 사용자 명령의 종료 코드. 129~159는 프로세스가 시그널로 종료되었음을 뜻합니다(코드 − 128). 예: `137` = `SIGKILL`, `143` = `SIGTERM`"
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true,
+            "description": "이 attempt의 실제 오류를 정제한 발췌(최대 500자). `IMAGE_PULL`, `COMMAND_INVALID`, `VOLUME_ERROR`일 때만 반환하며 그 외에는 `null`"
           },
           "started_at": {
             "type": "string",
@@ -2591,6 +2649,7 @@
           "status",
           "reason",
           "exit_code",
+          "detail",
           "started_at",
           "finished_at"
         ],
@@ -2660,11 +2719,12 @@
           "TIMEOUT",
           "PLATFORM_ERROR",
           "PLATFORM_LOST",
+          "VOLUME_ERROR",
           "USER_CANCELLED",
           "CAPACITY_TIMEOUT",
           "BALANCE_EXHAUSTED"
         ],
-        "description": "실패 또는 취소된 Job의 사유. `USER_EXIT_NONZERO`: 명령이 0이 아닌 코드로 종료, `OOM`: 메모리 부족, `IMAGE_PULL`: 이미지 가져오기 실패, `COMMAND_INVALID`: 명령을 시작할 수 없음(잘못된 명령, 없는 실행 파일, 이미지 아키텍처 불일치. 컨테이너가 시작되지 않음), `TIMEOUT`: `timeout_seconds` 초과. `PLATFORM_ERROR` / `PLATFORM_LOST`: 인프라 장애. `CAPACITY_TIMEOUT`은 자원 대기 시간 초과로 `timeout_seconds`와 무관합니다. `USER_CANCELLED`: 사용자 취소, `BALANCE_EXHAUSTED`: 선불 잔액 소진으로 취소"
+        "description": "실패 또는 취소된 Job의 사유. `USER_EXIT_NONZERO`: 명령이 0이 아닌 코드로 종료, `OOM`: 메모리 부족, `IMAGE_PULL`: 이미지 가져오기 실패, `COMMAND_INVALID`: 명령을 시작할 수 없음(잘못된 명령, 없는 실행 파일, 이미지 아키텍처 불일치. 컨테이너가 시작되지 않음), `TIMEOUT`: `timeout_seconds` 초과. `PLATFORM_ERROR` / `PLATFORM_LOST`: 인프라 장애. `VOLUME_ERROR`: Job의 볼륨을 연결하지 못함, `CAPACITY_TIMEOUT`은 자원 대기 시간 초과로 `timeout_seconds`와 무관합니다. `USER_CANCELLED`: 사용자 취소, `BALANCE_EXHAUSTED`: 선불 잔액 소진으로 취소"
       },
       "JobResponse": {
         "properties": {
@@ -2700,6 +2760,24 @@
             "type": "array",
             "description": "종료된 attempt 이력. Job이 끝났다면 마지막 attempt도 포함합니다. 진행 중인 attempt는 최상위 필드가 나타냅니다."
           },
+          "retry_on": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "USER_EXIT_NONZERO",
+                "OOM",
+                "IMAGE_PULL",
+                "COMMAND_INVALID",
+                "TIMEOUT",
+                "CAPACITY_TIMEOUT",
+                "PLATFORM_ERROR",
+                "PLATFORM_LOST",
+                "VOLUME_ERROR"
+              ]
+            },
+            "description": "이 Job의 재시도 사유 목록"
+          },
           "status": {
             "$ref": "#/components/schemas/JobStatus",
             "description": "현재 상태"
@@ -2711,12 +2789,17 @@
           "exit_code": {
             "type": "integer",
             "nullable": true,
-            "description": "사용자 명령의 exit code"
+            "description": "사용자 명령의 exit code. 129~159는 프로세스가 시그널로 종료되었음을 뜻합니다(코드 − 128). 예: `137` = `SIGKILL`, `143` = `SIGTERM`"
           },
           "message": {
             "type": "string",
             "nullable": true,
-            "description": "`reason`에서 파생된 사람이 읽을 수 있는 설명입니다. Job이 실행 중이거나 reason이 없으면 `null`입니다. 매핑(문자열은 영어로 제공됩니다):\n- `USER_EXIT_NONZERO`: \"The command exited with a non-zero exit code. Check exit_code and the logs.\"\n- `OOM`: \"The container ran out of memory. Choose an instance type with more memory or reduce memory usage.\"\n- `IMAGE_PULL`: \"The container image could not be pulled. Check the image URL and registry credentials.\"\n- `COMMAND_INVALID`: \"The container could not start the command. Check the command, that the executable exists in the image, and that the image matches the node architecture.\"\n- `TIMEOUT`: \"The Job exceeded its timeout_seconds limit and was stopped. Increase timeout_seconds or shorten the workload.\"\n- `CAPACITY_TIMEOUT`: \"No GPU capacity became available within the queue wait limit. Submit again later or choose another instance type.\"\n- `PLATFORM_ERROR`: \"The Job failed because of a platform error. Submit it again.\"\n- `PLATFORM_LOST`: \"The node running this Job became unreachable. Submit it again.\"\n- `USER_CANCELLED`: \"The Job was cancelled on request.\"\n- `BALANCE_EXHAUSTED`: \"The Job was stopped because the prepaid credit balance ran out.\"\n- 상태 불명(`reason` 없음, `status_unknown_since` 설정됨): \"The platform cannot confirm this Job's state right now. It will be rechecked automatically.\""
+            "description": "`reason`에서 파생된 사람이 읽을 수 있는 설명입니다. Job이 실행 중이거나 reason이 없으면 `null`입니다. 매핑(문자열은 영어로 제공됩니다):\n- `USER_EXIT_NONZERO`: \"The command exited with a non-zero exit code. Check exit_code and the logs.\"\n- `OOM`: \"The container ran out of memory. Choose an instance type with more memory or reduce memory usage.\"\n- `IMAGE_PULL`: \"The container image could not be pulled. Check the image URL and registry credentials.\"\n- `COMMAND_INVALID`: \"The container could not start the command. Check the command, that the executable exists in the image, and that the image matches the node architecture.\"\n- `TIMEOUT`: \"The Job exceeded its timeout_seconds limit and was stopped. Increase timeout_seconds or shorten the workload.\"\n- `CAPACITY_TIMEOUT`: \"No GPU capacity became available within the queue wait limit. Submit again later or choose another instance type.\"\n- `PLATFORM_ERROR`: \"The Job failed because of a platform error. Submit it again.\"\n- `PLATFORM_LOST`: \"The node running this Job became unreachable. Submit it again.\"\n- `VOLUME_ERROR`: \"The volume could not be attached to this Job. Check the volume's state, or contact support if it keeps happening.\"\n- `USER_CANCELLED`: \"The Job was cancelled on request.\"\n- `BALANCE_EXHAUSTED`: \"The Job was stopped because the prepaid credit balance ran out.\"\n- 상태 불명(`reason` 없음, `status_unknown_since` 설정됨): \"The platform cannot confirm this Job's state right now. It will be rechecked automatically.\""
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true,
+            "description": "실제 오류를 정제한 발췌(최대 500자). `IMAGE_PULL`, `COMMAND_INVALID`, `VOLUME_ERROR`일 때만 반환하며 그 외에는 `null`입니다. `message`는 `reason`별 고정 문구로 유지됩니다."
           },
           "created_at": {
             "type": "string",
@@ -2762,10 +2845,12 @@
           "instance_type_id",
           "attempt",
           "attempts",
+          "retry_on",
           "status",
           "reason",
           "exit_code",
           "message",
+          "detail",
           "created_at",
           "started_at",
           "finished_at",

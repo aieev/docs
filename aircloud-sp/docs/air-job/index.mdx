@@ -44,17 +44,18 @@ any active status -> CANCELLING -> CANCELLED
 
 For `FAILED` and `CANCELLED` Jobs, `reason` tells you why.
 
-`message` is a human-readable explanation derived from `reason`. It is `null` while the Job is running or when there is no `reason`. If the platform temporarily cannot confirm the Job's state, `status_unknown_since` is set and `message` says it will be rechecked automatically.
+`message` is a fixed, human-readable explanation derived from `reason`. For `IMAGE_PULL`, `COMMAND_INVALID` and `VOLUME_ERROR`, `detail` (on the Job and on each entry of `attempts`) adds a sanitized excerpt of the underlying error, up to 500 characters. It is `null` for other reasons. It is `null` while the Job is running or when there is no `reason`. If the platform temporarily cannot confirm the Job's state, `status_unknown_since` is set and `message` says it will be rechecked automatically.
 
 | Reason | Meaning |
 | --- | --- |
-| `USER_EXIT_NONZERO` | Your command exited with a non-zero code. See `exit_code`. This includes processes ended by a signal (`137` = `SIGKILL`, `143` = `SIGTERM`). |
+| `USER_EXIT_NONZERO` | Your command exited with a non-zero code. See `exit_code`. Exit codes 129-159 mean the process was killed by a signal (code minus 128), for example `137` = `SIGKILL` and `143` = `SIGTERM`. |
 | `OOM` | The container ran out of memory. |
 | `IMAGE_PULL` | The image could not be pulled. Check the image URL and registry credentials. |
 | `COMMAND_INVALID` | The command could not be started: a bad command, a missing executable, or an image that does not match the node architecture. The container never started. |
 | `TIMEOUT` | The Job exceeded `timeout_seconds` and was stopped. |
 | `CAPACITY_TIMEOUT` | The Job waited more than 900 seconds for capacity. This is unrelated to `timeout_seconds`. Submit again later or choose another instance type. |
 | `PLATFORM_ERROR` / `PLATFORM_LOST` | Infrastructure failure. Set `max_retries` to retry automatically (see [Retries](#retries)), or submit the Job again. |
+| `VOLUME_ERROR` | The volume could not be attached to the Job. Check the volume's state, or contact support if it keeps happening. Not retried by default. |
 | `USER_CANCELLED` | You cancelled the Job. |
 | `BALANCE_EXHAUSTED` | The prepaid balance ran out and the Job was cancelled. |
 
@@ -86,7 +87,10 @@ When you cancel a Job or `timeout_seconds` expires, the platform sends `SIGTERM`
 
 Jobs are not retried by default. Set `max_retries` (an integer from 0 to 10, default 0) to run up to that many additional attempts after a failed one.
 
-- When `max_retries` is greater than 0, any `FAILED` outcome is retried regardless of `reason` (`PLATFORM_LOST`, `PLATFORM_ERROR`, `OOM`, `USER_EXIT_NONZERO`, `IMAGE_PULL`, `COMMAND_INVALID`, `TIMEOUT`, `CAPACITY_TIMEOUT`). Cancelled Jobs are not retried.
+- A failed attempt is retried only if its `reason` is in `retry_on` and attempts remain under `max_retries`. Cancelled Jobs are not retried.
+- `retry_on` defaults to `["PLATFORM_ERROR", "PLATFORM_LOST"]`, so by default only infrastructure failures are retried. Allowed values: `USER_EXIT_NONZERO`, `OOM`, `IMAGE_PULL`, `COMMAND_INVALID`, `TIMEOUT`, `CAPACITY_TIMEOUT`, `PLATFORM_ERROR`, `PLATFORM_LOST`, `VOLUME_ERROR`.
+- To retry failures caused by your code, such as `USER_EXIT_NONZERO` or `OOM`, list them explicitly, for example `"max_retries": 2, "retry_on": ["PLATFORM_ERROR", "PLATFORM_LOST", "OOM"]`. With the CLI, use `--retries 2 --retry-on PLATFORM_ERROR,PLATFORM_LOST,OOM`. The value replaces the default, so include the platform reasons if you still want them retried.
+- The response returns the `retry_on` in effect.
 - The Job returns to `QUEUED` between attempts.
 - Failures with an exit code are resubmitted immediately. `PLATFORM_LOST` and failures without an exit code wait about 3 minutes so the previous container can stop.
 - Each attempt gets a fresh `timeout_seconds`.
@@ -143,7 +147,7 @@ The CLI adds a key to every submission and retries with the same key automatical
 - A Job can mount one volume. Mount paths must be absolute, must not be `/`, and must not repeat.
 - Names can be up to 100 characters, environment variables up to 100 (32 KB for keys and values combined), and `command` plus `args` up to 64 KB in total.
 - `command` replaces the image `ENTRYPOINT` and `args` replaces the image `CMD`. See [Command and args](#command-and-args).
-- Failed Jobs are not retried unless you set `max_retries` (up to 10). See [Retries](#retries).
+- Failed Jobs are not retried unless you set `max_retries` (up to 10), and only for the reasons in `retry_on` (default: platform failures). See [Retries](#retries).
 - Downloading result files through the API is not available yet. Write results to a mounted volume.
 
 <CardGroup cols={2}>

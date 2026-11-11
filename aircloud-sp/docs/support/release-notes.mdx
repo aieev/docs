@@ -6,9 +6,13 @@ icon: "newspaper"
 
 ## 2026-11
 
+### API Reference
+
+- **Job API**: Documented the `VOLUME_ERROR` reason, the `retry_on` request and response field (retries now apply only to the listed reasons; the default is `PLATFORM_ERROR` and `PLATFORM_LOST`), and the `detail` field on Jobs and attempts with a sanitized error excerpt for `IMAGE_PULL`, `COMMAND_INVALID` and `VOLUME_ERROR`. Exit codes 129-159 are described as signal terminations.
+
 ### Updated pages
 
-- **Air Job**: New sections on cancellation and the stop signal, and on the execution environment. Clarified log order and delay, how billing intervals are counted, input limits, using `args` with tool images, and the reason for signal-terminated processes.
+- **Air Job**: Updated the reason table and the Retries section for `retry_on`, `detail` and `VOLUME_ERROR`. New sections on cancellation and the stop signal, and on the execution environment. Clarified log order and delay, how billing intervals are counted, input limits, using `args` with tool images, and the reason for signal-terminated processes.
 
 ## 2026-10
 
