@@ -44,7 +44,7 @@ any active status -> CANCELLING -> CANCELLED
 
 For `FAILED` and `CANCELLED` Jobs, `reason` tells you why.
 
-`message` is a fixed, human-readable explanation derived from `reason`. For `IMAGE_PULL`, `COMMAND_INVALID` and `VOLUME_ERROR`, `detail` (on the Job and on each entry of `attempts`) adds a sanitized excerpt of the underlying error, up to 500 characters. It is `null` for other reasons. It is `null` while the Job is running or when there is no `reason`. If the platform temporarily cannot confirm the Job's state, `status_unknown_since` is set and `message` says it will be rechecked automatically.
+`message` is a fixed, human-readable explanation derived from `reason`. For `IMAGE_PULL`, `COMMAND_INVALID` and `VOLUME_ERROR`, `detail` (on the Job and on each entry of `attempts`) adds a sanitized excerpt of the underlying error, up to 500 characters. While the Job is `PENDING` or `QUEUED` (and not being cancelled), `detail` is a fixed notice that it is waiting for GPU capacity and fails with `CAPACITY_TIMEOUT` if none becomes available within 15 minutes. In every other case it is `null`. If the platform temporarily cannot confirm the Job's state, `status_unknown_since` is set and `message` says it will be rechecked automatically.
 
 | Reason | Meaning |
 | --- | --- |

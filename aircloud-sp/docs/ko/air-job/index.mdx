@@ -46,7 +46,7 @@ QUEUED -> PENDING -> STARTING -> RUNNING -> SUCCEEDED
 
 `message`는 `reason`에서 파생된 사람이 읽을 수 있는 고정 설명이며(영어 문자열), Job이 실행 중이거나 `reason`이 없으면 `null`입니다. 플랫폼이 Job 상태를 일시적으로 확인하지 못하면 `status_unknown_since`가 설정되고 `message`에 자동으로 다시 확인한다는 안내가 표시됩니다.
 
-`IMAGE_PULL`, `COMMAND_INVALID`, `VOLUME_ERROR`일 때는 Job과 `attempts`의 각 항목에 있는 `detail`이 실제 오류를 정제한 발췌(최대 500자)를 보여 줍니다. 다른 reason에서는 `null`입니다.
+`IMAGE_PULL`, `COMMAND_INVALID`, `VOLUME_ERROR`일 때는 Job과 `attempts`의 각 항목에 있는 `detail`이 실제 오류를 정제한 발췌(최대 500자)를 보여 줍니다. `PENDING`이나 `QUEUED` 상태(취소 중이 아닐 때)에서는 GPU 자원을 기다리는 중이며 15분 안에 자원을 받지 못하면 `CAPACITY_TIMEOUT`으로 실패한다는 고정 안내가 들어 있습니다. 그 밖에는 `null`입니다.
 
 | Reason | 의미 |
 | --- | --- |
