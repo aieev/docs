@@ -48,7 +48,7 @@ For `FAILED` and `CANCELLED` Jobs, `reason` tells you why.
 
 | Reason | Meaning |
 | --- | --- |
-| `USER_EXIT_NONZERO` | Your command exited with a non-zero code. See `exit_code`. |
+| `USER_EXIT_NONZERO` | Your command exited with a non-zero code. See `exit_code`. This includes processes ended by a signal (`137` = `SIGKILL`, `143` = `SIGTERM`). |
 | `OOM` | The container ran out of memory. |
 | `IMAGE_PULL` | The image could not be pulled. Check the image URL and registry credentials. |
 | `COMMAND_INVALID` | The command could not be started: a bad command, a missing executable, or an image that does not match the node architecture. The container never started. |
@@ -64,6 +64,15 @@ Set at least one of `command` and `args`; a request with neither returns `422`.
 
 - `command` replaces the image `ENTRYPOINT`. Your command becomes PID 1 and any setup the `ENTRYPOINT` performs is skipped. NGC and official PyTorch images work fine with `command`.
 - `args` replaces the image `CMD` and is passed to the image `ENTRYPOINT`. Use it only when the `ENTRYPOINT` does setup you need, such as activating a conda environment or switching users.
+- For images whose `ENTRYPOINT` is the tool itself (`curlimages/curl`, `amazon/aws-cli`, `alpine/git`, …), pass arguments the way you would with `docker run <image> --version` by using `args: ["--version"]`. `command: ["--version"]` looks for an executable named `--version` and fails with `COMMAND_INVALID`.
+
+## Cancellation and stop signal
+
+When you cancel a Job or `timeout_seconds` expires, the platform sends `SIGTERM` to PID 1 in the container and kills it with `SIGKILL` if it has not exited within 30 seconds.
+
+- A process started with `command` runs as PID 1. PID 1 ignores `SIGTERM` unless it installs a handler, so a plain `sleep` or a training script without one is killed only after the full 30 seconds.
+- If you need to save a checkpoint or clean up before exiting, install a `SIGTERM` handler (`trap` in a shell, `signal.signal(signal.SIGTERM, ...)` in Python). With a handler the Job stops within seconds and the handler's output stays in the logs.
+- If you wrap your program in a shell script, start the last command with `exec` so the signal reaches it directly.
 
 ## Timeout
 
@@ -91,9 +100,26 @@ Jobs are not retried by default. Set `max_retries` (an integer from 0 to 10, def
 
 Read `stdout` and `stderr` while the Job runs or after it ends. You can filter by source, search text, or time range, and page through results. By default you get the latest attempt that started; pass `attempt` to read an earlier one. With the CLI, `--follow` streams logs until the Job finishes.
 
+- Logs are returned newest first. Reverse them to read in time order.
+- A line can take tens of seconds to become visible.
+- A single line longer than 16 KB may be truncated.
+- Output that ends without a trailing newline may not be collected. End your last line with a newline.
+
+## Execution environment
+
+- CPU and memory limits match the instance type and are enforced on the container. However, `nproc`, `os.cpu_count()` and `/proc/meminfo` report the whole node, not the container limit. Set data loader workers and thread counts from the instance type's vCPU count yourself.
+- Anything written to the container file system is gone when the Job ends. Write results you want to keep to a mounted volume.
+- Processes run as the user the image specifies, or `root` if it specifies none.
+- RTX 5090 (Blackwell, `sm_120`) needs frameworks built with CUDA 12.8 or later. For PyTorch, use a CUDA 12.8 build of 2.7 or later. Older images either do not see the GPU or fail when launching kernels.
+
 ## Usage and cost
 
-Jobs are billed per Job in 10-minute units, with a minimum of 10 minutes. Amounts are in KRW.
+Jobs are billed the same way as Air Container. Amounts are in KRW.
+
+- You are billed for every 10-minute interval (aligned to :00, :10, :20, …) that the run overlaps. The minimum is 10 minutes, and even a short Job is billed for two intervals if it crosses a boundary.
+- Time spent waiting because no GPU is available is not billed. Once a GPU is assigned, image pull time counts, and the interval is billed even if the container never starts because of an image or command error.
+- Each retried attempt is billed. Attempts that run within the same 10-minute interval are billed once.
+- Usage becomes visible about 10 minutes after the Job ends.
 
 - `amount` is the confirmed charge.
 - `pending_amount` is an estimate for intervals that have not been charged yet. It can be higher than the final charge.
@@ -114,7 +140,8 @@ The CLI adds a key to every submission and retries with the same key automatical
 ## Limits and behavior
 
 - By default there is no maximum run time. Set `timeout_seconds` to limit each attempt; otherwise a Job runs until its command exits, you cancel it, or the prepaid balance is exhausted.
-- A Job can mount one volume.
+- A Job can mount one volume. Mount paths must be absolute, must not be `/`, and must not repeat.
+- Names can be up to 100 characters, environment variables up to 100 (32 KB for keys and values combined), and `command` plus `args` up to 64 KB in total.
 - `command` replaces the image `ENTRYPOINT` and `args` replaces the image `CMD`. See [Command and args](#command-and-args).
 - Failed Jobs are not retried unless you set `max_retries` (up to 10). See [Retries](#retries).
 - Downloading result files through the API is not available yet. Write results to a mounted volume.
