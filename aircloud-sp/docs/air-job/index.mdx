@@ -105,6 +105,7 @@ Jobs are not retried by default. Set `max_retries` (an integer from 0 to 10, def
 Read `stdout` and `stderr` while the Job runs or after it ends. You can filter by source, search text, or time range, and page through results. By default you get the latest attempt that started; pass `attempt` to read an earlier one. With the CLI, `--follow` streams logs until the Job finishes.
 
 - Logs are returned newest first. Reverse them to read in time order.
+- Lines printed within the same millisecond have no guaranteed order.
 - A line can take tens of seconds to become visible.
 - A single line longer than 16 KB may be truncated.
 - Output that ends without a trailing newline may not be collected. End your last line with a newline.
