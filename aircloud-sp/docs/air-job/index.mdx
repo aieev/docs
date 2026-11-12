@@ -50,8 +50,8 @@ For `FAILED` and `CANCELLED` Jobs, `reason` tells you why.
 | --- | --- |
 | `USER_EXIT_NONZERO` | Your command exited with a non-zero code. See `exit_code`. Exit codes 129-159 mean the process was killed by a signal (code minus 128), for example `137` = `SIGKILL` and `143` = `SIGTERM`. |
 | `OOM` | The container ran out of memory. |
-| `IMAGE_PULL` | The image could not be pulled. Check the image URL and registry credentials. |
-| `COMMAND_INVALID` | The command could not be started: a bad command, a missing executable, or an image that does not match the node architecture. The container never started. |
+| `IMAGE_PULL` | The image could not be pulled. This also happens when the image has no `linux/amd64` variant. Check the image URL, tag and registry credentials, and that the image supports `linux/amd64`. |
+| `COMMAND_INVALID` | The command could not be started: a bad command or a missing executable. The container never started. |
 | `TIMEOUT` | The Job exceeded `timeout_seconds` and was stopped. |
 | `CAPACITY_TIMEOUT` | The Job waited more than 900 seconds for capacity. This is unrelated to `timeout_seconds`. Submit again later or choose another instance type. |
 | `PLATFORM_ERROR` / `PLATFORM_LOST` | Infrastructure failure. Set `max_retries` to retry automatically (see [Retries](#retries)), or submit the Job again. |
