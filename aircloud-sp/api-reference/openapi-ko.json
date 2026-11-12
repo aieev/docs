@@ -623,11 +623,7 @@
                 "shm_size_gb": 8,
                 "working_dir": "/data",
                 "timeout_seconds": 3600,
-                "max_retries": 2,
-                "retry_on": [
-                  "PLATFORM_ERROR",
-                  "PLATFORM_LOST"
-                ]
+                "max_retries": 2
               }
             }
           }
@@ -687,11 +683,7 @@
                     "working_dir": "/data",
                     "shm_size_gb": 8,
                     "timeout_seconds": 3600,
-                    "max_retries": 2,
-                    "retry_on": [
-                      "PLATFORM_ERROR",
-                      "PLATFORM_LOST"
-                    ]
+                    "max_retries": 2
                   },
                   "created_by": "3f2a9c1e-7b4d-4e68-9a35-1d2c8e5f6a70",
                   "tags": []
@@ -877,11 +869,7 @@
                       "working_dir": "/data",
                       "shm_size_gb": 8,
                       "timeout_seconds": 3600,
-                      "max_retries": 2,
-                      "retry_on": [
-                        "PLATFORM_ERROR",
-                        "PLATFORM_LOST"
-                      ]
+                      "max_retries": 2
                     },
                     "created_by": "3f2a9c1e-7b4d-4e68-9a35-1d2c8e5f6a70",
                     "tags": []
@@ -1009,11 +997,7 @@
                     "working_dir": "/data",
                     "shm_size_gb": 8,
                     "timeout_seconds": 3600,
-                    "max_retries": 2,
-                    "retry_on": [
-                      "PLATFORM_ERROR",
-                      "PLATFORM_LOST"
-                    ]
+                    "max_retries": 2
                   },
                   "created_by": "3f2a9c1e-7b4d-4e68-9a35-1d2c8e5f6a70",
                   "tags": []
@@ -1148,11 +1132,7 @@
                     "working_dir": "/data",
                     "shm_size_gb": 8,
                     "timeout_seconds": 3600,
-                    "max_retries": 2,
-                    "retry_on": [
-                      "PLATFORM_ERROR",
-                      "PLATFORM_LOST"
-                    ]
+                    "max_retries": 2
                   },
                   "created_by": "3f2a9c1e-7b4d-4e68-9a35-1d2c8e5f6a70",
                   "tags": []
@@ -1214,11 +1194,7 @@
                     "working_dir": "/data",
                     "shm_size_gb": 8,
                     "timeout_seconds": 3600,
-                    "max_retries": 2,
-                    "retry_on": [
-                      "PLATFORM_ERROR",
-                      "PLATFORM_LOST"
-                    ]
+                    "max_retries": 2
                   },
                   "created_by": "3f2a9c1e-7b4d-4e68-9a35-1d2c8e5f6a70",
                   "tags": []
@@ -2652,29 +2628,7 @@
             "minimum": 0,
             "maximum": 10,
             "default": 0,
-            "description": "실패한 뒤 추가로 시도할 횟수. 기본값 0(재시도 안 함), 최소 0, 최대 10. 실패한 attempt의 `reason`이 `retry_on`(기본값 `PLATFORM_ERROR`, `PLATFORM_LOST`)에 있고 횟수가 남아 있을 때만 다시 실행하며, 취소된 Job은 재시도하지 않습니다. 재시도 사이에는 Job이 `QUEUED`로 돌아갑니다. 종료 코드가 있는 실패는 바로 다시 제출하고, `PLATFORM_LOST`와 종료 코드가 없는 실패는 이전 컨테이너가 중지될 수 있도록 약 3분 기다립니다. attempt마다 `timeout_seconds`가 새로 적용되고 모든 attempt가 과금됩니다."
-          },
-          "retry_on": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "enum": [
-                "USER_EXIT_NONZERO",
-                "OOM",
-                "IMAGE_PULL",
-                "COMMAND_INVALID",
-                "TIMEOUT",
-                "CAPACITY_TIMEOUT",
-                "PLATFORM_ERROR",
-                "PLATFORM_LOST",
-                "VOLUME_ERROR"
-              ]
-            },
-            "default": [
-              "PLATFORM_ERROR",
-              "PLATFORM_LOST"
-            ],
-            "description": "재시도를 일으킬 실패 사유 목록. 허용 값: `USER_EXIT_NONZERO`, `OOM`, `IMAGE_PULL`, `COMMAND_INVALID`, `TIMEOUT`, `CAPACITY_TIMEOUT`, `PLATFORM_ERROR`, `PLATFORM_LOST`, `VOLUME_ERROR`. 기본값 `[\"PLATFORM_ERROR\", \"PLATFORM_LOST\"]`. 실패한 attempt의 `reason`이 이 목록에 있고 `max_retries`가 남아 있을 때만 재시도합니다. `USER_EXIT_NONZERO`, `OOM` 같은 코드 실패를 재시도하려면 직접 추가하세요. 필드를 생략하거나 `null`을 보내면 기본값을 사용합니다. 위 실패 사유 외의 값(예: `USER_CANCELLED`)이 들어 있으면 422로 거부합니다."
+            "description": "실패한 뒤 추가로 시도할 횟수. 기본값 0(재시도 안 함), 최소 0, 최대 10. 실패한 attempt는 `reason`과 관계없이 횟수가 남아 있는 동안 다시 실행하며, 취소된 Job은 재시도하지 않습니다. 재시도 사이에는 Job이 `QUEUED`로 돌아갑니다. 약 1분 안에 다시 제출하고, `PLATFORM_LOST`와 종료 코드가 없는 실패는 이전 컨테이너가 중지될 수 있도록 약 3분 기다립니다. attempt마다 `timeout_seconds`가 새로 적용되고 모든 attempt가 과금됩니다."
           }
         },
         "type": "object",
@@ -2997,7 +2951,7 @@
           },
           "spec": {
             "$ref": "#/components/schemas/JobSpecResponse",
-            "description": "제출 사양(`max_retries`, `retry_on` 포함)"
+            "description": "제출 사양(`max_retries` 포함)"
           },
           "tags": {
             "type": "array",
@@ -3503,13 +3457,6 @@
           "max_retries": {
             "type": "integer",
             "description": "실패한 뒤 추가로 시도할 횟수"
-          },
-          "retry_on": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/JobReason"
-            },
-            "description": "이 Job의 재시도 사유 목록. 항상 포함되며, `retry_on` 없이 제출한 Job은 기본값 `[\"PLATFORM_ERROR\", \"PLATFORM_LOST\"]`를 반환합니다."
           }
         },
         "type": "object",
@@ -3526,8 +3473,7 @@
           "working_dir",
           "shm_size_gb",
           "timeout_seconds",
-          "max_retries",
-          "retry_on"
+          "max_retries"
         ],
         "description": "Job의 제출 사양. `registry_password`와 환경 변수 값은 포함하지 않습니다."
       }

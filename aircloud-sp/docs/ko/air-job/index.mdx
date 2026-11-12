@@ -87,14 +87,11 @@ QUEUED -> PENDING -> STARTING -> RUNNING -> SUCCEEDED
 
 ## 재시도
 
-기본적으로 Job은 재시도하지 않습니다. `max_retries`(0~10의 정수, 기본 0)를 지정하면 실패한 뒤 그 횟수만큼 추가로 다시 실행합니다.
+기본적으로 Job은 재시도하지 않습니다. `max_retries`(0~10의 정수, 기본 0)를 지정하면 취소를 제외한 모든 실패 뒤에 그 횟수만큼 추가로 다시 실행합니다. CLI에서는 `--retries`를 사용합니다.
 
-- 실패한 attempt의 `reason`이 `retry_on`에 있고 `max_retries` 횟수가 남아 있을 때만 다시 실행합니다. 취소된 Job은 재시도하지 않습니다.
-- `retry_on`의 기본값은 `["PLATFORM_ERROR", "PLATFORM_LOST"]`이므로 기본적으로는 인프라 장애만 재시도합니다. 사용할 수 있는 값은 `USER_EXIT_NONZERO`, `OOM`, `IMAGE_PULL`, `COMMAND_INVALID`, `TIMEOUT`, `CAPACITY_TIMEOUT`, `PLATFORM_ERROR`, `PLATFORM_LOST`, `VOLUME_ERROR`입니다.
-- `USER_EXIT_NONZERO`, `OOM`처럼 코드 때문에 생긴 실패도 재시도하려면 직접 지정하세요. 예: `"max_retries": 2, "retry_on": ["PLATFORM_ERROR", "PLATFORM_LOST", "OOM"]`. CLI에서는 `--retries 2 --retry-on PLATFORM_ERROR,PLATFORM_LOST,OOM`을 사용합니다. 지정한 값이 기본값을 대체하므로 인프라 장애도 계속 재시도하려면 함께 넣어야 합니다.
-- 응답에는 실제로 적용된 값이 `spec.retry_on`으로 포함됩니다.
+- 취소를 제외한 모든 실패를 `reason`과 관계없이 `max_retries` 횟수가 남아 있는 동안 다시 실행합니다. 취소된 Job은 재시도하지 않습니다.
 - 재실행 사이에는 Job이 `QUEUED` 상태로 돌아갑니다.
-- 플랫폼은 재시도를 기다리는 Job을 약 1분 주기로 확인하므로, 재시도는 즉시가 아니라 약 1분 안에 다시 제출됩니다. 종료 코드가 있는 실패는 다음 확인 때 다시 제출하고, `PLATFORM_LOST`와 종료 코드가 없는 실패는 이전 컨테이너가 중지될 수 있도록 먼저 약 3분 기다립니다.
+- 재시도는 즉시가 아니라 약 1분 안에 다시 제출됩니다. `PLATFORM_LOST`와 종료 코드가 없는 실패는 이전 컨테이너가 중지될 수 있도록 먼저 약 3분 기다립니다.
 - attempt마다 `timeout_seconds`가 새로 적용됩니다.
 - 모든 attempt가 과금됩니다.
 
@@ -150,7 +147,7 @@ CLI는 제출마다 키를 자동으로 붙이고, 재시도할 때도 같은 �
 - Job당 볼륨은 1개만 마운트할 수 있습니다. 마운트 경로는 `/`가 아닌 절대 경로여야 하며 서로 겹칠 수 없습니다.
 - 이름은 100자, 환경 변수는 100개(키와 값 합계 32KB), `command`와 `args`는 합계 64KB까지 지정할 수 있습니다.
 - `command`는 이미지의 `ENTRYPOINT`를, `args`는 이미지의 `CMD`를 대체합니다. [command와 args](#command와-args)를 참고하세요.
-- 실패한 Job은 `max_retries`(최대 10)를 지정하지 않으면 재시도하지 않으며, 재시도 대상은 `retry_on`에 있는 reason(기본값은 인프라 장애)뿐입니다. [재시도](#재시도)를 참고하세요.
+- 실패한 Job은 `max_retries`(최대 10)를 지정하지 않으면 재시도하지 않으며, 지정하면 취소를 제외한 모든 실패를 그 횟수만큼 다시 실행합니다. [재시도](#재시도)를 참고하세요.
 - API로 결과 파일을 내려받는 기능은 아직 없습니다. 결과는 마운트한 볼륨에 저장하세요.
 
 <CardGroup cols={2}>

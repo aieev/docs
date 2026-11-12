@@ -8,11 +8,11 @@ icon: "newspaper"
 
 ### API Reference
 
-- **Job API**: Documented the `VOLUME_ERROR` reason, the `retry_on` request and response field (retries now apply only to the listed reasons; the default is `PLATFORM_ERROR` and `PLATFORM_LOST`), and the `detail` field on Jobs and attempts with a sanitized error excerpt for `IMAGE_PULL`, `COMMAND_INVALID` and `VOLUME_ERROR`. Exit codes 129-159 are described as signal terminations.
+- **Job API**: Documented the `VOLUME_ERROR` reason, retry behavior (with `max_retries` from 0 to 10, any failure except cancellation is rerun that many times, resubmitted within about 1 minute, about 3 minutes for `PLATFORM_LOST` and failures without an exit code, and all attempts are billed), and the `detail` field on Jobs and attempts with a sanitized error excerpt for `IMAGE_PULL`, `COMMAND_INVALID` and `VOLUME_ERROR`. Exit codes 129-159 are described as signal terminations.
 
 ### Updated pages
 
-- **Air Job**: Updated the reason table and the Retries section for `retry_on`, `detail` and `VOLUME_ERROR`. New sections on cancellation and the stop signal, and on the execution environment. Clarified log order and delay, how billing intervals are counted, input limits, using `args` with tool images, and the reason for signal-terminated processes.
+- **Air Job**: Updated the reason table and the Retries section for `detail` and `VOLUME_ERROR`. New sections on cancellation and the stop signal, and on the execution environment. Clarified log order and delay, how billing intervals are counted, input limits, using `args` with tool images, and the reason for signal-terminated processes.
 
 - **Air Job quickstart**: Corrected the exit code table (`TIMEOUT` is 124, `VOLUME_ERROR` is 2) and the Ctrl+C description (it stops waiting and does not cancel the Job), and added `aircloud jobs logs --attempt` and `--all`.
 

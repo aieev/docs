@@ -85,14 +85,11 @@ When you cancel a Job or `timeout_seconds` expires, the platform sends `SIGTERM`
 
 ## Retries
 
-Jobs are not retried by default. Set `max_retries` (an integer from 0 to 10, default 0) to run up to that many additional attempts after a failed one.
+Jobs are not retried by default. Set `max_retries` (an integer from 0 to 10, default 0) to rerun the Job up to that many additional times after any failure except cancellation. With the CLI, use `--retries`.
 
-- A failed attempt is retried only if its `reason` is in `retry_on` and attempts remain under `max_retries`. Cancelled Jobs are not retried.
-- `retry_on` defaults to `["PLATFORM_ERROR", "PLATFORM_LOST"]`, so by default only infrastructure failures are retried. Allowed values: `USER_EXIT_NONZERO`, `OOM`, `IMAGE_PULL`, `COMMAND_INVALID`, `TIMEOUT`, `CAPACITY_TIMEOUT`, `PLATFORM_ERROR`, `PLATFORM_LOST`, `VOLUME_ERROR`.
-- To retry failures caused by your code, such as `USER_EXIT_NONZERO` or `OOM`, list them explicitly, for example `"max_retries": 2, "retry_on": ["PLATFORM_ERROR", "PLATFORM_LOST", "OOM"]`. With the CLI, use `--retries 2 --retry-on PLATFORM_ERROR,PLATFORM_LOST,OOM`. The value replaces the default, so include the platform reasons if you still want them retried.
-- The response returns the `retry_on` in effect as `spec.retry_on`.
+- Any failed attempt is retried while attempts remain under `max_retries`, whatever its `reason`. Cancelled Jobs are not retried.
 - The Job returns to `QUEUED` between attempts.
-- The platform checks for Jobs waiting to retry about once a minute, so a retry is resubmitted within about a minute rather than instantly. Failures with an exit code are resubmitted at the next check; `PLATFORM_LOST` and failures without an exit code wait about 3 minutes first so the previous container can stop.
+- The platform resubmits a retry within about 1 minute rather than instantly. `PLATFORM_LOST` and failures without an exit code wait about 3 minutes first so the previous container can stop.
 - Each attempt gets a fresh `timeout_seconds`.
 - All attempts are billed.
 
@@ -148,7 +145,7 @@ The CLI adds a key to every submission and retries with the same key automatical
 - A Job can mount one volume. Mount paths must be absolute, must not be `/`, and must not repeat.
 - Names can be up to 100 characters, environment variables up to 100 (32 KB for keys and values combined), and `command` plus `args` up to 64 KB in total.
 - `command` replaces the image `ENTRYPOINT` and `args` replaces the image `CMD`. See [Command and args](#command-and-args).
-- Failed Jobs are not retried unless you set `max_retries` (up to 10), and only for the reasons in `retry_on` (default: platform failures). See [Retries](#retries).
+- Failed Jobs are not retried unless you set `max_retries` (up to 10); any failure except cancellation is then rerun up to that many times. See [Retries](#retries).
 - Downloading result files through the API is not available yet. Write results to a mounted volume.
 
 <CardGroup cols={2}>

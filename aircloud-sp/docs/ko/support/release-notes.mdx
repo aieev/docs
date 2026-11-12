@@ -11,11 +11,11 @@ AirCloud 문서의 구조 변경, 신규 가이드 추가, 콘텐츠 개선 사�
 
 ### API 레퍼런스
 
-- **Job API**: `VOLUME_ERROR` reason, `retry_on` 요청·응답 필드(이제 지정한 reason만 재시도하며 기본값은 `PLATFORM_ERROR`, `PLATFORM_LOST`), `IMAGE_PULL`·`COMMAND_INVALID`·`VOLUME_ERROR`일 때 실제 오류를 정제해 보여 주는 Job과 attempt의 `detail` 필드를 문서화했습니다. 종료 코드 129~159는 시그널 종료로 설명합니다.
+- **Job API**: `VOLUME_ERROR` reason, 재시도 동작(`max_retries`를 0~10으로 지정하면 취소를 제외한 모든 실패를 그 횟수만큼 다시 실행하고, 약 1분 안에 재제출하며 `PLATFORM_LOST`·종료 코드 없는 실패는 약 3분 대기, 모든 실행 과금), `IMAGE_PULL`·`COMMAND_INVALID`·`VOLUME_ERROR`일 때 실제 오류를 정제해 보여 주는 Job과 attempt의 `detail` 필드를 문서화했습니다. 종료 코드 129~159는 시그널 종료로 설명합니다.
 
 ### 문서 개선
 
-- **Air Job**: reason 표와 재시도 섹션을 `retry_on`, `detail`, `VOLUME_ERROR`에 맞게 갱신했습니다. 취소와 종료 시그널, 실행 환경 섹션을 추가했습니다. 로그 조회 순서와 지연, 과금 구간 계산 방식, 입력 한도, 도구 이미지에서 `args`를 쓰는 방법, 시그널로 종료된 경우의 reason을 보완했습니다.
+- **Air Job**: reason 표와 재시도 섹션을 `detail`, `VOLUME_ERROR`에 맞게 갱신했습니다. 취소와 종료 시그널, 실행 환경 섹션을 추가했습니다. 로그 조회 순서와 지연, 과금 구간 계산 방식, 입력 한도, 도구 이미지에서 `args`를 쓰는 방법, 시그널로 종료된 경우의 reason을 보완했습니다.
 
 - **Air Job 빠른 시작**: 종료 코드 표(`TIMEOUT` 124, `VOLUME_ERROR` 2)와 Ctrl+C 설명(대기만 멈추고 Job 은 취소하지 않음)을 바로잡고 `aircloud jobs logs --attempt`, `--all` 을 추가했습니다.
 
