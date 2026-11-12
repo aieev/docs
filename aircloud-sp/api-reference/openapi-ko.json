@@ -692,7 +692,9 @@
                       "PLATFORM_ERROR",
                       "PLATFORM_LOST"
                     ]
-                  }
+                  },
+                  "created_by": "3f2a9c1e-7b4d-4e68-9a35-1d2c8e5f6a70",
+                  "tags": []
                 }
               }
             }
@@ -732,8 +734,22 @@
               }
             }
           },
+          "404": {
+            "description": "인스턴스 타입을 찾을 수 없음(`instance_type_id`가 UUID 형식이지만 존재하지 않음)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "Instance type not found",
+                  "detail": "Instance type not found"
+                }
+              }
+            }
+          },
           "422": {
-            "description": "요청 검증 오류이거나, 같은 `Idempotency-Key`가 다른 요청 본문으로 이미 사용됨",
+            "description": "요청 검증 오류(예: `instance_type_id`가 UUID 형식이 아님)이거나, 같은 `Idempotency-Key`가 다른 요청 본문으로 이미 사용됨",
             "content": {
               "application/json": {
                 "schema": {
@@ -866,7 +882,9 @@
                         "PLATFORM_ERROR",
                         "PLATFORM_LOST"
                       ]
-                    }
+                    },
+                    "created_by": "3f2a9c1e-7b4d-4e68-9a35-1d2c8e5f6a70",
+                    "tags": []
                   }
                 ]
               }
@@ -996,7 +1014,9 @@
                       "PLATFORM_ERROR",
                       "PLATFORM_LOST"
                     ]
-                  }
+                  },
+                  "created_by": "3f2a9c1e-7b4d-4e68-9a35-1d2c8e5f6a70",
+                  "tags": []
                 }
               }
             }
@@ -1133,7 +1153,9 @@
                       "PLATFORM_ERROR",
                       "PLATFORM_LOST"
                     ]
-                  }
+                  },
+                  "created_by": "3f2a9c1e-7b4d-4e68-9a35-1d2c8e5f6a70",
+                  "tags": []
                 }
               }
             }
@@ -1197,7 +1219,9 @@
                       "PLATFORM_ERROR",
                       "PLATFORM_LOST"
                     ]
-                  }
+                  },
+                  "created_by": "3f2a9c1e-7b4d-4e68-9a35-1d2c8e5f6a70",
+                  "tags": []
                 }
               }
             }
@@ -2890,6 +2914,10 @@
             "type": "string",
             "description": "프로젝트 ID"
           },
+          "created_by": {
+            "type": "string",
+            "description": "Job을 제출한 멤버의 사용자 ID"
+          },
           "name": {
             "type": "string",
             "nullable": true,
@@ -2970,6 +2998,14 @@
           "spec": {
             "$ref": "#/components/schemas/JobSpecResponse",
             "description": "제출 사양(`max_retries`, `retry_on` 포함)"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Job에 붙은 태그",
+            "default": []
           }
         },
         "type": "object",
@@ -2977,6 +3013,7 @@
           "id",
           "organization_id",
           "project_id",
+          "created_by",
           "name",
           "instance_type_id",
           "attempt",
