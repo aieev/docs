@@ -107,8 +107,8 @@ Read `stdout` and `stderr` while the Job runs or after it ends. You can filter b
 - Logs are returned newest first. Reverse them to read in time order.
 - Lines printed within the same millisecond have no guaranteed order.
 - A line can take tens of seconds to become visible.
-- A single line longer than 16 KB may be truncated.
-- Output that ends without a trailing newline may not be collected. End your last line with a newline.
+- A line longer than 16 KB is still stored as one record. A very long line can be split across several records.
+- Output that ends without a trailing newline is collected as the last line.
 
 ## Execution environment
 
