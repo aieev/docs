@@ -94,13 +94,13 @@ QUEUED -> PENDING -> STARTING -> RUNNING -> SUCCEEDED
 - `USER_EXIT_NONZERO`, `OOM`처럼 코드 때문에 생긴 실패도 재시도하려면 직접 지정하세요. 예: `"max_retries": 2, "retry_on": ["PLATFORM_ERROR", "PLATFORM_LOST", "OOM"]`. CLI에서는 `--retries 2 --retry-on PLATFORM_ERROR,PLATFORM_LOST,OOM`을 사용합니다. 지정한 값이 기본값을 대체하므로 인프라 장애도 계속 재시도하려면 함께 넣어야 합니다.
 - 응답에는 실제로 적용된 값이 `spec.retry_on`으로 포함됩니다.
 - 재실행 사이에는 Job이 `QUEUED` 상태로 돌아갑니다.
-- 종료 코드가 있는 실패는 바로 다시 제출합니다. `PLATFORM_LOST`와 종료 코드가 없는 실패는 이전 컨테이너가 중지될 수 있도록 약 3분 기다립니다.
+- 플랫폼은 재시도를 기다리는 Job을 약 1분 주기로 확인하므로, 재시도는 즉시가 아니라 약 1분 안에 다시 제출됩니다. 종료 코드가 있는 실패는 다음 확인 때 다시 제출하고, `PLATFORM_LOST`와 종료 코드가 없는 실패는 이전 컨테이너가 중지될 수 있도록 먼저 약 3분 기다립니다.
 - attempt마다 `timeout_seconds`가 새로 적용됩니다.
 - 모든 attempt가 과금됩니다.
 
 - `attempt`는 현재 attempt 번호입니다(1부터 시작).
 - `attempts`는 종료된 attempt의 `status`, `reason`, `exit_code`, `started_at`, `finished_at` 이력입니다.
-- 컨테이너에는 `AIRCLOUD_JOB_ID`, `AIRCLOUD_ATTEMPT` 환경 변수가 주입됩니다.
+- 컨테이너에는 `AIRCLOUD_JOB_ID`, `AIRCLOUD_ATTEMPT` 환경 변수가 주입됩니다. `env`에 같은 이름을 지정해도 플랫폼 값이 우선합니다.
 
 ## 로그
 

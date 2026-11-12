@@ -92,13 +92,13 @@ Jobs are not retried by default. Set `max_retries` (an integer from 0 to 10, def
 - To retry failures caused by your code, such as `USER_EXIT_NONZERO` or `OOM`, list them explicitly, for example `"max_retries": 2, "retry_on": ["PLATFORM_ERROR", "PLATFORM_LOST", "OOM"]`. With the CLI, use `--retries 2 --retry-on PLATFORM_ERROR,PLATFORM_LOST,OOM`. The value replaces the default, so include the platform reasons if you still want them retried.
 - The response returns the `retry_on` in effect as `spec.retry_on`.
 - The Job returns to `QUEUED` between attempts.
-- Failures with an exit code are resubmitted immediately. `PLATFORM_LOST` and failures without an exit code wait about 3 minutes so the previous container can stop.
+- The platform checks for Jobs waiting to retry about once a minute, so a retry is resubmitted within about a minute rather than instantly. Failures with an exit code are resubmitted at the next check; `PLATFORM_LOST` and failures without an exit code wait about 3 minutes first so the previous container can stop.
 - Each attempt gets a fresh `timeout_seconds`.
 - All attempts are billed.
 
 - `attempt` is the current attempt number, starting at 1.
 - `attempts` lists the finished attempts with their `status`, `reason`, `exit_code`, `started_at`, and `finished_at`.
-- Your container receives the environment variables `AIRCLOUD_JOB_ID` and `AIRCLOUD_ATTEMPT`.
+- Your container receives the environment variables `AIRCLOUD_JOB_ID` and `AIRCLOUD_ATTEMPT`. If you set variables with the same names in `env`, the platform values take precedence.
 
 ## Logs
 
