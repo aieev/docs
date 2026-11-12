@@ -55,7 +55,7 @@ For `FAILED` and `CANCELLED` Jobs, `reason` tells you why.
 | `TIMEOUT` | The Job exceeded `timeout_seconds` and was stopped. |
 | `CAPACITY_TIMEOUT` | The Job waited more than 900 seconds for capacity. This is unrelated to `timeout_seconds`. Submit again later or choose another instance type. |
 | `PLATFORM_ERROR` / `PLATFORM_LOST` | Infrastructure failure. Set `max_retries` to retry automatically (see [Retries](#retries)), or submit the Job again. |
-| `VOLUME_ERROR` | The volume could not be attached to the Job. Check the volume's state, or contact support if it keeps happening. Not retried by default. |
+| `VOLUME_ERROR` | The volume could not be attached to the Job. Check the volume's state, or contact support if it keeps happening. |
 | `USER_CANCELLED` | You cancelled the Job. |
 | `BALANCE_EXHAUSTED` | The prepaid balance ran out and the Job was cancelled. |
 
