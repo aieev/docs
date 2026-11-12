@@ -1668,7 +1668,7 @@
                     "volume_id": "vol-xxxxxxxx",
                     "name": "my-volume",
                     "size_gb": 100,
-                    "status": "available",
+                    "status": "READY",
                     "organization_id": "org-0I2GoSBhwODG",
                     "project_id": "proj-sGF4ynUPbc8H",
                     "created_at": "2026-08-01T00:00:00Z",
@@ -1750,7 +1750,7 @@
                   "volume_id": "vol-xxxxxxxx",
                   "name": "my-volume",
                   "size_gb": 100,
-                  "status": "available",
+                  "status": "READY",
                   "organization_id": "org-0I2GoSBhwODG",
                   "project_id": "proj-sGF4ynUPbc8H",
                   "created_at": "2026-08-01T00:00:00Z",
@@ -3317,7 +3317,7 @@
           },
           "status": {
             "type": "string",
-            "description": "Volume status."
+            "description": "Volume status: `PENDING`, `READY`, `ERROR`, `DELETING`, or `UNKNOWN` if it cannot be looked up."
           },
           "organization_id": {
             "type": "string",
