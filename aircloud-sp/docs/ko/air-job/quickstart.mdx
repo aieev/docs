@@ -176,6 +176,8 @@ aircloud jobs submit -f job.yaml --name train-v2 -- python /data/train.py --epoc
     aircloud jobs get <JOB_ID>
     aircloud jobs logs <JOB_ID> --follow
     aircloud jobs logs <JOB_ID> --source stderr --search Error
+    aircloud jobs logs <JOB_ID> --attempt 1
+    aircloud jobs logs <JOB_ID> --all
     aircloud jobs wait <JOB_ID> --follow
     aircloud jobs cancel <JOB_ID> -y
     ```
@@ -188,7 +190,7 @@ aircloud jobs submit -f job.yaml --name train-v2 -- python /data/train.py --epoc
     curl -s -X POST -H "$AUTH" "$BASE/jobs/<JOB_ID>/cancel"
     ```
 
-    취소는 요청이 접수되면 `202`, 이미 종료된 Job이면 `200`을 반환합니다. 로그는 최신순이며 `has_more`가 true이면 `offset=<next_offset>`으로 다음 페이지를 조회합니다.
+    취소는 요청이 접수되면 `202`, 이미 종료된 Job이면 `200`을 반환합니다. 로그는 최신순이며 `has_more`가 true이면 `offset=<next_offset>`으로 다음 페이지를 조회합니다(`limit`은 최대 5000). CLI 에서는 `--limit N` 이 최신 N줄, `--all` 이 전체 페이지, `--attempt N` 이 이전 시도의 로그입니다. 끝난 Job 에 `--follow` 를 쓰면 시간순으로 출력만 합니다. Job 이 끝난 뒤 `--follow` 는 늦게 나타나는 줄을 최대 60초 더 기다립니다.
   </Tab>
 </Tabs>
 
@@ -199,8 +201,13 @@ aircloud jobs submit -f job.yaml --name train-v2 -- python /data/train.py --epoc
 | 0 | 성공 |
 | 1~255 | 사용자 명령의 exit code (`USER_EXIT_NONZERO`) |
 | 137 | OOM |
-| 130 | 취소 (Ctrl+C 포함) |
-| 2 | 그 밖의 실패 (플랫폼 오류, `TIMEOUT`, 자원 대기 초과, 잔액 소진, 요청 오류) |
+| 124 | `TIMEOUT` |
+| 130 | 취소. Ctrl+C 는 Job 을 취소하지 않고 대기만 멈추며 이때도 130 으로 종료 |
+| 2 | 그 밖의 실패. 시작하지 못한 Job(`IMAGE_PULL`, `COMMAND_INVALID`, `VOLUME_ERROR`) 포함 (플랫폼 오류, 자원 대기 초과, 잔액 소진, 요청 오류) |
+
+컨테이너가 2 로 종료한 경우도 같은 코드입니다. 정확한 사유는 `aircloud jobs get <JOB_ID>` 의 `reason` 으로 확인합니다.
+
+Ctrl+C 는 Job 을 취소하지 않습니다. CLI 가 기다리기만 멈추고(종료 코드 130) Job 은 계속 실행됩니다. `aircloud jobs wait <JOB_ID>` 로 다시 붙거나 `aircloud jobs cancel <JOB_ID>` 로 취소합니다.
 
 ## 사용량과 비용 확인
 

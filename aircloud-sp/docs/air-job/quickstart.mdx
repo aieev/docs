@@ -176,6 +176,8 @@ Flags override values in the file.
     aircloud jobs get <JOB_ID>
     aircloud jobs logs <JOB_ID> --follow
     aircloud jobs logs <JOB_ID> --source stderr --search Error
+    aircloud jobs logs <JOB_ID> --attempt 1
+    aircloud jobs logs <JOB_ID> --all
     aircloud jobs wait <JOB_ID> --follow
     aircloud jobs cancel <JOB_ID> -y
     ```
@@ -188,7 +190,7 @@ Flags override values in the file.
     curl -s -X POST -H "$AUTH" "$BASE/jobs/<JOB_ID>/cancel"
     ```
 
-    Cancel returns `202` when the request is accepted and `200` if the Job has already finished. Logs are returned newest first; when `has_more` is true, request the next page with `offset=<next_offset>`.
+    Cancel returns `202` when the request is accepted and `200` if the Job has already finished. Logs are returned newest first; when `has_more` is true, request the next page with `offset=<next_offset>` (`limit` is at most 5000). With the CLI, `--limit N` prints the newest N lines, `--all` reads every page, and `--attempt N` reads an earlier attempt. On a Job that has finished, `--follow` just prints the log in time order. After a Job ends, `--follow` keeps polling for up to 60 seconds for late lines.
   </Tab>
 </Tabs>
 
@@ -199,8 +201,13 @@ Flags override values in the file.
 | 0 | Succeeded. |
 | 1 to 255 | Your command's exit code (`USER_EXIT_NONZERO`). |
 | 137 | Out of memory. |
-| 130 | Cancelled, including Ctrl+C. |
-| 2 | Any other failure: platform error, `TIMEOUT`, capacity wait timeout, exhausted balance, or an invalid request. |
+| 124 | `TIMEOUT`. |
+| 130 | Cancelled. Ctrl+C does not cancel the Job; it only stops waiting and also exits with 130. |
+| 2 | Any other failure, including Jobs that could not start (`IMAGE_PULL`, `COMMAND_INVALID`, `VOLUME_ERROR`): platform error, capacity wait timeout, exhausted balance, or an invalid request. |
+
+A container that exits with 2 gives the same code. To see the exact reason, run `aircloud jobs get <JOB_ID>` and read `reason`.
+
+Ctrl+C does not cancel the Job. It stops the CLI from waiting (exit code 130) and the Job keeps running. Re-attach with `aircloud jobs wait <JOB_ID>`, or cancel with `aircloud jobs cancel <JOB_ID>`.
 
 ## Check usage and cost
 
