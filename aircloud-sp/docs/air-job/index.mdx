@@ -27,6 +27,7 @@ A Job runs a container image with a command until the command exits, then releas
 ## Status lifecycle
 
 ```text
+(console only) READY -> QUEUED
 QUEUED -> PENDING -> STARTING -> RUNNING -> SUCCEEDED
                                          -> FAILED
 any active status -> CANCELLING -> CANCELLED
@@ -34,6 +35,7 @@ any active status -> CANCELLING -> CANCELLED
 
 | Status | Meaning |
 | --- | --- |
+| `READY` | A Job created in the console with "create only": it is saved but not started yet. It cannot be created through the API; start it from the console. |
 | `QUEUED` | The Job was accepted. |
 | `PENDING` | Waiting for GPU capacity. |
 | `STARTING` | Pulling the image and starting the container. |

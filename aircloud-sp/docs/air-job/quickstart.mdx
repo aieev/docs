@@ -203,6 +203,7 @@ Flags override values in the file.
 | 137 | Out of memory. |
 | 124 | `TIMEOUT`. |
 | 130 | Cancelled. Ctrl+C does not cancel the Job; it only stops waiting and also exits with 130. |
+| 75 | The Job is `READY` (created in the console but not started). The CLI stops waiting; start it from the console, then wait again. |
 | 2 | Any other failure, including Jobs that could not start (`IMAGE_PULL`, `COMMAND_INVALID`, `VOLUME_ERROR`): platform error, capacity wait timeout, exhausted balance, or an invalid request. |
 
 A container that exits with 2 gives the same code. To see the exact reason, run `aircloud jobs get <JOB_ID>` and read `reason`.

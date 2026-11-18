@@ -2988,6 +2988,7 @@
       "JobStatus": {
         "type": "string",
         "enum": [
+          "READY",
           "QUEUED",
           "PENDING",
           "STARTING",
@@ -2997,7 +2998,7 @@
           "CANCELLING",
           "CANCELLED"
         ],
-        "description": "Job 상태. 흐름: `QUEUED` -> `PENDING`(자원 대기) -> `STARTING` -> `RUNNING` -> `SUCCEEDED` / `FAILED`. 취소 요청 후에는 `CANCELLING` -> `CANCELLED`"
+        "description": "Job 상태. `READY` 는 콘솔에서 실행하지 않고 만든 Job 의 실행 전 상태입니다(API 로는 만들 수 없음). 흐름: `QUEUED` -> `PENDING`(자원 대기) -> `STARTING` -> `RUNNING` -> `SUCCEEDED` / `FAILED`. 취소 요청 후에는 `CANCELLING` -> `CANCELLED`"
       },
       "JobUsageInterval": {
         "properties": {

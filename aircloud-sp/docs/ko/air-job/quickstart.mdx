@@ -203,6 +203,7 @@ aircloud jobs submit -f job.yaml --name train-v2 -- python /data/train.py --epoc
 | 137 | OOM |
 | 124 | `TIMEOUT` |
 | 130 | 취소. Ctrl+C 는 Job 을 취소하지 않고 대기만 멈추며 이때도 130 으로 종료 |
+| 75 | Job 이 `READY` (콘솔에서 만들었지만 시작 전). CLI 가 대기를 멈추며, 콘솔에서 시작한 뒤 다시 wait 합니다 |
 | 2 | 그 밖의 실패. 시작하지 못한 Job(`IMAGE_PULL`, `COMMAND_INVALID`, `VOLUME_ERROR`) 포함 (플랫폼 오류, 자원 대기 초과, 잔액 소진, 요청 오류) |
 
 컨테이너가 2 로 종료한 경우도 같은 코드입니다. 정확한 사유는 `aircloud jobs get <JOB_ID>` 의 `reason` 으로 확인합니다.
