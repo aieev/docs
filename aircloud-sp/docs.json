@@ -17,6 +17,29 @@
   "icons": {
     "library": "lucide"
   },
+  "contextual": {
+    "options": [
+      "copy",
+      "view",
+      "chatgpt",
+      "claude",
+      "perplexity",
+      {
+        "title": "Share on LinkedIn",
+        "description": "Share this page on LinkedIn",
+        "icon": "linkedin",
+        "href": {
+          "base": "https://www.linkedin.com/sharing/share-offsite/",
+          "query": [
+            {
+              "key": "url",
+              "value": "https://docs.aieev.com$path"
+            }
+          ]
+        }
+      }
+    ]
+  },
   "navigation": {
     "languages": [
       {
