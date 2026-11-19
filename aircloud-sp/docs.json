@@ -24,6 +24,9 @@
       "chatgpt",
       "claude",
       "perplexity",
+      "mcp",
+      "cursor",
+      "vscode",
       {
         "title": "Share on LinkedIn",
         "description": "Share this page on LinkedIn",
